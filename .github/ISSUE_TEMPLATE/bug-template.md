@@ -1,7 +1,7 @@
 ---
 name: Bug Template
 about: project's bugs
-title: "[Bug] "
+title: "[bug] "
 labels: ""
 assignees: ""
 ---

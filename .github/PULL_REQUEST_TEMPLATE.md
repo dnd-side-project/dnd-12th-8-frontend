@@ -1,6 +1,6 @@
 ## #️⃣ Related Issue
 
-> #이슈번호, 
+> #이슈번호
 
 ## 📝 Description
 

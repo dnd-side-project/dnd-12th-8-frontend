@@ -60,10 +60,16 @@ const config = [
       /* React */
       'react/react-in-jsx-scope': 'off', // React를 import 하지 않아도 됨 
       'no-restricted-imports': ['warn', { name: 'react'} ], // react import 제한
-      'react/prop-types': 'off', // prop-types 검사 비활성화 (TypeScript 사용 시 불필요)
       'react/jsx-props-no-spreading': 'off', // props spreading 허용 (...props)
       'react-hooks/rules-of-hooks': 'error', // Hooks 규칙 강제
       'react-hooks/exhaustive-deps': 'warn', // useEffect의 의존성 배열 검사
+      'react/function-component-definition': [ // arrow function 사용
+        'error',
+        {
+          namedComponents: 'arrow-function',
+          unnamedComponents: 'arrow-function',
+        },
+      ],
 
       // Import
      'import/order': [
@@ -87,7 +93,6 @@ const config = [
       ],
 
       // JSX Accessibility
-      'jsx-a11y/anchor-is-valid': 'error', // <a> 태그는 유효한 href 속성을 가져야 함
       'jsx-a11y/click-events-have-key-events': 'warn', // 클릭 이벤트가 있는 요소는 키보드 이벤트도 필요 (접근성)
       'jsx-a11y/no-static-element-interactions': 'warn', // div 등의 일반 요소에 이벤트 핸들러 사용 시 경고
 

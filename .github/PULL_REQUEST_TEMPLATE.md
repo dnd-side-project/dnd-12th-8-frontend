@@ -1,6 +1,7 @@
 ## #️⃣ Related Issue
 
-> #이슈번호
+> closes #이슈번호
+
 
 ## 📝 Description
 

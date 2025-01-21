@@ -1,17 +1,17 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "./Button";
+import { Button } from './Button';
+import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {
-  title: "Components/Button",
+  title: 'Components/Button',
   component: Button,
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   parameters: {
     docs: {
       description: {
-        component: "기본 버튼 컴포넌트입니다.",
+        component: '기본 버튼 컴포넌트입니다.',
       },
     },
-    layout: "centered",
+    layout: 'centered',
   },
 } satisfies Meta<typeof Button>;
 
@@ -20,20 +20,20 @@ type Story = StoryObj<typeof Button>;
 
 export const Default: Story = {
   args: {
-    children: "기본 버튼",
+    children: '기본 버튼',
   },
 };
 
-export const 링크_버튼: Story = {
+export const LinkButton: Story = {
   args: {
-    href: "/test",
-    children: "링크 버튼",
+    href: '/test',
+    children: '링크 버튼',
   },
 };
 
-export const 커스텀_스타일: Story = {
+export const CustomStyle: Story = {
   args: {
-    children: "커스텀 스타일",
-    className: "my-4",
+    children: '커스텀 스타일',
+    className: 'my-4',
   },
 };

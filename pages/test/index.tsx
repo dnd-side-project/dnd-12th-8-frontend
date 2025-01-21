@@ -1,6 +1,6 @@
 const TestPage = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="flex min-h-screen items-center justify-center">
       <h1 className="text-2xl font-bold">테스트 페이지입니다</h1>
     </div>
   );

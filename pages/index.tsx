@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Button } from "@/components/common/Button";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,18 +17,10 @@ export default function Home() {
       className={`${geistSans.variable} ${geistMono.variable} min-h-screen flex flex-col items-center justify-center p-8`}
     >
       <h1 className="text-2xl font-bold mb-8">메인 페이지</h1>
-      <Link
-        href="test"
-        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-      >
-        테스트 페이지로 이동
-      </Link>
-      <Link
-        href="api/hello"
-        className="my-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors"
-      >
+      <Button href="test">테스트 페이지로 이동</Button>
+      <Button href="api/hello" className="my-4">
         API 테스트
-      </Link>
+      </Button>
     </div>
   );
 }

@@ -42,3 +42,5 @@ next-env.d.ts
 
 # 추가 그외 목록
 .env
+
+*storybook.log

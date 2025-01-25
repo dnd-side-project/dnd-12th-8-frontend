@@ -58,24 +58,33 @@ const config = [
       '@typescript-eslint/no-misused-promises': 'error', // Promise 사용 시 에러
 
       /* React */
-      'react/react-in-jsx-scope': 'off', // React를 import 하지 않아도 됨 
-      'no-restricted-imports': ['warn', { name: 'react'} ], // react import 제한
+      'react/react-in-jsx-scope': 'off', // React를 import 하지 않아도 됨
+      'no-restricted-imports': ['warn', { name: 'react' }], // react import 제한
       'react/jsx-props-no-spreading': 'off', // props spreading 허용 (...props)
       'react-hooks/rules-of-hooks': 'error', // Hooks 규칙 강제
       'react-hooks/exhaustive-deps': 'warn', // useEffect의 의존성 배열 검사
-      'react/function-component-definition': [ // arrow function 사용
+      'react/function-component-definition': [
         'error',
         {
-          namedComponents: 'arrow-function',
+          namedComponents: ['arrow-function', 'function-declaration'],
           unnamedComponents: 'arrow-function',
         },
       ],
 
       // Import
-     'import/order': [
+      'import/order': [
         'error',
         {
-          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+          groups: [
+            'builtin',
+            'external',
+            'internal',
+            'parent',
+            'sibling',
+            'index',
+            'object',
+            'type',
+          ],
           pathGroups: [
             {
               pattern: 'react',

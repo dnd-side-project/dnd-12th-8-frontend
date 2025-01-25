@@ -1,10 +1,10 @@
 import { Html, Head, Main, NextScript } from 'next/document';
 
-export const Document = () => {
+export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/public/favicon.ico" />
       </Head>
       <body className="antialiased">
         <Main />
@@ -12,4 +12,4 @@ export const Document = () => {
       </body>
     </Html>
   );
-};
+}

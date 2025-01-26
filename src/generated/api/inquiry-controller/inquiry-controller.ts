@@ -5,37 +5,47 @@
  * OpenAPI spec version: v0
  */
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { HttpResponse, delay, http } from 'msw';
-import type { InquiryCreateRequest } from '../models';
+import { customInstance } from '../../custom-instance';
+import type { InquiryCreateRequest } from '../../models';
 import type {
   MutationFunction,
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query';
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 export const insertInquiry = (
   inquiryCreateRequest: InquiryCreateRequest,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<void>> => {
-  return axios.post(`/api/v1/inquiries`, inquiryCreateRequest, options);
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/inquiries`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: inquiryCreateRequest,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getInsertInquiryMutationOptions = <
   TData = Awaited<ReturnType<typeof insertInquiry>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { data: InquiryCreateRequest }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
   const mutationKey = ['insertInquiry'];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof insertInquiry>>,
@@ -43,7 +53,7 @@ export const getInsertInquiryMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return insertInquiry(data, axiosOptions);
+    return insertInquiry(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions } as UseMutationOptions<
@@ -56,32 +66,17 @@ export const getInsertInquiryMutationOptions = <
 
 export type InsertInquiryMutationResult = NonNullable<Awaited<ReturnType<typeof insertInquiry>>>;
 export type InsertInquiryMutationBody = InquiryCreateRequest;
-export type InsertInquiryMutationError = AxiosError<unknown>;
+export type InsertInquiryMutationError = unknown;
 
 export const useInsertInquiry = <
   TData = Awaited<ReturnType<typeof insertInquiry>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { data: InquiryCreateRequest }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<TData, TError, { data: InquiryCreateRequest }, TContext> => {
   const mutationOptions = getInsertInquiryMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
-
-export const getInsertInquiryMockHandler = (
-  overrideResponse?:
-    | void
-    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
-) => {
-  return http.post('*/api/v1/inquiries', async (info) => {
-    await delay(1000);
-    if (typeof overrideResponse === 'function') {
-      await overrideResponse(info);
-    }
-    return new HttpResponse(null, { status: 200 });
-  });
-};
-export const getInquiryControllerMock = () => [getInsertInquiryMockHandler()];

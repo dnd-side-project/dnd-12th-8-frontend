@@ -1,15 +1,20 @@
-module.exports = {
-  '98percent': {
+import { defineConfig } from 'orval';
+
+export default defineConfig({
+  api: {
     output: {
       workspace: 'src/generated',
-      mode: 'tags',
-      client: 'react-query',
+      mode: 'tags-split', // 태그별로 파일 분리
       target: './api',
       schemas: './models',
-      clean: true,
+      client: 'react-query',
       mock: true,
       prettier: true,
       override: {
+        mutator: {
+          path: './custom-instance.ts',
+          name: 'customInstance',
+        },
         query: {
           useQuery: true,
           useInfinite: true,
@@ -18,7 +23,9 @@ module.exports = {
         },
       },
     },
-    input:
-      'http://ec2-3-36-160-44.ap-northeast-2.compute.amazonaws.com:8080/v3/api-docs/springdoc-openapi',
+    input: {
+      target:
+        'http://ec2-3-36-160-44.ap-northeast-2.compute.amazonaws.com:8080/v3/api-docs/springdoc-openapi',
+    },
   },
-};
+});

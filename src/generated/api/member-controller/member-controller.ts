@@ -4,7 +4,6 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import { faker } from '@faker-js/faker';
 import {
   useInfiniteQuery,
   useMutation,
@@ -12,9 +11,8 @@ import {
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import axios from 'axios';
-import { HttpResponse, delay, http } from 'msw';
-import type { MemberResponse } from '../models';
+import { customInstance } from '../../custom-instance';
+import type { MemberResponse } from '../../models';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -36,10 +34,14 @@ import type {
   UseSuspenseQueryOptions,
   UseSuspenseQueryResult,
 } from '@tanstack/react-query';
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-export const getMe = (options?: AxiosRequestConfig): Promise<AxiosResponse<MemberResponse>> => {
-  return axios.get(`/api/v1/members/me`, options);
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
+
+export const getMe = (options?: SecondParameter<typeof customInstance>, signal?: AbortSignal) => {
+  return customInstance<MemberResponse>(
+    { url: `/api/v1/members/me`, method: 'GET', signal },
+    options,
+  );
 };
 
 export const getGetMeQueryKey = () => {
@@ -48,17 +50,17 @@ export const getGetMeQueryKey = () => {
 
 export const getGetMeInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getMe>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetMeQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) =>
-    getMe({ signal, ...axiosOptions });
+    getMe(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getMe>>,
@@ -68,44 +70,44 @@ export const getGetMeInfiniteQueryOptions = <
 };
 
 export type GetMeInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>;
-export type GetMeInfiniteQueryError = AxiosError<unknown>;
+export type GetMeInfiniteQueryError = unknown;
 
 export function useGetMeInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMe>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>> &
     Pick<
       DefinedInitialDataOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMeInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMe>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>> &
     Pick<
       UndefinedInitialDataOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMeInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMe>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetMeInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMe>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetMeInfiniteQueryOptions(options);
 
@@ -120,17 +122,17 @@ export function useGetMeInfinite<
 
 export const getGetMeQueryOptions = <
   TData = Awaited<ReturnType<typeof getMe>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetMeQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) =>
-    getMe({ signal, ...axiosOptions });
+    getMe(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getMe>>,
@@ -140,44 +142,32 @@ export const getGetMeQueryOptions = <
 };
 
 export type GetMeQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>;
-export type GetMeQueryError = AxiosError<unknown>;
+export type GetMeQueryError = unknown;
 
-export function useGetMe<
-  TData = Awaited<ReturnType<typeof getMe>>,
-  TError = AxiosError<unknown>,
->(options: {
+export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = unknown>(options: {
   query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>> &
     Pick<
       DefinedInitialDataOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetMe<
-  TData = Awaited<ReturnType<typeof getMe>>,
-  TError = AxiosError<unknown>,
->(options?: {
+export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = unknown>(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>> &
     Pick<
       UndefinedInitialDataOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetMe<
-  TData = Awaited<ReturnType<typeof getMe>>,
-  TError = AxiosError<unknown>,
->(options?: {
+export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = unknown>(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useGetMe<
-  TData = Awaited<ReturnType<typeof getMe>>,
-  TError = AxiosError<unknown>,
->(options?: {
+export function useGetMe<TData = Awaited<ReturnType<typeof getMe>>, TError = unknown>(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetMeQueryOptions(options);
 
@@ -192,17 +182,17 @@ export function useGetMe<
 
 export const getGetMeSuspenseQueryOptions = <
   TData = Awaited<ReturnType<typeof getMe>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetMeQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) =>
-    getMe({ signal, ...axiosOptions });
+    getMe(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
     Awaited<ReturnType<typeof getMe>>,
@@ -212,36 +202,36 @@ export const getGetMeSuspenseQueryOptions = <
 };
 
 export type GetMeSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>;
-export type GetMeSuspenseQueryError = AxiosError<unknown>;
+export type GetMeSuspenseQueryError = unknown;
 
 export function useGetMeSuspense<
   TData = Awaited<ReturnType<typeof getMe>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMeSuspense<
   TData = Awaited<ReturnType<typeof getMe>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMeSuspense<
   TData = Awaited<ReturnType<typeof getMe>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetMeSuspense<
   TData = Awaited<ReturnType<typeof getMe>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetMeSuspenseQueryOptions(options);
 
@@ -256,19 +246,19 @@ export function useGetMeSuspense<
 
 export const getGetMeSuspenseInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getMe>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetMeQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getMe>>> = ({ signal }) =>
-    getMe({ signal, ...axiosOptions });
+    getMe(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getMe>>,
@@ -278,42 +268,42 @@ export const getGetMeSuspenseInfiniteQueryOptions = <
 };
 
 export type GetMeSuspenseInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getMe>>>;
-export type GetMeSuspenseInfiniteQueryError = AxiosError<unknown>;
+export type GetMeSuspenseInfiniteQueryError = unknown;
 
 export function useGetMeSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMe>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMeSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMe>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMeSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMe>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetMeSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMe>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getMe>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetMeSuspenseInfiniteQueryOptions(options);
 
@@ -327,27 +317,27 @@ export function useGetMeSuspenseInfinite<
   return query;
 }
 
-export const deleteMember = (options?: AxiosRequestConfig): Promise<AxiosResponse<void>> => {
-  return axios.delete(`/api/v1/members`, options);
+export const deleteMember = (options?: SecondParameter<typeof customInstance>) => {
+  return customInstance<void>({ url: `/api/v1/members`, method: 'DELETE' }, options);
 };
 
 export const getDeleteMemberMutationOptions = <
   TData = Awaited<ReturnType<typeof deleteMember>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, void, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
   const mutationKey = ['deleteMember'];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteMember>>, void> = () => {
-    return deleteMember(axiosOptions);
+    return deleteMember(requestOptions);
   };
 
   return { mutationFn, ...mutationOptions } as UseMutationOptions<TData, TError, void, TContext>;
@@ -355,64 +345,17 @@ export const getDeleteMemberMutationOptions = <
 
 export type DeleteMemberMutationResult = NonNullable<Awaited<ReturnType<typeof deleteMember>>>;
 
-export type DeleteMemberMutationError = AxiosError<unknown>;
+export type DeleteMemberMutationError = unknown;
 
 export const useDeleteMember = <
   TData = Awaited<ReturnType<typeof deleteMember>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, void, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<TData, TError, void, TContext> => {
   const mutationOptions = getDeleteMemberMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
-
-export const getGetMeResponseMock = (
-  overrideResponse: Partial<MemberResponse> = {},
-): MemberResponse => ({
-  email: faker.string.alpha(20),
-  name: faker.string.alpha(20),
-  nickName: faker.string.alpha(20),
-  ...overrideResponse,
-});
-
-export const getGetMeMockHandler = (
-  overrideResponse?:
-    | MemberResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<MemberResponse> | MemberResponse),
-) => {
-  return http.get('*/api/v1/members/me', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetMeResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-
-export const getDeleteMemberMockHandler = (
-  overrideResponse?:
-    | void
-    | ((info: Parameters<Parameters<typeof http.delete>[1]>[0]) => Promise<void> | void),
-) => {
-  return http.delete('*/api/v1/members', async (info) => {
-    await delay(1000);
-    if (typeof overrideResponse === 'function') {
-      await overrideResponse(info);
-    }
-    return new HttpResponse(null, { status: 200 });
-  });
-};
-export const getMemberControllerMock = () => [getGetMeMockHandler(), getDeleteMemberMockHandler()];

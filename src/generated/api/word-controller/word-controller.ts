@@ -4,16 +4,14 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import { faker } from '@faker-js/faker';
 import {
   useInfiniteQuery,
   useQuery,
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import axios from 'axios';
-import { HttpResponse, delay, http } from 'msw';
-import type { WordResponse } from '../models';
+import { customInstance } from '../../custom-instance';
+import type { WordResponse } from '../../models';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -32,13 +30,18 @@ import type {
   UseSuspenseQueryOptions,
   UseSuspenseQueryResult,
 } from '@tanstack/react-query';
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 export const getWords = (
   word: string,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<WordResponse>> => {
-  return axios.get(`/api/v1/words/${word}`, options);
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<WordResponse>(
+    { url: `/api/v1/words/${word}`, method: 'GET', signal },
+    options,
+  );
 };
 
 export const getGetWordsQueryKey = (word: string) => {
@@ -47,20 +50,20 @@ export const getGetWordsQueryKey = (word: string) => {
 
 export const getGetWordsInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getWords>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options?: {
     query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetWordsQueryKey(word);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getWords>>> = ({ signal }) =>
-    getWords(word, { signal, ...axiosOptions });
+    getWords(word, requestOptions, signal);
 
   return { queryKey, queryFn, enabled: !!word, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getWords>>,
@@ -70,11 +73,11 @@ export const getGetWordsInfiniteQueryOptions = <
 };
 
 export type GetWordsInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getWords>>>;
-export type GetWordsInfiniteQueryError = AxiosError<unknown>;
+export type GetWordsInfiniteQueryError = unknown;
 
 export function useGetWordsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getWords>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options: {
@@ -83,12 +86,12 @@ export function useGetWordsInfinite<
         DefinedInitialDataOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetWordsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getWords>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options?: {
@@ -97,28 +100,28 @@ export function useGetWordsInfinite<
         UndefinedInitialDataOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetWordsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getWords>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options?: {
     query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetWordsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getWords>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options?: {
     query?: Partial<UseInfiniteQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetWordsInfiniteQueryOptions(word, options);
@@ -134,20 +137,20 @@ export function useGetWordsInfinite<
 
 export const getGetWordsQueryOptions = <
   TData = Awaited<ReturnType<typeof getWords>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetWordsQueryKey(word);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getWords>>> = ({ signal }) =>
-    getWords(word, { signal, ...axiosOptions });
+    getWords(word, requestOptions, signal);
 
   return { queryKey, queryFn, enabled: !!word, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getWords>>,
@@ -157,12 +160,9 @@ export const getGetWordsQueryOptions = <
 };
 
 export type GetWordsQueryResult = NonNullable<Awaited<ReturnType<typeof getWords>>>;
-export type GetWordsQueryError = AxiosError<unknown>;
+export type GetWordsQueryError = unknown;
 
-export function useGetWords<
-  TData = Awaited<ReturnType<typeof getWords>>,
-  TError = AxiosError<unknown>,
->(
+export function useGetWords<TData = Awaited<ReturnType<typeof getWords>>, TError = unknown>(
   word: string,
   options: {
     query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>> &
@@ -170,13 +170,10 @@ export function useGetWords<
         DefinedInitialDataOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetWords<
-  TData = Awaited<ReturnType<typeof getWords>>,
-  TError = AxiosError<unknown>,
->(
+export function useGetWords<TData = Awaited<ReturnType<typeof getWords>>, TError = unknown>(
   word: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>> &
@@ -184,28 +181,22 @@ export function useGetWords<
         UndefinedInitialDataOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetWords<
-  TData = Awaited<ReturnType<typeof getWords>>,
-  TError = AxiosError<unknown>,
->(
+export function useGetWords<TData = Awaited<ReturnType<typeof getWords>>, TError = unknown>(
   word: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useGetWords<
-  TData = Awaited<ReturnType<typeof getWords>>,
-  TError = AxiosError<unknown>,
->(
+export function useGetWords<TData = Awaited<ReturnType<typeof getWords>>, TError = unknown>(
   word: string,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetWordsQueryOptions(word, options);
@@ -221,20 +212,20 @@ export function useGetWords<
 
 export const getGetWordsSuspenseQueryOptions = <
   TData = Awaited<ReturnType<typeof getWords>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options?: {
     query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetWordsQueryKey(word);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getWords>>> = ({ signal }) =>
-    getWords(word, { signal, ...axiosOptions });
+    getWords(word, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
     Awaited<ReturnType<typeof getWords>>,
@@ -244,47 +235,35 @@ export const getGetWordsSuspenseQueryOptions = <
 };
 
 export type GetWordsSuspenseQueryResult = NonNullable<Awaited<ReturnType<typeof getWords>>>;
-export type GetWordsSuspenseQueryError = AxiosError<unknown>;
+export type GetWordsSuspenseQueryError = unknown;
 
-export function useGetWordsSuspense<
-  TData = Awaited<ReturnType<typeof getWords>>,
-  TError = AxiosError<unknown>,
->(
+export function useGetWordsSuspense<TData = Awaited<ReturnType<typeof getWords>>, TError = unknown>(
   word: string,
   options: {
     query: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetWordsSuspense<
-  TData = Awaited<ReturnType<typeof getWords>>,
-  TError = AxiosError<unknown>,
->(
+export function useGetWordsSuspense<TData = Awaited<ReturnType<typeof getWords>>, TError = unknown>(
   word: string,
   options?: {
     query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-export function useGetWordsSuspense<
-  TData = Awaited<ReturnType<typeof getWords>>,
-  TError = AxiosError<unknown>,
->(
+export function useGetWordsSuspense<TData = Awaited<ReturnType<typeof getWords>>, TError = unknown>(
   word: string,
   options?: {
     query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
-export function useGetWordsSuspense<
-  TData = Awaited<ReturnType<typeof getWords>>,
-  TError = AxiosError<unknown>,
->(
+export function useGetWordsSuspense<TData = Awaited<ReturnType<typeof getWords>>, TError = unknown>(
   word: string,
   options?: {
     query?: Partial<UseSuspenseQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetWordsSuspenseQueryOptions(word, options);
@@ -300,22 +279,22 @@ export function useGetWordsSuspense<
 
 export const getGetWordsSuspenseInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getWords>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetWordsQueryKey(word);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getWords>>> = ({ signal }) =>
-    getWords(word, { signal, ...axiosOptions });
+    getWords(word, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getWords>>,
@@ -325,55 +304,55 @@ export const getGetWordsSuspenseInfiniteQueryOptions = <
 };
 
 export type GetWordsSuspenseInfiniteQueryResult = NonNullable<Awaited<ReturnType<typeof getWords>>>;
-export type GetWordsSuspenseInfiniteQueryError = AxiosError<unknown>;
+export type GetWordsSuspenseInfiniteQueryError = unknown;
 
 export function useGetWordsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getWords>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options: {
     query: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetWordsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getWords>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetWordsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getWords>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetWordsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getWords>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   word: string,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getWords>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetWordsSuspenseInfiniteQueryOptions(word, options);
@@ -387,42 +366,3 @@ export function useGetWordsSuspenseInfinite<
 
   return query;
 }
-
-export const getGetWordsResponseMock = (
-  overrideResponse: Partial<WordResponse> = {},
-): WordResponse => ({
-  wordId: faker.helpers.arrayElement([
-    faker.number.int({ min: undefined, max: undefined }),
-    undefined,
-  ]),
-  wordString: faker.string.alpha(20),
-  koreanDiction: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
-  englishDiction: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
-  speechAudioUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
-  feedBack: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
-  ...overrideResponse,
-});
-
-export const getGetWordsMockHandler = (
-  overrideResponse?:
-    | WordResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<WordResponse> | WordResponse),
-) => {
-  return http.get('*/api/v1/words/:word', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetWordsResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-export const getWordControllerMock = () => [getGetWordsMockHandler()];

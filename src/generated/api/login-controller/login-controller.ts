@@ -4,46 +4,55 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import { faker } from '@faker-js/faker';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { HttpResponse, delay, http } from 'msw';
-import type { LoginRequest, MemberRequest, RefreshTokenRequest } from '../models';
+import { customInstance } from '../../custom-instance';
+import type { LoginRequest, MemberRequest, RefreshTokenRequest } from '../../models';
 import type {
   MutationFunction,
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query';
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 export const login = (
   loginRequest: LoginRequest,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<string>> => {
-  return axios.post(`/api/v1/auth/login`, loginRequest, options);
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<string>(
+    {
+      url: `/api/v1/auth/login`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: loginRequest,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getLoginMutationOptions = <
   TData = Awaited<ReturnType<typeof login>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { data: LoginRequest }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
   const mutationKey = ['login'];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<Awaited<ReturnType<typeof login>>, { data: LoginRequest }> = (
     props,
   ) => {
     const { data } = props ?? {};
 
-    return login(data, axiosOptions);
+    return login(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions } as UseMutationOptions<
@@ -56,15 +65,15 @@ export const getLoginMutationOptions = <
 
 export type LoginMutationResult = NonNullable<Awaited<ReturnType<typeof login>>>;
 export type LoginMutationBody = LoginRequest;
-export type LoginMutationError = AxiosError<unknown>;
+export type LoginMutationError = unknown;
 
 export const useLogin = <
   TData = Awaited<ReturnType<typeof login>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { data: LoginRequest }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<TData, TError, { data: LoginRequest }, TContext> => {
   const mutationOptions = getLoginMutationOptions(options);
 
@@ -72,32 +81,42 @@ export const useLogin = <
 };
 export const join = (
   memberRequest: MemberRequest,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<void>> => {
-  return axios.post(`/api/v1/auth/join`, memberRequest, options);
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/auth/join`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: memberRequest,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getJoinMutationOptions = <
   TData = Awaited<ReturnType<typeof join>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { data: MemberRequest }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
   const mutationKey = ['join'];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<Awaited<ReturnType<typeof join>>, { data: MemberRequest }> = (
     props,
   ) => {
     const { data } = props ?? {};
 
-    return join(data, axiosOptions);
+    return join(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions } as UseMutationOptions<
@@ -110,15 +129,15 @@ export const getJoinMutationOptions = <
 
 export type JoinMutationResult = NonNullable<Awaited<ReturnType<typeof join>>>;
 export type JoinMutationBody = MemberRequest;
-export type JoinMutationError = AxiosError<unknown>;
+export type JoinMutationError = unknown;
 
 export const useJoin = <
   TData = Awaited<ReturnType<typeof join>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { data: MemberRequest }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<TData, TError, { data: MemberRequest }, TContext> => {
   const mutationOptions = getJoinMutationOptions(options);
 
@@ -126,25 +145,35 @@ export const useJoin = <
 };
 export const accessToken = (
   refreshTokenRequest: RefreshTokenRequest,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<string>> => {
-  return axios.post(`/api/v1/auth/access-token`, refreshTokenRequest, options);
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<string>(
+    {
+      url: `/api/v1/auth/access-token`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: refreshTokenRequest,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getAccessTokenMutationOptions = <
   TData = Awaited<ReturnType<typeof accessToken>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { data: RefreshTokenRequest }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
   const mutationKey = ['accessToken'];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof accessToken>>,
@@ -152,7 +181,7 @@ export const getAccessTokenMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return accessToken(data, axiosOptions);
+    return accessToken(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions } as UseMutationOptions<
@@ -165,82 +194,17 @@ export const getAccessTokenMutationOptions = <
 
 export type AccessTokenMutationResult = NonNullable<Awaited<ReturnType<typeof accessToken>>>;
 export type AccessTokenMutationBody = RefreshTokenRequest;
-export type AccessTokenMutationError = AxiosError<unknown>;
+export type AccessTokenMutationError = unknown;
 
 export const useAccessToken = <
   TData = Awaited<ReturnType<typeof accessToken>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { data: RefreshTokenRequest }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<TData, TError, { data: RefreshTokenRequest }, TContext> => {
   const mutationOptions = getAccessTokenMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
-
-export const getLoginResponseMock = (): string => faker.word.sample();
-
-export const getAccessTokenResponseMock = (): string => faker.word.sample();
-
-export const getLoginMockHandler = (
-  overrideResponse?:
-    | string
-    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<string> | string),
-) => {
-  return http.post('*/api/v1/auth/login', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getLoginResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-
-export const getJoinMockHandler = (
-  overrideResponse?:
-    | void
-    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
-) => {
-  return http.post('*/api/v1/auth/join', async (info) => {
-    await delay(1000);
-    if (typeof overrideResponse === 'function') {
-      await overrideResponse(info);
-    }
-    return new HttpResponse(null, { status: 200 });
-  });
-};
-
-export const getAccessTokenMockHandler = (
-  overrideResponse?:
-    | string
-    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<string> | string),
-) => {
-  return http.post('*/api/v1/auth/access-token', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getAccessTokenResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-export const getLoginControllerMock = () => [
-  getLoginMockHandler(),
-  getJoinMockHandler(),
-  getAccessTokenMockHandler(),
-];

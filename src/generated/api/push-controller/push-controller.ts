@@ -4,7 +4,6 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import { faker } from '@faker-js/faker';
 import {
   useInfiniteQuery,
   useMutation,
@@ -12,9 +11,8 @@ import {
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import axios from 'axios';
-import { HttpResponse, delay, http } from 'msw';
-import type { IsPushEnableUpdateRequest } from '../models';
+import { customInstance } from '../../custom-instance';
+import type { IsPushEnableUpdateRequest } from '../../models';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -36,10 +34,14 @@ import type {
   UseSuspenseQueryOptions,
   UseSuspenseQueryResult,
 } from '@tanstack/react-query';
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 
-export const getIsPushEnable = (options?: AxiosRequestConfig): Promise<AxiosResponse<boolean>> => {
-  return axios.get(`/api/v1/push`, options);
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
+
+export const getIsPushEnable = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<boolean>({ url: `/api/v1/push`, method: 'GET', signal }, options);
 };
 
 export const getGetIsPushEnableQueryKey = () => {
@@ -48,19 +50,19 @@ export const getGetIsPushEnableQueryKey = () => {
 
 export const getGetIsPushEnableInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getIsPushEnable>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetIsPushEnableQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getIsPushEnable>>> = ({ signal }) =>
-    getIsPushEnable({ signal, ...axiosOptions });
+    getIsPushEnable(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getIsPushEnable>>,
@@ -72,11 +74,11 @@ export const getGetIsPushEnableInfiniteQueryOptions = <
 export type GetIsPushEnableInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getIsPushEnable>>
 >;
-export type GetIsPushEnableInfiniteQueryError = AxiosError<unknown>;
+export type GetIsPushEnableInfiniteQueryError = unknown;
 
 export function useGetIsPushEnableInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getIsPushEnable>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
@@ -85,11 +87,11 @@ export function useGetIsPushEnableInfinite<
       DefinedInitialDataOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetIsPushEnableInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getIsPushEnable>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
@@ -98,26 +100,26 @@ export function useGetIsPushEnableInfinite<
       UndefinedInitialDataOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetIsPushEnableInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getIsPushEnable>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetIsPushEnableInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getIsPushEnable>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetIsPushEnableInfiniteQueryOptions(options);
 
@@ -132,17 +134,17 @@ export function useGetIsPushEnableInfinite<
 
 export const getGetIsPushEnableQueryOptions = <
   TData = Awaited<ReturnType<typeof getIsPushEnable>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetIsPushEnableQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getIsPushEnable>>> = ({ signal }) =>
-    getIsPushEnable({ signal, ...axiosOptions });
+    getIsPushEnable(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getIsPushEnable>>,
@@ -152,44 +154,44 @@ export const getGetIsPushEnableQueryOptions = <
 };
 
 export type GetIsPushEnableQueryResult = NonNullable<Awaited<ReturnType<typeof getIsPushEnable>>>;
-export type GetIsPushEnableQueryError = AxiosError<unknown>;
+export type GetIsPushEnableQueryError = unknown;
 
 export function useGetIsPushEnable<
   TData = Awaited<ReturnType<typeof getIsPushEnable>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>> &
     Pick<
       DefinedInitialDataOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetIsPushEnable<
   TData = Awaited<ReturnType<typeof getIsPushEnable>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>> &
     Pick<
       UndefinedInitialDataOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetIsPushEnable<
   TData = Awaited<ReturnType<typeof getIsPushEnable>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetIsPushEnable<
   TData = Awaited<ReturnType<typeof getIsPushEnable>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetIsPushEnableQueryOptions(options);
 
@@ -204,19 +206,19 @@ export function useGetIsPushEnable<
 
 export const getGetIsPushEnableSuspenseQueryOptions = <
   TData = Awaited<ReturnType<typeof getIsPushEnable>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetIsPushEnableQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getIsPushEnable>>> = ({ signal }) =>
-    getIsPushEnable({ signal, ...axiosOptions });
+    getIsPushEnable(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
     Awaited<ReturnType<typeof getIsPushEnable>>,
@@ -228,44 +230,44 @@ export const getGetIsPushEnableSuspenseQueryOptions = <
 export type GetIsPushEnableSuspenseQueryResult = NonNullable<
   Awaited<ReturnType<typeof getIsPushEnable>>
 >;
-export type GetIsPushEnableSuspenseQueryError = AxiosError<unknown>;
+export type GetIsPushEnableSuspenseQueryError = unknown;
 
 export function useGetIsPushEnableSuspense<
   TData = Awaited<ReturnType<typeof getIsPushEnable>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetIsPushEnableSuspense<
   TData = Awaited<ReturnType<typeof getIsPushEnable>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetIsPushEnableSuspense<
   TData = Awaited<ReturnType<typeof getIsPushEnable>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetIsPushEnableSuspense<
   TData = Awaited<ReturnType<typeof getIsPushEnable>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetIsPushEnableSuspenseQueryOptions(options);
 
@@ -280,19 +282,19 @@ export function useGetIsPushEnableSuspense<
 
 export const getGetIsPushEnableSuspenseInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getIsPushEnable>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetIsPushEnableQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getIsPushEnable>>> = ({ signal }) =>
-    getIsPushEnable({ signal, ...axiosOptions });
+    getIsPushEnable(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getIsPushEnable>>,
@@ -304,44 +306,44 @@ export const getGetIsPushEnableSuspenseInfiniteQueryOptions = <
 export type GetIsPushEnableSuspenseInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getIsPushEnable>>
 >;
-export type GetIsPushEnableSuspenseInfiniteQueryError = AxiosError<unknown>;
+export type GetIsPushEnableSuspenseInfiniteQueryError = unknown;
 
 export function useGetIsPushEnableSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getIsPushEnable>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetIsPushEnableSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getIsPushEnable>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetIsPushEnableSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getIsPushEnable>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetIsPushEnableSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getIsPushEnable>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getIsPushEnable>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetIsPushEnableSuspenseInfiniteQueryOptions(options);
 
@@ -357,25 +359,33 @@ export function useGetIsPushEnableSuspenseInfinite<
 
 export const isPushEnableUpdate = (
   isPushEnableUpdateRequest: IsPushEnableUpdateRequest,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<void>> => {
-  return axios.put(`/api/v1/push`, isPushEnableUpdateRequest, options);
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/push`,
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      data: isPushEnableUpdateRequest,
+    },
+    options,
+  );
 };
 
 export const getIsPushEnableUpdateMutationOptions = <
   TData = Awaited<ReturnType<typeof isPushEnableUpdate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { data: IsPushEnableUpdateRequest }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
   const mutationKey = ['isPushEnableUpdate'];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof isPushEnableUpdate>>,
@@ -383,7 +393,7 @@ export const getIsPushEnableUpdateMutationOptions = <
   > = (props) => {
     const { data } = props ?? {};
 
-    return isPushEnableUpdate(data, axiosOptions);
+    return isPushEnableUpdate(data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions } as UseMutationOptions<
@@ -398,58 +408,17 @@ export type IsPushEnableUpdateMutationResult = NonNullable<
   Awaited<ReturnType<typeof isPushEnableUpdate>>
 >;
 export type IsPushEnableUpdateMutationBody = IsPushEnableUpdateRequest;
-export type IsPushEnableUpdateMutationError = AxiosError<unknown>;
+export type IsPushEnableUpdateMutationError = unknown;
 
 export const useIsPushEnableUpdate = <
   TData = Awaited<ReturnType<typeof isPushEnableUpdate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { data: IsPushEnableUpdateRequest }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<TData, TError, { data: IsPushEnableUpdateRequest }, TContext> => {
   const mutationOptions = getIsPushEnableUpdateMutationOptions(options);
 
   return useMutation(mutationOptions);
 };
-
-export const getGetIsPushEnableResponseMock = (): boolean => faker.datatype.boolean();
-
-export const getGetIsPushEnableMockHandler = (
-  overrideResponse?:
-    | boolean
-    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<boolean> | boolean),
-) => {
-  return http.get('*/api/v1/push', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetIsPushEnableResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-
-export const getIsPushEnableUpdateMockHandler = (
-  overrideResponse?:
-    | void
-    | ((info: Parameters<Parameters<typeof http.put>[1]>[0]) => Promise<void> | void),
-) => {
-  return http.put('*/api/v1/push', async (info) => {
-    await delay(1000);
-    if (typeof overrideResponse === 'function') {
-      await overrideResponse(info);
-    }
-    return new HttpResponse(null, { status: 200 });
-  });
-};
-export const getPushControllerMock = () => [
-  getGetIsPushEnableMockHandler(),
-  getIsPushEnableUpdateMockHandler(),
-];

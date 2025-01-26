@@ -4,17 +4,14 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import { faker } from '@faker-js/faker';
 import {
   useInfiniteQuery,
   useQuery,
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import axios from 'axios';
-import { HttpResponse, delay, http } from 'msw';
-import type { GetMyProblemsParams } from '../models';
-import type { ListProblemResponse, TodayProblemsResponse } from '../models';
+import { customInstance } from '../../custom-instance';
+import type { GetMyProblemsParams, ListProblemResponse, TodayProblemsResponse } from '../../models';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -33,16 +30,18 @@ import type {
   UseSuspenseQueryOptions,
   UseSuspenseQueryResult,
 } from '@tanstack/react-query';
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 export const getMyProblems = (
   params: GetMyProblemsParams,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<ListProblemResponse>> => {
-  return axios.get(`/api/v1/problems`, {
-    ...options,
-    params: { ...params, ...options?.params },
-  });
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<ListProblemResponse>(
+    { url: `/api/v1/problems`, method: 'GET', params, signal },
+    options,
+  );
 };
 
 export const getGetMyProblemsQueryKey = (params: GetMyProblemsParams) => {
@@ -51,22 +50,22 @@ export const getGetMyProblemsQueryKey = (params: GetMyProblemsParams) => {
 
 export const getGetMyProblemsInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getMyProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetMyProblemsQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyProblems>>> = ({ signal }) =>
-    getMyProblems(params, { signal, ...axiosOptions });
+    getMyProblems(params, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getMyProblems>>,
@@ -78,11 +77,11 @@ export const getGetMyProblemsInfiniteQueryOptions = <
 export type GetMyProblemsInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getMyProblems>>
 >;
-export type GetMyProblemsInfiniteQueryError = AxiosError<unknown>;
+export type GetMyProblemsInfiniteQueryError = unknown;
 
 export function useGetMyProblemsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMyProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options: {
@@ -93,12 +92,12 @@ export function useGetMyProblemsInfinite<
         DefinedInitialDataOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMyProblemsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMyProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
@@ -109,32 +108,32 @@ export function useGetMyProblemsInfinite<
         UndefinedInitialDataOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMyProblemsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMyProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetMyProblemsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMyProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetMyProblemsInfiniteQueryOptions(params, options);
@@ -150,20 +149,20 @@ export function useGetMyProblemsInfinite<
 
 export const getGetMyProblemsQueryOptions = <
   TData = Awaited<ReturnType<typeof getMyProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetMyProblemsQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyProblems>>> = ({ signal }) =>
-    getMyProblems(params, { signal, ...axiosOptions });
+    getMyProblems(params, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getMyProblems>>,
@@ -173,11 +172,11 @@ export const getGetMyProblemsQueryOptions = <
 };
 
 export type GetMyProblemsQueryResult = NonNullable<Awaited<ReturnType<typeof getMyProblems>>>;
-export type GetMyProblemsQueryError = AxiosError<unknown>;
+export type GetMyProblemsQueryError = unknown;
 
 export function useGetMyProblems<
   TData = Awaited<ReturnType<typeof getMyProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options: {
@@ -186,12 +185,12 @@ export function useGetMyProblems<
         DefinedInitialDataOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMyProblems<
   TData = Awaited<ReturnType<typeof getMyProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
@@ -200,28 +199,28 @@ export function useGetMyProblems<
         UndefinedInitialDataOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMyProblems<
   TData = Awaited<ReturnType<typeof getMyProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetMyProblems<
   TData = Awaited<ReturnType<typeof getMyProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetMyProblemsQueryOptions(params, options);
@@ -237,22 +236,22 @@ export function useGetMyProblems<
 
 export const getGetMyProblemsSuspenseQueryOptions = <
   TData = Awaited<ReturnType<typeof getMyProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetMyProblemsQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyProblems>>> = ({ signal }) =>
-    getMyProblems(params, { signal, ...axiosOptions });
+    getMyProblems(params, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
     Awaited<ReturnType<typeof getMyProblems>>,
@@ -264,55 +263,55 @@ export const getGetMyProblemsSuspenseQueryOptions = <
 export type GetMyProblemsSuspenseQueryResult = NonNullable<
   Awaited<ReturnType<typeof getMyProblems>>
 >;
-export type GetMyProblemsSuspenseQueryError = AxiosError<unknown>;
+export type GetMyProblemsSuspenseQueryError = unknown;
 
 export function useGetMyProblemsSuspense<
   TData = Awaited<ReturnType<typeof getMyProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options: {
     query: Partial<
       UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMyProblemsSuspense<
   TData = Awaited<ReturnType<typeof getMyProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMyProblemsSuspense<
   TData = Awaited<ReturnType<typeof getMyProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetMyProblemsSuspense<
   TData = Awaited<ReturnType<typeof getMyProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetMyProblemsSuspenseQueryOptions(params, options);
@@ -328,22 +327,22 @@ export function useGetMyProblemsSuspense<
 
 export const getGetMyProblemsSuspenseInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getMyProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetMyProblemsQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyProblems>>> = ({ signal }) =>
-    getMyProblems(params, { signal, ...axiosOptions });
+    getMyProblems(params, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getMyProblems>>,
@@ -355,55 +354,55 @@ export const getGetMyProblemsSuspenseInfiniteQueryOptions = <
 export type GetMyProblemsSuspenseInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getMyProblems>>
 >;
-export type GetMyProblemsSuspenseInfiniteQueryError = AxiosError<unknown>;
+export type GetMyProblemsSuspenseInfiniteQueryError = unknown;
 
 export function useGetMyProblemsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMyProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options: {
     query: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMyProblemsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMyProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetMyProblemsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMyProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetMyProblemsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getMyProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetMyProblemsParams,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getMyProblems>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetMyProblemsSuspenseInfiniteQueryOptions(params, options);
@@ -419,9 +418,13 @@ export function useGetMyProblemsSuspenseInfinite<
 }
 
 export const getTodayProblems = (
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<TodayProblemsResponse>> => {
-  return axios.get(`/api/v1/problems/today`, options);
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<TodayProblemsResponse>(
+    { url: `/api/v1/problems/today`, method: 'GET', signal },
+    options,
+  );
 };
 
 export const getGetTodayProblemsQueryKey = () => {
@@ -430,19 +433,19 @@ export const getGetTodayProblemsQueryKey = () => {
 
 export const getGetTodayProblemsInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTodayProblemsQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getTodayProblems>>> = ({ signal }) =>
-    getTodayProblems({ signal, ...axiosOptions });
+    getTodayProblems(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getTodayProblems>>,
@@ -454,11 +457,11 @@ export const getGetTodayProblemsInfiniteQueryOptions = <
 export type GetTodayProblemsInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTodayProblems>>
 >;
-export type GetTodayProblemsInfiniteQueryError = AxiosError<unknown>;
+export type GetTodayProblemsInfiniteQueryError = unknown;
 
 export function useGetTodayProblemsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
@@ -467,11 +470,11 @@ export function useGetTodayProblemsInfinite<
       DefinedInitialDataOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayProblemsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
@@ -480,26 +483,26 @@ export function useGetTodayProblemsInfinite<
       UndefinedInitialDataOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayProblemsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetTodayProblemsInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetTodayProblemsInfiniteQueryOptions(options);
 
@@ -514,17 +517,17 @@ export function useGetTodayProblemsInfinite<
 
 export const getGetTodayProblemsQueryOptions = <
   TData = Awaited<ReturnType<typeof getTodayProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTodayProblemsQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getTodayProblems>>> = ({ signal }) =>
-    getTodayProblems({ signal, ...axiosOptions });
+    getTodayProblems(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getTodayProblems>>,
@@ -534,44 +537,44 @@ export const getGetTodayProblemsQueryOptions = <
 };
 
 export type GetTodayProblemsQueryResult = NonNullable<Awaited<ReturnType<typeof getTodayProblems>>>;
-export type GetTodayProblemsQueryError = AxiosError<unknown>;
+export type GetTodayProblemsQueryError = unknown;
 
 export function useGetTodayProblems<
   TData = Awaited<ReturnType<typeof getTodayProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>> &
     Pick<
       DefinedInitialDataOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayProblems<
   TData = Awaited<ReturnType<typeof getTodayProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>> &
     Pick<
       UndefinedInitialDataOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayProblems<
   TData = Awaited<ReturnType<typeof getTodayProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetTodayProblems<
   TData = Awaited<ReturnType<typeof getTodayProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetTodayProblemsQueryOptions(options);
 
@@ -586,19 +589,19 @@ export function useGetTodayProblems<
 
 export const getGetTodayProblemsSuspenseQueryOptions = <
   TData = Awaited<ReturnType<typeof getTodayProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTodayProblemsQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getTodayProblems>>> = ({ signal }) =>
-    getTodayProblems({ signal, ...axiosOptions });
+    getTodayProblems(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
     Awaited<ReturnType<typeof getTodayProblems>>,
@@ -610,44 +613,44 @@ export const getGetTodayProblemsSuspenseQueryOptions = <
 export type GetTodayProblemsSuspenseQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTodayProblems>>
 >;
-export type GetTodayProblemsSuspenseQueryError = AxiosError<unknown>;
+export type GetTodayProblemsSuspenseQueryError = unknown;
 
 export function useGetTodayProblemsSuspense<
   TData = Awaited<ReturnType<typeof getTodayProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayProblemsSuspense<
   TData = Awaited<ReturnType<typeof getTodayProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayProblemsSuspense<
   TData = Awaited<ReturnType<typeof getTodayProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetTodayProblemsSuspense<
   TData = Awaited<ReturnType<typeof getTodayProblems>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetTodayProblemsSuspenseQueryOptions(options);
 
@@ -662,19 +665,19 @@ export function useGetTodayProblemsSuspense<
 
 export const getGetTodayProblemsSuspenseInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTodayProblemsQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getTodayProblems>>> = ({ signal }) =>
-    getTodayProblems({ signal, ...axiosOptions });
+    getTodayProblems(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getTodayProblems>>,
@@ -686,44 +689,44 @@ export const getGetTodayProblemsSuspenseInfiniteQueryOptions = <
 export type GetTodayProblemsSuspenseInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTodayProblems>>
 >;
-export type GetTodayProblemsSuspenseInfiniteQueryError = AxiosError<unknown>;
+export type GetTodayProblemsSuspenseInfiniteQueryError = unknown;
 
 export function useGetTodayProblemsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayProblemsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayProblemsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetTodayProblemsSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayProblems>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayProblems>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetTodayProblemsSuspenseInfiniteQueryOptions(options);
 
@@ -736,103 +739,3 @@ export function useGetTodayProblemsSuspenseInfinite<
 
   return query;
 }
-
-export const getGetMyProblemsResponseMock = (
-  overrideResponse: Partial<ListProblemResponse> = {},
-): ListProblemResponse => ({
-  problemResponses: Array.from(
-    { length: faker.number.int({ min: 1, max: 10 }) },
-    (_, i) => i + 1,
-  ).map(() => ({
-    problemId: faker.number.int({ min: undefined, max: undefined }),
-    errorRate: faker.number.float(),
-    koreanWord: faker.string.alpha(20),
-    englishDiction: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
-    meaning: faker.string.alpha(20),
-    speechAudioUrl: faker.string.alpha(20),
-    problemSituation: faker.helpers.arrayElement([
-      'INTRODUCTION',
-      'FOOD_ORDER',
-      'GREETINGS',
-      'DAILY',
-    ] as const),
-    problemType: faker.helpers.arrayElement(['WORD', 'SHORT_TEXT', 'LONG_TEXT'] as const),
-  })),
-  ...overrideResponse,
-});
-
-export const getGetTodayProblemsResponseMock = (
-  overrideResponse: Partial<TodayProblemsResponse> = {},
-): TodayProblemsResponse => ({
-  problemResponses: Array.from(
-    { length: faker.number.int({ min: 1, max: 10 }) },
-    (_, i) => i + 1,
-  ).map(() => ({
-    problemId: faker.number.int({ min: undefined, max: undefined }),
-    errorRate: faker.number.float(),
-    koreanWord: faker.string.alpha(20),
-    englishDiction: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
-    meaning: faker.string.alpha(20),
-    speechAudioUrl: faker.string.alpha(20),
-    problemSituation: faker.helpers.arrayElement([
-      'INTRODUCTION',
-      'FOOD_ORDER',
-      'GREETINGS',
-      'DAILY',
-    ] as const),
-    problemType: faker.helpers.arrayElement(['WORD', 'SHORT_TEXT', 'LONG_TEXT'] as const),
-  })),
-  totalTodayProblemCount: faker.number.int({ min: undefined, max: undefined }),
-  attemptedTodayProblemCount: faker.number.int({ min: undefined, max: undefined }),
-  ...overrideResponse,
-});
-
-export const getGetMyProblemsMockHandler = (
-  overrideResponse?:
-    | ListProblemResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<ListProblemResponse> | ListProblemResponse),
-) => {
-  return http.get('*/api/v1/problems', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetMyProblemsResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-
-export const getGetTodayProblemsMockHandler = (
-  overrideResponse?:
-    | TodayProblemsResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<TodayProblemsResponse> | TodayProblemsResponse),
-) => {
-  return http.get('*/api/v1/problems/today', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetTodayProblemsResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-export const getProblemControllerMock = () => [
-  getGetMyProblemsMockHandler(),
-  getGetTodayProblemsMockHandler(),
-];

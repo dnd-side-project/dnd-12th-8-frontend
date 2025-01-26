@@ -4,37 +4,43 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import { faker } from '@faker-js/faker';
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-import { HttpResponse, delay, http } from 'msw';
-import type { RecordVerifyBody, RecordVerifyParams } from '../models';
-import type { RecordValidateResponse } from '../models';
+import { customInstance } from '../../custom-instance';
+import type { RecordValidateResponse, RecordVerifyBody, RecordVerifyParams } from '../../models';
 import type {
   MutationFunction,
   UseMutationOptions,
   UseMutationResult,
 } from '@tanstack/react-query';
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 export const recordVerify = (
   problemId: number,
   recordVerifyBody: RecordVerifyBody,
   params?: RecordVerifyParams,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<RecordValidateResponse>> => {
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
   const formData = new FormData();
   formData.append('recordFile', recordVerifyBody.recordFile);
 
-  return axios.post(`/api/v1/record/verify/${problemId}`, formData, {
-    ...options,
-    params: { ...params, ...options?.params },
-  });
+  return customInstance<RecordValidateResponse>(
+    {
+      url: `/api/v1/record/verify/${problemId}`,
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: formData,
+      params,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getRecordVerifyMutationOptions = <
   TData = Awaited<ReturnType<typeof recordVerify>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -43,14 +49,14 @@ export const getRecordVerifyMutationOptions = <
     { problemId: number; data: RecordVerifyBody; params?: RecordVerifyParams },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
   const mutationKey = ['recordVerify'];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof recordVerify>>,
@@ -58,7 +64,7 @@ export const getRecordVerifyMutationOptions = <
   > = (props) => {
     const { problemId, data, params } = props ?? {};
 
-    return recordVerify(problemId, data, params, axiosOptions);
+    return recordVerify(problemId, data, params, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions } as UseMutationOptions<
@@ -71,11 +77,11 @@ export const getRecordVerifyMutationOptions = <
 
 export type RecordVerifyMutationResult = NonNullable<Awaited<ReturnType<typeof recordVerify>>>;
 export type RecordVerifyMutationBody = RecordVerifyBody;
-export type RecordVerifyMutationError = AxiosError<unknown>;
+export type RecordVerifyMutationError = unknown;
 
 export const useRecordVerify = <
   TData = Awaited<ReturnType<typeof recordVerify>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -84,7 +90,7 @@ export const useRecordVerify = <
     { problemId: number; data: RecordVerifyBody; params?: RecordVerifyParams },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<
   TData,
   TError,
@@ -95,38 +101,3 @@ export const useRecordVerify = <
 
   return useMutation(mutationOptions);
 };
-
-export const getRecordVerifyResponseMock = (
-  overrideResponse: Partial<RecordValidateResponse> = {},
-): RecordValidateResponse => ({
-  correctAnswerList: Array.from(
-    { length: faker.number.int({ min: 1, max: 10 }) },
-    (_, i) => i + 1,
-  ).map(() => faker.string.alpha(20)),
-  speechRecognitionResult: faker.string.alpha(20),
-  ...overrideResponse,
-});
-
-export const getRecordVerifyMockHandler = (
-  overrideResponse?:
-    | RecordValidateResponse
-    | ((
-        info: Parameters<Parameters<typeof http.post>[1]>[0],
-      ) => Promise<RecordValidateResponse> | RecordValidateResponse),
-) => {
-  return http.post('*/api/v1/record/verify/:problemId', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getRecordVerifyResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-export const getRecordControllerMock = () => [getRecordVerifyMockHandler()];

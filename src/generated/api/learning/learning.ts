@@ -4,7 +4,6 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import { faker } from '@faker-js/faker';
 import {
   useInfiniteQuery,
   useMutation,
@@ -12,10 +11,14 @@ import {
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from '@tanstack/react-query';
-import axios from 'axios';
-import { HttpResponse, delay, http } from 'msw';
-import type { CreateLearningParams, GetLearningRateParams, LearningUpdateRequest } from '../models';
-import type { LearningInfoResponse, TodayLearningRateResponse } from '../models';
+import { customInstance } from '../../custom-instance';
+import type {
+  CreateLearningParams,
+  GetLearningRateParams,
+  LearningInfoResponse,
+  LearningUpdateRequest,
+  TodayLearningRateResponse,
+} from '../../models';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -37,32 +40,34 @@ import type {
   UseSuspenseQueryOptions,
   UseSuspenseQueryResult,
 } from '@tanstack/react-query';
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+
+type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
 export const createLearning = (
   params: CreateLearningParams,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<void>> => {
-  return axios.post(`/api/v1/learnings`, undefined, {
-    ...options,
-    params: { ...params, ...options?.params },
-  });
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    { url: `/api/v1/learnings`, method: 'POST', params, signal },
+    options,
+  );
 };
 
 export const getCreateLearningMutationOptions = <
   TData = Awaited<ReturnType<typeof createLearning>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { params: CreateLearningParams }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
   const mutationKey = ['createLearning'];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof createLearning>>,
@@ -70,7 +75,7 @@ export const getCreateLearningMutationOptions = <
   > = (props) => {
     const { params } = props ?? {};
 
-    return createLearning(params, axiosOptions);
+    return createLearning(params, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions } as UseMutationOptions<
@@ -83,15 +88,15 @@ export const getCreateLearningMutationOptions = <
 
 export type CreateLearningMutationResult = NonNullable<Awaited<ReturnType<typeof createLearning>>>;
 
-export type CreateLearningMutationError = AxiosError<unknown>;
+export type CreateLearningMutationError = unknown;
 
 export const useCreateLearning = <
   TData = Awaited<ReturnType<typeof createLearning>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<TData, TError, { params: CreateLearningParams }, TContext>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<TData, TError, { params: CreateLearningParams }, TContext> => {
   const mutationOptions = getCreateLearningMutationOptions(options);
 
@@ -100,14 +105,24 @@ export const useCreateLearning = <
 export const updateLearningState = (
   problemId: number,
   learningUpdateRequest: LearningUpdateRequest,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<void>> => {
-  return axios.post(`/api/v1/learnings/${problemId}/state`, learningUpdateRequest, options);
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<void>(
+    {
+      url: `/api/v1/learnings/${problemId}/state`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: learningUpdateRequest,
+      signal,
+    },
+    options,
+  );
 };
 
 export const getUpdateLearningStateMutationOptions = <
   TData = Awaited<ReturnType<typeof updateLearningState>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -116,14 +131,14 @@ export const getUpdateLearningStateMutationOptions = <
     { problemId: number; data: LearningUpdateRequest },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
   const mutationKey = ['updateLearningState'];
-  const { mutation: mutationOptions, axios: axiosOptions } = options
+  const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, axios: undefined };
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof updateLearningState>>,
@@ -131,7 +146,7 @@ export const getUpdateLearningStateMutationOptions = <
   > = (props) => {
     const { problemId, data } = props ?? {};
 
-    return updateLearningState(problemId, data, axiosOptions);
+    return updateLearningState(problemId, data, requestOptions);
   };
 
   return { mutationFn, ...mutationOptions } as UseMutationOptions<
@@ -146,11 +161,11 @@ export type UpdateLearningStateMutationResult = NonNullable<
   Awaited<ReturnType<typeof updateLearningState>>
 >;
 export type UpdateLearningStateMutationBody = LearningUpdateRequest;
-export type UpdateLearningStateMutationError = AxiosError<unknown>;
+export type UpdateLearningStateMutationError = unknown;
 
 export const useUpdateLearningState = <
   TData = Awaited<ReturnType<typeof updateLearningState>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -159,7 +174,7 @@ export const useUpdateLearningState = <
     { problemId: number; data: LearningUpdateRequest },
     TContext
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<
   TData,
   TError,
@@ -172,12 +187,13 @@ export const useUpdateLearningState = <
 };
 export const getLearningRate = (
   params: GetLearningRateParams,
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<number>> => {
-  return axios.get(`/api/v1/learnings/rate`, {
-    ...options,
-    params: { ...params, ...options?.params },
-  });
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<number>(
+    { url: `/api/v1/learnings/rate`, method: 'GET', params, signal },
+    options,
+  );
 };
 
 export const getGetLearningRateQueryKey = (params: GetLearningRateParams) => {
@@ -186,22 +202,22 @@ export const getGetLearningRateQueryKey = (params: GetLearningRateParams) => {
 
 export const getGetLearningRateInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetLearningRateQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getLearningRate>>> = ({ signal }) =>
-    getLearningRate(params, { signal, ...axiosOptions });
+    getLearningRate(params, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getLearningRate>>,
@@ -213,11 +229,11 @@ export const getGetLearningRateInfiniteQueryOptions = <
 export type GetLearningRateInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getLearningRate>>
 >;
-export type GetLearningRateInfiniteQueryError = AxiosError<unknown>;
+export type GetLearningRateInfiniteQueryError = unknown;
 
 export function useGetLearningRateInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options: {
@@ -228,12 +244,12 @@ export function useGetLearningRateInfinite<
         DefinedInitialDataOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningRateInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
@@ -244,32 +260,32 @@ export function useGetLearningRateInfinite<
         UndefinedInitialDataOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningRateInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetLearningRateInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetLearningRateInfiniteQueryOptions(params, options);
@@ -285,20 +301,20 @@ export function useGetLearningRateInfinite<
 
 export const getGetLearningRateQueryOptions = <
   TData = Awaited<ReturnType<typeof getLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetLearningRateQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getLearningRate>>> = ({ signal }) =>
-    getLearningRate(params, { signal, ...axiosOptions });
+    getLearningRate(params, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getLearningRate>>,
@@ -308,11 +324,11 @@ export const getGetLearningRateQueryOptions = <
 };
 
 export type GetLearningRateQueryResult = NonNullable<Awaited<ReturnType<typeof getLearningRate>>>;
-export type GetLearningRateQueryError = AxiosError<unknown>;
+export type GetLearningRateQueryError = unknown;
 
 export function useGetLearningRate<
   TData = Awaited<ReturnType<typeof getLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options: {
@@ -321,12 +337,12 @@ export function useGetLearningRate<
         DefinedInitialDataOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningRate<
   TData = Awaited<ReturnType<typeof getLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
@@ -335,28 +351,28 @@ export function useGetLearningRate<
         UndefinedInitialDataOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>,
         'initialData'
       >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningRate<
   TData = Awaited<ReturnType<typeof getLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetLearningRate<
   TData = Awaited<ReturnType<typeof getLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>>;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetLearningRateQueryOptions(params, options);
@@ -372,22 +388,22 @@ export function useGetLearningRate<
 
 export const getGetLearningRateSuspenseQueryOptions = <
   TData = Awaited<ReturnType<typeof getLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetLearningRateQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getLearningRate>>> = ({ signal }) =>
-    getLearningRate(params, { signal, ...axiosOptions });
+    getLearningRate(params, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
     Awaited<ReturnType<typeof getLearningRate>>,
@@ -399,55 +415,55 @@ export const getGetLearningRateSuspenseQueryOptions = <
 export type GetLearningRateSuspenseQueryResult = NonNullable<
   Awaited<ReturnType<typeof getLearningRate>>
 >;
-export type GetLearningRateSuspenseQueryError = AxiosError<unknown>;
+export type GetLearningRateSuspenseQueryError = unknown;
 
 export function useGetLearningRateSuspense<
   TData = Awaited<ReturnType<typeof getLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options: {
     query: Partial<
       UseSuspenseQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningRateSuspense<
   TData = Awaited<ReturnType<typeof getLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningRateSuspense<
   TData = Awaited<ReturnType<typeof getLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetLearningRateSuspense<
   TData = Awaited<ReturnType<typeof getLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseSuspenseQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetLearningRateSuspenseQueryOptions(params, options);
@@ -463,22 +479,22 @@ export function useGetLearningRateSuspense<
 
 export const getGetLearningRateSuspenseInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetLearningRateQueryKey(params);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getLearningRate>>> = ({ signal }) =>
-    getLearningRate(params, { signal, ...axiosOptions });
+    getLearningRate(params, requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getLearningRate>>,
@@ -490,55 +506,55 @@ export const getGetLearningRateSuspenseInfiniteQueryOptions = <
 export type GetLearningRateSuspenseInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getLearningRate>>
 >;
-export type GetLearningRateSuspenseInfiniteQueryError = AxiosError<unknown>;
+export type GetLearningRateSuspenseInfiniteQueryError = unknown;
 
 export function useGetLearningRateSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options: {
     query: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningRateSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningRateSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetLearningRateSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(
   params: GetLearningRateParams,
   options?: {
     query?: Partial<
       UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningRate>>, TError, TData>
     >;
-    axios?: AxiosRequestConfig;
+    request?: SecondParameter<typeof customInstance>;
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetLearningRateSuspenseInfiniteQueryOptions(params, options);
@@ -554,9 +570,13 @@ export function useGetLearningRateSuspenseInfinite<
 }
 
 export const getTodayLearningRate = (
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<TodayLearningRateResponse>> => {
-  return axios.get(`/api/v1/learnings/rate/today`, options);
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<TodayLearningRateResponse>(
+    { url: `/api/v1/learnings/rate/today`, method: 'GET', signal },
+    options,
+  );
 };
 
 export const getGetTodayLearningRateQueryKey = () => {
@@ -565,19 +585,19 @@ export const getGetTodayLearningRateQueryKey = () => {
 
 export const getGetTodayLearningRateInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTodayLearningRateQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getTodayLearningRate>>> = ({ signal }) =>
-    getTodayLearningRate({ signal, ...axiosOptions });
+    getTodayLearningRate(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getTodayLearningRate>>,
@@ -589,11 +609,11 @@ export const getGetTodayLearningRateInfiniteQueryOptions = <
 export type GetTodayLearningRateInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTodayLearningRate>>
 >;
-export type GetTodayLearningRateInfiniteQueryError = AxiosError<unknown>;
+export type GetTodayLearningRateInfiniteQueryError = unknown;
 
 export function useGetTodayLearningRateInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
@@ -602,11 +622,11 @@ export function useGetTodayLearningRateInfinite<
       DefinedInitialDataOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayLearningRateInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
@@ -615,26 +635,26 @@ export function useGetTodayLearningRateInfinite<
       UndefinedInitialDataOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayLearningRateInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetTodayLearningRateInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetTodayLearningRateInfiniteQueryOptions(options);
 
@@ -649,17 +669,17 @@ export function useGetTodayLearningRateInfinite<
 
 export const getGetTodayLearningRateQueryOptions = <
   TData = Awaited<ReturnType<typeof getTodayLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTodayLearningRateQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getTodayLearningRate>>> = ({ signal }) =>
-    getTodayLearningRate({ signal, ...axiosOptions });
+    getTodayLearningRate(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getTodayLearningRate>>,
@@ -671,22 +691,22 @@ export const getGetTodayLearningRateQueryOptions = <
 export type GetTodayLearningRateQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTodayLearningRate>>
 >;
-export type GetTodayLearningRateQueryError = AxiosError<unknown>;
+export type GetTodayLearningRateQueryError = unknown;
 
 export function useGetTodayLearningRate<
   TData = Awaited<ReturnType<typeof getTodayLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>> &
     Pick<
       DefinedInitialDataOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayLearningRate<
   TData = Awaited<ReturnType<typeof getTodayLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
@@ -695,22 +715,22 @@ export function useGetTodayLearningRate<
       UndefinedInitialDataOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayLearningRate<
   TData = Awaited<ReturnType<typeof getTodayLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetTodayLearningRate<
   TData = Awaited<ReturnType<typeof getTodayLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetTodayLearningRateQueryOptions(options);
 
@@ -725,19 +745,19 @@ export function useGetTodayLearningRate<
 
 export const getGetTodayLearningRateSuspenseQueryOptions = <
   TData = Awaited<ReturnType<typeof getTodayLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTodayLearningRateQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getTodayLearningRate>>> = ({ signal }) =>
-    getTodayLearningRate({ signal, ...axiosOptions });
+    getTodayLearningRate(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
     Awaited<ReturnType<typeof getTodayLearningRate>>,
@@ -749,44 +769,44 @@ export const getGetTodayLearningRateSuspenseQueryOptions = <
 export type GetTodayLearningRateSuspenseQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTodayLearningRate>>
 >;
-export type GetTodayLearningRateSuspenseQueryError = AxiosError<unknown>;
+export type GetTodayLearningRateSuspenseQueryError = unknown;
 
 export function useGetTodayLearningRateSuspense<
   TData = Awaited<ReturnType<typeof getTodayLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayLearningRateSuspense<
   TData = Awaited<ReturnType<typeof getTodayLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayLearningRateSuspense<
   TData = Awaited<ReturnType<typeof getTodayLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetTodayLearningRateSuspense<
   TData = Awaited<ReturnType<typeof getTodayLearningRate>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetTodayLearningRateSuspenseQueryOptions(options);
 
@@ -801,19 +821,19 @@ export function useGetTodayLearningRateSuspense<
 
 export const getGetTodayLearningRateSuspenseInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetTodayLearningRateQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getTodayLearningRate>>> = ({ signal }) =>
-    getTodayLearningRate({ signal, ...axiosOptions });
+    getTodayLearningRate(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getTodayLearningRate>>,
@@ -825,44 +845,44 @@ export const getGetTodayLearningRateSuspenseInfiniteQueryOptions = <
 export type GetTodayLearningRateSuspenseInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getTodayLearningRate>>
 >;
-export type GetTodayLearningRateSuspenseInfiniteQueryError = AxiosError<unknown>;
+export type GetTodayLearningRateSuspenseInfiniteQueryError = unknown;
 
 export function useGetTodayLearningRateSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayLearningRateSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetTodayLearningRateSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetTodayLearningRateSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getTodayLearningRate>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getTodayLearningRate>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetTodayLearningRateSuspenseInfiniteQueryOptions(options);
 
@@ -877,9 +897,13 @@ export function useGetTodayLearningRateSuspenseInfinite<
 }
 
 export const getLearningInfo = (
-  options?: AxiosRequestConfig,
-): Promise<AxiosResponse<LearningInfoResponse>> => {
-  return axios.get(`/api/v1/learnings/info`, options);
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<LearningInfoResponse>(
+    { url: `/api/v1/learnings/info`, method: 'GET', signal },
+    options,
+  );
 };
 
 export const getGetLearningInfoQueryKey = () => {
@@ -888,19 +912,19 @@ export const getGetLearningInfoQueryKey = () => {
 
 export const getGetLearningInfoInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningInfo>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetLearningInfoQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getLearningInfo>>> = ({ signal }) =>
-    getLearningInfo({ signal, ...axiosOptions });
+    getLearningInfo(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getLearningInfo>>,
@@ -912,11 +936,11 @@ export const getGetLearningInfoInfiniteQueryOptions = <
 export type GetLearningInfoInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getLearningInfo>>
 >;
-export type GetLearningInfoInfiniteQueryError = AxiosError<unknown>;
+export type GetLearningInfoInfiniteQueryError = unknown;
 
 export function useGetLearningInfoInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningInfo>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
@@ -925,11 +949,11 @@ export function useGetLearningInfoInfinite<
       DefinedInitialDataOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningInfoInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningInfo>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
@@ -938,26 +962,26 @@ export function useGetLearningInfoInfinite<
       UndefinedInitialDataOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningInfoInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningInfo>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetLearningInfoInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningInfo>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetLearningInfoInfiniteQueryOptions(options);
 
@@ -972,17 +996,17 @@ export function useGetLearningInfoInfinite<
 
 export const getGetLearningInfoQueryOptions = <
   TData = Awaited<ReturnType<typeof getLearningInfo>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetLearningInfoQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getLearningInfo>>> = ({ signal }) =>
-    getLearningInfo({ signal, ...axiosOptions });
+    getLearningInfo(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getLearningInfo>>,
@@ -992,44 +1016,44 @@ export const getGetLearningInfoQueryOptions = <
 };
 
 export type GetLearningInfoQueryResult = NonNullable<Awaited<ReturnType<typeof getLearningInfo>>>;
-export type GetLearningInfoQueryError = AxiosError<unknown>;
+export type GetLearningInfoQueryError = unknown;
 
 export function useGetLearningInfo<
   TData = Awaited<ReturnType<typeof getLearningInfo>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>> &
     Pick<
       DefinedInitialDataOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningInfo<
   TData = Awaited<ReturnType<typeof getLearningInfo>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>> &
     Pick<
       UndefinedInitialDataOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>,
       'initialData'
     >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningInfo<
   TData = Awaited<ReturnType<typeof getLearningInfo>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetLearningInfo<
   TData = Awaited<ReturnType<typeof getLearningInfo>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>>;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetLearningInfoQueryOptions(options);
 
@@ -1044,19 +1068,19 @@ export function useGetLearningInfo<
 
 export const getGetLearningInfoSuspenseQueryOptions = <
   TData = Awaited<ReturnType<typeof getLearningInfo>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetLearningInfoQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getLearningInfo>>> = ({ signal }) =>
-    getLearningInfo({ signal, ...axiosOptions });
+    getLearningInfo(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
     Awaited<ReturnType<typeof getLearningInfo>>,
@@ -1068,44 +1092,44 @@ export const getGetLearningInfoSuspenseQueryOptions = <
 export type GetLearningInfoSuspenseQueryResult = NonNullable<
   Awaited<ReturnType<typeof getLearningInfo>>
 >;
-export type GetLearningInfoSuspenseQueryError = AxiosError<unknown>;
+export type GetLearningInfoSuspenseQueryError = unknown;
 
 export function useGetLearningInfoSuspense<
   TData = Awaited<ReturnType<typeof getLearningInfo>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningInfoSuspense<
   TData = Awaited<ReturnType<typeof getLearningInfo>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningInfoSuspense<
   TData = Awaited<ReturnType<typeof getLearningInfo>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetLearningInfoSuspense<
   TData = Awaited<ReturnType<typeof getLearningInfo>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetLearningInfoSuspenseQueryOptions(options);
 
@@ -1120,19 +1144,19 @@ export function useGetLearningInfoSuspense<
 
 export const getGetLearningInfoSuspenseInfiniteQueryOptions = <
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningInfo>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, axios: axiosOptions } = options ?? {};
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey = queryOptions?.queryKey ?? getGetLearningInfoQueryKey();
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof getLearningInfo>>> = ({ signal }) =>
-    getLearningInfo({ signal, ...axiosOptions });
+    getLearningInfo(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
     Awaited<ReturnType<typeof getLearningInfo>>,
@@ -1144,44 +1168,44 @@ export const getGetLearningInfoSuspenseInfiniteQueryOptions = <
 export type GetLearningInfoSuspenseInfiniteQueryResult = NonNullable<
   Awaited<ReturnType<typeof getLearningInfo>>
 >;
-export type GetLearningInfoSuspenseInfiniteQueryError = AxiosError<unknown>;
+export type GetLearningInfoSuspenseInfiniteQueryError = unknown;
 
 export function useGetLearningInfoSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningInfo>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options: {
   query: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningInfoSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningInfo>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 export function useGetLearningInfoSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningInfo>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
 export function useGetLearningInfoSuspenseInfinite<
   TData = InfiniteData<Awaited<ReturnType<typeof getLearningInfo>>>,
-  TError = AxiosError<unknown>,
+  TError = unknown,
 >(options?: {
   query?: Partial<
     UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getLearningInfo>>, TError, TData>
   >;
-  axios?: AxiosRequestConfig;
+  request?: SecondParameter<typeof customInstance>;
 }): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetLearningInfoSuspenseInfiniteQueryOptions(options);
 
@@ -1194,126 +1218,3 @@ export function useGetLearningInfoSuspenseInfinite<
 
   return query;
 }
-
-export const getGetLearningRateResponseMock = (): number => faker.number.int();
-
-export const getGetTodayLearningRateResponseMock = (
-  overrideResponse: Partial<TodayLearningRateResponse> = {},
-): TodayLearningRateResponse => ({
-  todayProblemTotalCount: faker.number.int({ min: undefined, max: undefined }),
-  attemptedTodayProblemCount: faker.number.int({ min: undefined, max: undefined }),
-  todayLearningRate: faker.number.float(),
-  ...overrideResponse,
-});
-
-export const getGetLearningInfoResponseMock = (
-  overrideResponse: Partial<LearningInfoResponse> = {},
-): LearningInfoResponse => ({
-  correctRate: faker.number.float(),
-  rankRate: faker.number.float(),
-  ranking: faker.number.int({ min: undefined, max: undefined }),
-  attendance: faker.number.float(),
-  ...overrideResponse,
-});
-
-export const getCreateLearningMockHandler = (
-  overrideResponse?:
-    | void
-    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
-) => {
-  return http.post('*/api/v1/learnings', async (info) => {
-    await delay(1000);
-    if (typeof overrideResponse === 'function') {
-      await overrideResponse(info);
-    }
-    return new HttpResponse(null, { status: 200 });
-  });
-};
-
-export const getUpdateLearningStateMockHandler = (
-  overrideResponse?:
-    | void
-    | ((info: Parameters<Parameters<typeof http.post>[1]>[0]) => Promise<void> | void),
-) => {
-  return http.post('*/api/v1/learnings/:problemId/state', async (info) => {
-    await delay(1000);
-    if (typeof overrideResponse === 'function') {
-      await overrideResponse(info);
-    }
-    return new HttpResponse(null, { status: 200 });
-  });
-};
-
-export const getGetLearningRateMockHandler = (
-  overrideResponse?:
-    | number
-    | ((info: Parameters<Parameters<typeof http.get>[1]>[0]) => Promise<number> | number),
-) => {
-  return http.get('*/api/v1/learnings/rate', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetLearningRateResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-
-export const getGetTodayLearningRateMockHandler = (
-  overrideResponse?:
-    | TodayLearningRateResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<TodayLearningRateResponse> | TodayLearningRateResponse),
-) => {
-  return http.get('*/api/v1/learnings/rate/today', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetTodayLearningRateResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-
-export const getGetLearningInfoMockHandler = (
-  overrideResponse?:
-    | LearningInfoResponse
-    | ((
-        info: Parameters<Parameters<typeof http.get>[1]>[0],
-      ) => Promise<LearningInfoResponse> | LearningInfoResponse),
-) => {
-  return http.get('*/api/v1/learnings/info', async (info) => {
-    await delay(1000);
-
-    return new HttpResponse(
-      JSON.stringify(
-        overrideResponse !== undefined
-          ? typeof overrideResponse === 'function'
-            ? await overrideResponse(info)
-            : overrideResponse
-          : getGetLearningInfoResponseMock(),
-      ),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
-    );
-  });
-};
-export const getLearningMock = () => [
-  getCreateLearningMockHandler(),
-  getUpdateLearningStateMockHandler(),
-  getGetLearningRateMockHandler(),
-  getGetTodayLearningRateMockHandler(),
-  getGetLearningInfoMockHandler(),
-];

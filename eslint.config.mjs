@@ -29,6 +29,7 @@ const config = [
       parser: tsParser,
       parserOptions: {
         project: './tsconfig.json',
+        tsconfigRootDir: __dirname,
       },
     },
     plugins: {

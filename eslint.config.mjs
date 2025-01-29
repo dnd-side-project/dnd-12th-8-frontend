@@ -18,7 +18,7 @@ const compat = new FlatCompat({
 
 const config = [
   {
-    ignores: ['dist', 'node_modules', '.next'],
+    ignores: ['dist', 'node_modules', '.next', '.storybook'],
   },
   ...compat.extends('next/core-web-vitals', 'plugin:storybook/recommended'),
   {

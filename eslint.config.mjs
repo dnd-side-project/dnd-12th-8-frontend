@@ -18,7 +18,7 @@ const compat = new FlatCompat({
 
 const config = [
   {
-    ignores: ['dist', 'node_modules', '.next'],
+    ignores: ['dist', 'node_modules', '.next', '.storybook'],
   },
   ...compat.extends('next/core-web-vitals', 'plugin:storybook/recommended'),
   {
@@ -60,7 +60,17 @@ const config = [
 
       /* React */
       'react/react-in-jsx-scope': 'off', // React를 import 하지 않아도 됨
-      'no-restricted-imports': ['warn', { name: 'react' }], // react import 제한
+      'no-restricted-imports': [
+        'warn',
+        {
+          paths: [
+            {
+              name: 'react',
+              importNames: ['default'],
+            },
+          ],
+        },
+      ],
       'react/jsx-props-no-spreading': 'off', // props spreading 허용 (...props)
       'react-hooks/rules-of-hooks': 'error', // Hooks 규칙 강제
       'react-hooks/exhaustive-deps': 'warn', // useEffect의 의존성 배열 검사
@@ -103,7 +113,7 @@ const config = [
       ],
 
       // JSX Accessibility
-      'jsx-a11y/click-events-have-key-events': 'warn', // 클릭 이벤트가 있는 요소는 키보드 이벤트도 필요 (접근성)
+      //'jsx-a11y/click-events-have-key-events': 'warn', // 클릭 이벤트가 있는 요소는 키보드 이벤트도 필요 (접근성)
       'jsx-a11y/no-static-element-interactions': 'warn', // div 등의 일반 요소에 이벤트 핸들러 사용 시 경고
 
       // General

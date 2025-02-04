@@ -9,6 +9,7 @@ const Home = () => {
         <div className="flex flex-col gap-4">
           <Button href="test">테스트 페이지로 이동</Button>
           <Button href="api/hello">API 테스트</Button>
+          <Button href="test-taeryong">태룡 테스트</Button>
         </div>
 
         <div className="mt-8 space-y-4">

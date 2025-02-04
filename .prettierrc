@@ -12,5 +12,6 @@
   "proseWrap": "preserve",
   "jsxSingleQuote": false,
   "embeddedLanguageFormatting": "auto",
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "plugins": ["prettier-plugin-tailwindcss"],
+  "tailwindStylesheet": "./src/styles/globals.css"
 }

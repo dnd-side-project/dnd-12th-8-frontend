@@ -1,0 +1,40 @@
+name: React S3 Deployment
+
+on:
+  push:
+    branches: ['develop', 'main']
+
+jobs:
+  buildAndDeploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.4.0]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        run: pnpm install
+
+      - name: Build
+        working-directory: ./
+        run: pnpm build
+
+      - name: AWS Setting
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-southeast-2
+
+      - name: Deploy to S3
+        run: aws s3 sync ./build/. s3://98percent

@@ -2,7 +2,11 @@ name: React S3 Deployment
 
 on:
   push:
-    branches: ['develop', 'main']
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
 
 jobs:
   build-and-deploy:
@@ -22,7 +26,7 @@ jobs:
           node-version: 20
           cache: 'pnpm'
           cache-dependency-path: '**/pnpm-lock.yaml'
-    
+
       - name: Install dependencies
         run: pnpm install
 

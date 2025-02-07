@@ -86,4 +86,5 @@
   .font-caption2 {
     @apply text-xs font-normal; /* Caption2 - 12pt Regular */
   }
+  
 }

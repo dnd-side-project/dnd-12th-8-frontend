@@ -6,10 +6,6 @@ on:
     branches:
       - develop
       - main
-  pull_request:
-    branches:
-      - develop
-      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -45,8 +41,8 @@ jobs:
           destination-github-username: Taegon21
           destination-repository-name: dnd-12th-8-frontend
           user-email: ${{ secrets.EMAIL }}
-          commit-message: ${{ github.event_name == 'pull_request' && 'preview-pr-vercel' || github.event.commits[0].message}}
-          target-branch: ${{ github.ref_name }}
+          commit-message: ${{ github.event.commits[0].message}}
+          target-branch: develop
           create-target-branch-if-needed: true
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CheckBox } from './CheckBox';
+import { CheckBox } from '@/components/@shared/checkbox/CheckBox';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

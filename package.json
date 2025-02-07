@@ -37,6 +37,7 @@
     "@storybook/nextjs": "8.6.0-alpha.0",
     "@storybook/react": "8.6.0-alpha.0",
     "@storybook/test": "8.6.0-alpha.0",
+    "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -64,7 +65,7 @@
   "packageManager": "pnpm@9.15.4",
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "next lint --file"
+      "next lint --file --fix"
     ]
   }
 }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Radio } from './Radio';
+import { Radio } from '@/components/@shared/radio/Radio';
 import type { Meta, StoryObj } from '@storybook/react';
 
 const meta = {

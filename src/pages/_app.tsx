@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 import { IBM_Plex_Sans } from 'next/font/google';
 import localFont from 'next/font/local';
+import Layout from '@/components/@shared/layout/Layout';
 import type { AppProps } from 'next/app';
 
 export const pretendard = localFont({
@@ -18,7 +19,9 @@ const ibmPlexSans = IBM_Plex_Sans({
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <main className={`${pretendard.variable} ${ibmPlexSans.variable} font-sans`}>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </main>
   );
 }

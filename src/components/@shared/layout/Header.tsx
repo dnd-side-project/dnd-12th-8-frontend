@@ -11,7 +11,7 @@ function Header() {
   const isLoggedIn = true;
 
   return (
-    <div className="mb-4 flex w-full items-center justify-between py-3 tablet:pt-6 laptop:mb-[58px] laptop:pt-7">
+    <div className="sticky top-0 left-0 z-50 mb-4 flex w-full items-center justify-between bg-gray-900 py-3 tablet:pt-6 laptop:mb-[58px] laptop:pt-7">
       <Link href="/">
         <LogoShortIcon className="laptop:hidden" />
         <LogoFullIcon className="hidden laptop:block" />

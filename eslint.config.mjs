@@ -122,9 +122,6 @@ const config = [
       // 'no-console': ['warn', { allow: ['warn', 'error'] }], // console 사용 경고
       'prefer-const': 'error', // const 사용 강제
       'no-var': 'error', // var 사용 에러 (let, const 사용)
-
-      // Prettier
-      'prettier/prettier': 'error', // prettier 규칙 적용
     },
   },
 ];

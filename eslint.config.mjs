@@ -51,6 +51,8 @@ const config = [
       },
     },
     rules: {
+      'storybook/story-imports': 'off',
+
       /* TypeScript */
       '@typescript-eslint/no-explicit-any': 'warn', // any 타입 사용 시 경고
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }], // 사용하지 않는 변수 에러 (단, _로 시작하는 변수는 무시)

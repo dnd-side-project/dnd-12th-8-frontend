@@ -87,8 +87,3 @@
     @apply text-xs font-normal; /* Caption2 - 12pt Regular */
   }
 }
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}

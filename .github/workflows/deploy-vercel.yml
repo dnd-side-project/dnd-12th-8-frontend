@@ -42,7 +42,7 @@ jobs:
           destination-github-username: Taegon21
           destination-repository-name: dnd-12th-8-frontend
           user-email: ${{ secrets.EMAIL }}
-          commit-message: 'Preview deployment'
+          commit-message: ${{ github.event_name == 'pull_request' && 'preview-pr' || github.event.commits[0].message}}
           target-branch: ${{ github.ref_name }}
           create-target-branch-if-needed: true
       - name: Test get variable exported by push-to-another-repository

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import CheckBox from '@/components/common/CheckBox';
-import Radio from '@/components/common/Radio';
+import CheckBox from '@/components/@shared/checkbox/CheckBox';
+import Radio from '@/components/@shared/radio/Radio';
 
 export default function TestTaeryong() {
   const [selectedRadio, setSelectedRadio] = useState('option1');

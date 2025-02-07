@@ -23,8 +23,11 @@ const Home = () => {
         </div>
       </div>
 
-      <Button size="sm" color="primary">
-        버튼
+      <Button size="icon-sm" color="primary">
+        <Icon icon={AlertTriangleIcon} />
+      </Button>
+      <Button variant="lined" disabled>
+        hi
       </Button>
       <div className="h-30 w-20 bg-red-500">
         <Icon icon={AlertTriangleIcon} />

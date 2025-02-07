@@ -46,7 +46,7 @@ jobs:
           destination-repository-name: dnd-12th-8-frontend
           user-email: ${{ secrets.EMAIL }}
           commit-message: ${{ github.event_name == 'pull_request' && 'preview-pr-vercel' || github.event.commits[0].message}}
-          target-branch: ${{ github.ref_name }}
+          target-branch: develop
           create-target-branch-if-needed: true
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY

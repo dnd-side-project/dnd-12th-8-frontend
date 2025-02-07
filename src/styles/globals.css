@@ -49,46 +49,48 @@
   --color-gray-900: #151515;
 
   /* 브레이크포인트 */
-  --breakpoint-tablet: 36rem; /* 576px 이상 */
-  --breakpoint-desktop: 64rem; /* 1024px 이상 */
-  --breakpoint-wide: 90rem; /* 1440px 이상 */
+  --breakpoint-tablet: 30rem; /* 480px 이상 */
+  --breakpoint-laptop: 64rem; /* 1024px 이상 */
+  --breakpoint-desktop: 90rem; /* 1440px 이상 */
 }
 
-@layer base {
-  .font-headline {
-    @apply text-4xl font-bold; /* Headline - 36pt Bold */
-  }
+@utility font-headline {
+  @apply text-4xl leading-[140%] font-bold; /* Headline - 36pt Bold */
+}
 
-  .font-title {
-    @apply text-2xl font-semibold; /* Title - 24pt SemiBold */
-  }
+@utility font-title {
+  @apply text-2xl leading-[140%] font-semibold; /* Title - 24pt SemiBold */
+}
 
-  .font-subtitle {
-    @apply text-xl font-semibold; /* SubTitle - 20pt SemiBold */
-  }
+@utility font-subtitle {
+  @apply text-xl leading-[140%] font-semibold; /* SubTitle - 20pt SemiBold */
+}
 
-  .font-body1 {
-    @apply text-xl font-medium; /* Body1 - 20pt Medium */
-  }
+@utility font-body1 {
+  @apply text-xl leading-[140%] font-medium; /* Body1 - 20pt Medium */
+}
 
-  .font-body2 {
-    @apply text-lg font-medium; /* Body2 - 18pt Medium */
-  }
+@utility font-body2 {
+  @apply text-lg leading-[140%] font-medium; /* Body2 - 18pt Medium */
+}
 
-  .font-body3 {
-    @apply text-base font-normal; /* Body3 - 16pt Regular */
-  }
+@utility font-body3 {
+  @apply text-base leading-[140%] font-normal; /* Body3 - 16pt Regular */
+}
 
-  .font-caption1 {
-    @apply text-sm font-normal; /* Caption1 - 14pt Regular */
-  }
+@utility font-caption1 {
+  @apply text-sm leading-[140%] font-normal; /* Caption1 - 14pt Regular */
+}
 
-  .font-caption2 {
-    @apply text-xs font-normal; /* Caption2 - 12pt Regular */
-  }
+@utility font-caption2 {
+  @apply text-xs leading-[140%] font-normal; /* Caption2 - 12pt Regular */
 }
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+button {
+  cursor: pointer;
 }

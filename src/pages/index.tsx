@@ -5,7 +5,7 @@ import { Icon } from '@/components/@shared/icons/Icon';
 
 const Home = () => {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-8">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-gray-0">
       <div className="flex flex-col items-center gap-8 text-center">
         <h1 className="mb-8 text-2xl font-bold">메인 페이지</h1>
 

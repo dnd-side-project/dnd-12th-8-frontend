@@ -18,7 +18,7 @@ const buttonVariants = cva(`flex items-center justify-center rounded-md`, {
       primary: `bg-purple-500 text-gray-0 disabled:bg-gray-400 disabled:text-gray-200`,
       white: `bg-gray-0 text-purple-500 disabled:bg-gray-200 disabled:text-gray-400`,
       gray: `bg-gray-600 text-gray-50 disabled:bg-gray-700 disabled:text-gray-300`,
-      lined: `border-[1.5px] border-gray-600 text-gray-0 disabled:text-gray-200`,
+      lined: `border-[1px] border-gray-600 text-gray-0 disabled:text-gray-200`,
     },
   },
 });

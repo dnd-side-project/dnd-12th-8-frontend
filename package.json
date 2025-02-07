@@ -65,7 +65,7 @@
   "packageManager": "pnpm@9.15.4",
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
-      "next lint --file"
+      "next lint --file --fix"
     ]
   }
 }

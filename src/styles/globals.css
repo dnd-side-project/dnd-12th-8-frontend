@@ -55,35 +55,48 @@
 }
 
 @utility font-headline {
-  @apply text-4xl leading-[140%] font-bold; /* Headline - 36pt Bold */
+  @apply text-[28px] leading-[140%] font-bold lg:text-4xl;
 }
 
-@utility font-title {
-  @apply text-2xl leading-[140%] font-semibold; /* Title - 24pt SemiBold */
+@utility font-title1 {
+  @apply text-2xl leading-[140%] font-semibold lg:text-[28px];
+}
+
+@utility font-title2 {
+  @apply text-[22px] leading-[140%] font-semibold lg:text-2xl;
 }
 
 @utility font-subtitle {
-  @apply text-xl leading-[140%] font-semibold; /* SubTitle - 20pt SemiBold */
+  @apply text-xl leading-[140%] font-semibold lg:text-[22px];
 }
 
 @utility font-body1 {
-  @apply text-xl leading-[140%] font-medium; /* Body1 - 20pt Medium */
+  @apply text-lg leading-[140%] font-medium lg:text-xl;
+}
+@utility font-body1-regular {
+  @apply text-lg leading-[140%] font-normal lg:text-xl;
 }
 
 @utility font-body2 {
-  @apply text-lg leading-[140%] font-medium; /* Body2 - 18pt Medium */
+  @apply text-base leading-[140%] font-medium lg:text-lg;
+}
+@utility font-body2-regular {
+  @apply text-base leading-[140%] font-normal lg:text-lg;
 }
 
 @utility font-body3 {
-  @apply text-base leading-[140%] font-normal; /* Body3 - 16pt Regular */
+  @apply text-sm leading-[140%] font-medium lg:text-base;
+}
+@utility font-body3-regular {
+  @apply text-sm leading-[140%] font-normal lg:text-base;
 }
 
 @utility font-caption1 {
-  @apply text-sm leading-[140%] font-normal; /* Caption1 - 14pt Regular */
+  @apply text-xs leading-[140%] font-normal lg:text-sm;
 }
 
 @utility font-caption2 {
-  @apply text-xs leading-[140%] font-normal; /* Caption2 - 12pt Regular */
+  @apply text-xs leading-[140%] font-normal lg:text-xs;
 }
 
 body {

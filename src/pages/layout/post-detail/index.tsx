@@ -29,7 +29,7 @@ const PostDetailTest = () => {
           <CommonLayout height="h-[332px]" backgroundColor="bg-gray-400" title="comment" />
         </div>
         {/* 같은 카테고리의 글 */}
-        <div className="mb-6 font-title text-white">같은 카테고리의 글</div>
+        <div className="mb-6 font-title1 text-white">같은 카테고리의 글</div>
         <div className="grid grid-cols-1 gap-5 pb-15 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4">
           {[...Array(8)].map((_, i) => (
             <PostCardLayout key={i + 1} item={i + 1} />

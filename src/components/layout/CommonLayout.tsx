@@ -17,7 +17,7 @@ export default function CommonLayout({
     <div
       className={cn('flex w-full items-center justify-center', height, backgroundColor, className)}
     >
-      <h1 className="font-title text-white">{title}</h1>
+      <h1 className="font-title1 text-white">{title}</h1>
     </div>
   );
 }

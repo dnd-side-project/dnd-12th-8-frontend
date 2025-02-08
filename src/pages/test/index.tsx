@@ -65,7 +65,7 @@ export default function Test() {
       <section className="space-y-4 text-center">
         <h1 className="font-ibm font-headline text-purple-500">Headline IMB TEXT - 36pt Bold</h1>
         <h1 className="font-headline text-purple-500">Headline - 36pt Bold</h1>
-        <h2 className="font-title text-purple-400">Title - 24pt SemiBold</h2>
+        <h2 className="font-title1 text-purple-400">Title - 28pt SemiBold</h2>
         <h3 className="font-subtitle text-purple-300">Subtitle - 20pt SemiBold</h3>
         <p className="font-body1 text-gray-900">Body1 - 20pt Medium</p>
         <p className="font-body2 text-gray-800">Body2 - 18pt Medium</p>

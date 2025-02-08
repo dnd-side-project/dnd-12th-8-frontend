@@ -86,3 +86,6 @@
   @apply text-xs leading-[140%] font-normal; /* Caption2 - 12pt Regular */
 }
 
+body {
+  background: var(--color-gray-900);
+}

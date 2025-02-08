@@ -63,7 +63,7 @@ export default function Test() {
     <div className="mx-auto max-w-7xl space-y-8 p-8">
       {/* 타이포그래피 테스트 */}
       <section className="space-y-4 text-center">
-        <h1 className="font-headline font-ibm text-purple-500">Headline IMB TEXT - 36pt Bold</h1>
+        <h1 className="font-ibm font-headline text-purple-500">Headline IMB TEXT - 36pt Bold</h1>
         <h1 className="font-headline text-purple-500">Headline - 36pt Bold</h1>
         <h2 className="font-title text-purple-400">Title - 24pt SemiBold</h2>
         <h3 className="font-subtitle text-purple-300">Subtitle - 20pt SemiBold</h3>
@@ -77,7 +77,7 @@ export default function Test() {
       {/* 색상 팔레트 */}
       {palettes.map((palette, index) => (
         <section key={index} className="space-y-2">
-          <h2 className="font-headline mb-4 text-center">{palette.name}</h2>
+          <h2 className="mb-4 text-center font-headline">{palette.name}</h2>
           <div
             className={cn('grid', {
               'grid-cols-10': palette.name === 'Purple Palette',

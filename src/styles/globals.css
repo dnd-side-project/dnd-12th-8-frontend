@@ -54,35 +54,57 @@
   --breakpoint-desktop: 90rem; /* 1440px 이상 */
 }
 
+/* Headline - Bold */
 @utility font-headline {
-  @apply text-4xl leading-[140%] font-bold; /* Headline - 36pt Bold */
+  @apply text-[28px] leading-[140%] font-bold laptop:text-[36px];
 }
 
-@utility font-title {
-  @apply text-2xl leading-[140%] font-semibold; /* Title - 24pt SemiBold */
+/* Title1 - SemiBold */
+@utility font-title1 {
+  @apply text-[24px] leading-[140%] font-semibold laptop:text-[28px];
 }
 
+/* Title2 - SemiBold */
+@utility font-title2 {
+  @apply text-[22px] leading-[140%] font-semibold laptop:text-[24px];
+}
+
+/* SubTitle - SemiBold */
 @utility font-subtitle {
-  @apply text-xl leading-[140%] font-semibold; /* SubTitle - 20pt SemiBold */
+  @apply text-[20px] leading-[140%] font-semibold laptop:text-[22px];
 }
 
+/* Body1 - Medium */
 @utility font-body1 {
-  @apply text-xl leading-[140%] font-medium; /* Body1 - 20pt Medium */
+  @apply text-[18px] leading-[140%] font-medium laptop:text-[20px];
 }
 
+/* Body2 - Medium */
 @utility font-body2 {
-  @apply text-lg leading-[140%] font-medium; /* Body2 - 18pt Medium */
+  @apply text-[16px] leading-[140%] font-medium laptop:text-[18px];
 }
 
+/* Body2 - Regular */
+@utility font-body2-regular {
+  @apply text-[16px] leading-[140%] font-normal laptop:text-[18px];
+}
+
+/* Body3 - Medium */
 @utility font-body3 {
-  @apply text-base leading-[140%] font-normal; /* Body3 - 16pt Regular */
+  @apply text-[14px] leading-[140%] font-medium laptop:text-[16px];
 }
 
+/* Body3 - Regular */
+@utility font-body3-regular {
+  @apply text-[14px] leading-[140%] font-normal laptop:text-[16px];
+}
+
+/* Caption1 - Regular */
 @utility font-caption1 {
-  @apply text-sm leading-[140%] font-normal; /* Caption1 - 14pt Regular */
+  @apply text-[12px] leading-[140%] font-normal laptop:text-[14px];
 }
 
+/* Caption2 - Regular */
 @utility font-caption2 {
-  @apply text-xs leading-[140%] font-normal; /* Caption2 - 12pt Regular */
+  @apply text-[12px] leading-[140%] font-normal;
 }
-

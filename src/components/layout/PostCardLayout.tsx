@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export default function PostCardLayout({ item }: { item: number }) {
   return (
-    <div className="wide:bg-purple-400 h-70 overflow-hidden rounded-lg bg-red-400 shadow-md transition-colors duration-300 tablet:bg-blue-400 desktop:bg-green-400">
+    <div className="h-70 overflow-hidden rounded-lg bg-red-400 shadow-md transition-colors duration-300 tablet:bg-blue-400 laptop:bg-green-400 desktop:bg-purple-400">
       <div className="relative h-48 overflow-hidden">
         <Image
           src={`https://picsum.photos/id/${item + 50}/200/300`}

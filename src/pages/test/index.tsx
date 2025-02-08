@@ -63,15 +63,18 @@ export default function Test() {
     <div className="mx-auto max-w-7xl space-y-8 p-8">
       {/* 타이포그래피 테스트 */}
       <section className="space-y-4 text-center">
-        <h1 className="font-headline font-ibm text-purple-500">Headline IMB TEXT - 36pt Bold</h1>
-        <h1 className="font-headline text-purple-500">Headline - 36pt Bold</h1>
-        <h2 className="font-title text-purple-400">Title - 24pt SemiBold</h2>
-        <h3 className="font-subtitle text-purple-300">Subtitle - 20pt SemiBold</h3>
-        <p className="font-body1 text-gray-900">Body1 - 20pt Medium</p>
-        <p className="font-body2 text-gray-800">Body2 - 18pt Medium</p>
-        <p className="font-body3 text-gray-700">Body3 - 16pt Regular</p>
-        <p className="font-caption1 text-gray-600">Caption1 - 14pt Regular</p>
-        <p className="font-caption2 text-gray-500">Caption2 - 12pt Regular</p>
+        <h1 className="font-ibm font-headline text-purple-900">Headline IMB TEXT - 36pt Bold</h1>
+        <h1 className="font-headline text-purple-900">Headline - 28px/36px Bold</h1>
+        <h2 className="font-title1 text-purple-800">Title1 - 24px/28px SemiBold</h2>
+        <h2 className="font-title2 text-purple-700">Title2 - 22px/24px SemiBold</h2>
+        <h3 className="font-subtitle text-purple-600">Subtitle - 20px/22px SemiBold</h3>
+        <p className="font-body1 text-purple-500">Body1 - 18px/20px Medium</p>
+        <p className="font-body2 text-purple-400">Body2 - 16px/18px Medium</p>
+        <p className="font-body2-regular text-purple-400">Body2 - 16px/18px Regular</p>
+        <p className="font-body3 text-purple-300">Body3 - 14px/16px Medium</p>
+        <p className="font-body3-regular text-purple-300">Body3 - 14px/16px Regular</p>
+        <p className="font-caption1 text-purple-200">Caption1 - 12px/14px Regular</p>
+        <p className="font-caption2 text-purple-100">Caption2 - 12px Regular</p>
       </section>
 
       {/* 색상 팔레트 */}

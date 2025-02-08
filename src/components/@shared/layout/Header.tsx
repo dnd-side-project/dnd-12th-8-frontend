@@ -29,7 +29,7 @@ function Header() {
             <Icon icon={AlarmIcon} className="h-5 w-5 tablet:h-7 tablet:w-7" />
           </button>
           <div className="relative h-8 w-8 overflow-hidden rounded-full tablet:h-12 tablet:w-12">
-            <Image src={profileImage} alt="profile" fill objectFit="cover" />
+            <Image src={profileImage} alt="profile" fill style={{ objectFit: 'cover' }} />
           </div>
         </div>
       ) : (

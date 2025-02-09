@@ -108,3 +108,15 @@
 @utility font-caption2 {
   @apply text-[12px] leading-[140%] font-normal;
 }
+
+@layer base {
+  button {
+    cursor: pointer;
+  }
+
+  input {
+    &:focus {
+      outline: none;
+    }
+  }
+}

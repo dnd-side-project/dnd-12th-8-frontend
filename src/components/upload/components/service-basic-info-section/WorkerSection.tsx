@@ -28,7 +28,7 @@ function WorkerSection() {
       <input
         type="email"
         placeholder="사용자 이메일을 입력해주세요."
-        className="rounded-[10px] bg-gray-700 px-4.5 py-3 text-gray-0 placeholder:font-body3-regular placeholder:text-gray-200"
+        className="rounded-[10px] bg-gray-700 px-4.5 py-3 text-gray-50 placeholder:font-body3-regular placeholder:text-gray-200"
       />
     </div>
   );

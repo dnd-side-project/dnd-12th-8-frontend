@@ -6,7 +6,7 @@ function PreQuizQuestion() {
       <input
         type="text"
         placeholder="질문을 입력해주세요"
-        className="font-body2 text-gray-0 placeholder:text-gray-200"
+        className="font-body2 text-gray-50 placeholder:text-gray-200"
       />
       <div className="grid grid-cols-1 gap-3 desktop:grid-cols-2">
         <PreQuizOption />

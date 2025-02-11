@@ -71,7 +71,7 @@ const CHIP_TYPE_MAP = {
 
 function UploadChip({ type }: UploadChipProps) {
   return (
-    <div className="flex h-[80px] w-[80px] flex-col items-center justify-center gap-1 rounded-full bg-gray-700 text-gray-0 desktop:h-[118px] desktop:w-[118px] desktop:gap-2">
+    <div className="flex h-[80px] w-[80px] flex-col items-center justify-center gap-1 rounded-full bg-gray-700 text-gray-50 desktop:h-[118px] desktop:w-[118px] desktop:gap-2">
       <Icon icon={CHIP_TYPE_MAP[type].icon} />
       <span className="font-caption2 desktop:font-body3-regular">{CHIP_TYPE_MAP[type].label}</span>
     </div>

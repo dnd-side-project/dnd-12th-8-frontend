@@ -7,11 +7,11 @@ interface RadioProps {
 }
 
 const indicatorVariants = cva(
-  'absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-0',
+  'absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gray-50',
   {
     variants: {
       checked: {
-        true: 'scale-100 bg-gray-0',
+        true: 'scale-100 bg-gray-50',
         false: 'scale-0 bg-transparent',
       },
     },

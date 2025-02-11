@@ -39,7 +39,7 @@ function PreQuizSection() {
       {!preQuiz.length ? (
         <div className="flex items-center justify-between rounded-[20px] bg-gray-800 p-10">
           <div className="flex flex-col gap-2">
-            <p className="font-subtitle text-gray-0">사전퀴즈 만들기</p>
+            <p className="font-subtitle text-gray-50">사전퀴즈 만들기</p>
             <p className="font-body2-regular text-gray-100">
               실제 유저만을 모으고 싶다면 사전퀴즈를 통해 검증 절차를 만들 수 있어요!
             </p>
@@ -51,7 +51,7 @@ function PreQuizSection() {
       ) : (
         <div className="flex flex-col gap-7 rounded-[20px] bg-gray-800 px-6 py-10">
           <div className="flex items-center justify-between">
-            <p className="font-title2 text-gray-0">사전퀴즈</p>
+            <p className="font-title2 text-gray-50">사전퀴즈</p>
             <button onClick={handleDeletePreQuiz}>
               <Icon icon={CloseIcon} />
             </button>

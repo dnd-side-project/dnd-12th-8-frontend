@@ -14,7 +14,7 @@ function ThumbnailSection() {
       ) : (
         <div className="flex flex-col items-center gap-4.5">
           <UploadChip type="image" />
-          <p className="font-subtitle text-gray-0">
+          <p className="font-subtitle text-gray-50">
             썸네일을 등록해주세요
             <span className="text-red-500">&nbsp;*</span>
           </p>

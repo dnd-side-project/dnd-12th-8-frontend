@@ -27,7 +27,7 @@ function WorkerCard({ isEditable = false, data }: WorkerCardProps) {
         </div>
         <div className="flex gap-4 tablet:flex-col tablet:gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-body2 text-gray-0">{name}</span>
+            <span className="font-body2 text-gray-50">{name}</span>
             {isAuthor && <span className="font-caption1 text-gray-200">작성자</span>}
           </div>
           <div className="flex items-center gap-2">

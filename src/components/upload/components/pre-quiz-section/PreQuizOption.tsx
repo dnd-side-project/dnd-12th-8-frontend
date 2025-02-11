@@ -7,7 +7,7 @@ function PreQuizOption() {
         type="text"
         placeholder="입력하세요."
         maxLength={20}
-        className="flex-1 font-body3-regular text-gray-0 placeholder:text-gray-200"
+        className="flex-1 font-body3-regular text-gray-50 placeholder:text-gray-200"
       />
       <QuestionDefaultIcon />
     </div>

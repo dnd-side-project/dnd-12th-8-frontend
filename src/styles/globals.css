@@ -108,3 +108,7 @@
 @utility font-caption2 {
   @apply text-[12px] leading-[140%] font-normal;
 }
+
+body {
+  background-color: var(--color-gray-900);
+}

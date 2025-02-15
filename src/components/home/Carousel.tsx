@@ -16,6 +16,34 @@ const Carousel = ({ items }: CarouselProps) => {
   const extendedItems = [items[items.length - 1], ...items, items[0]];
   const [currentIndex, setCurrentIndex] = useState(1);
   const [transition, setTransition] = useState(true);
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      goToNext();
+    }
+    if (isRightSwipe) {
+      goToPrevious();
+    }
+  };
 
   const goToPrevious = useCallback(() => {
     setTransition(true);
@@ -44,7 +72,7 @@ const Carousel = ({ items }: CarouselProps) => {
       timeoutId = setTimeout(() => {
         setTransition(false);
         setCurrentIndex(1);
-      }, 300);
+      }, 500);
     }
 
     return () => clearTimeout(timeoutId);
@@ -54,32 +82,41 @@ const Carousel = ({ items }: CarouselProps) => {
     <div className="relative h-[400px] w-full overflow-hidden">
       <button
         onClick={goToPrevious}
-        className="absolute top-1/2 left-12 z-10 -translate-y-1/2 rounded-full bg-gray-500 p-2 shadow-md"
+        className="absolute top-1/2 left-12 z-10 hidden -translate-y-1/2 rounded-full bg-gray-500 p-2 tablet:block"
       >
         <LeftIcon className="h-6 w-6 text-white" />
       </button>
 
       <button
         onClick={goToNext}
-        className="absolute top-1/2 right-12 z-10 -translate-y-1/2 rounded-full bg-gray-500 p-2 shadow-md"
+        className="absolute top-1/2 right-12 z-10 hidden -translate-y-1/2 rounded-full bg-gray-500 p-2 tablet:block"
       >
         <RightIcon className="h-6 w-6 text-white" />
       </button>
 
-      <div className="mx-auto h-full max-w-[70%] overflow-visible">
+      <div
+        className="mx-auto h-full max-w-[90%] overflow-visible tablet:max-w-[70%]"
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         <div
           className={`flex h-full ${transition ? 'transition-transform duration-300' : ''}`}
           style={{
-            transform: `translateX(-${currentIndex * 33.333}%)`,
+            transform: `translateX(-${currentIndex * (100 / 3)}%)`,
             width: '300%',
           }}
         >
           {extendedItems.map((item, index) => (
             <div key={`${item.id}-${index}`} className="relative w-1/3 flex-shrink-0">
               <div
-                className={`relative mx-auto h-full w-[100%] overflow-hidden rounded-2xl ${
+                className={`relative mx-auto h-full overflow-hidden rounded-2xl ${
                   transition ? 'transition-all duration-300' : ''
-                } ${index === currentIndex ? 'scale-100 opacity-100' : 'scale-90 opacity-60'}`}
+                } ${
+                  index === currentIndex
+                    ? 'scale-100 opacity-100'
+                    : 'scale-100 opacity-0 tablet:scale-90 tablet:opacity-60'
+                }`}
               >
                 <Image
                   src={item.imageUrl}

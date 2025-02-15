@@ -1,6 +1,16 @@
 import Image from 'next/image';
 
-export default function PostCardLayout({ item }: { item: number }) {
+export default function PostCardLayout({
+  item,
+  recommendRank,
+  popularRank,
+}: {
+  item: number;
+  recommendRank: number;
+  popularRank: number;
+}) {
+  console.log(recommendRank, popularRank);
+
   return (
     <div className="h-70 overflow-hidden rounded-lg bg-red-400 shadow-md transition-colors duration-300 tablet:bg-blue-400 laptop:bg-green-400 desktop:bg-purple-400">
       <div className="relative h-48 overflow-hidden">

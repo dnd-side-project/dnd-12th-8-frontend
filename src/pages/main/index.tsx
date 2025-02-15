@@ -1,13 +1,26 @@
+import { useRouter } from 'next/router';
 import Carousel from '@/components/home/Carousel';
-import CommonLayout from '@/components/layout/CommonLayout';
-import PostCardLayout from '@/components/layout/PostCardLayout';
+import RenderContent from '@/components/home/RenderContent';
+import TabSection from '@/components/home/TabSection';
+
+const carouselItems = Array.from({ length: 5 }, (_, i) => ({
+  id: i + 1,
+  imageUrl: `https://picsum.photos/id/${i + 50}/1200/400`,
+  title: `슬라이드 ${i + 1}`,
+}));
+
+const postcardItems = Array.from({ length: 15 }, (_, i) => ({
+  id: i + 1,
+  imageUrl: `https://picsum.photos/id/${i + 50}/200/300`,
+  item: i + 1,
+  title: `카드 ${i + 1}`,
+  recommendRank: i + 1,
+  popularRank: 15 - i,
+}));
 
 const MainPage = () => {
-  const carouselItems = Array.from({ length: 5 }, (_, i) => ({
-    id: i + 1,
-    imageUrl: `https://picsum.photos/id/${i + 50}/1200/400`,
-    title: `슬라이드 ${i + 1}`,
-  }));
+  const router = useRouter();
+  const { tab = 'popular' } = router.query;
 
   return (
     <div>
@@ -16,15 +29,9 @@ const MainPage = () => {
           <Carousel items={carouselItems} />
         </div>
       </div>
-      {/* post info */}
-      <CommonLayout height="h-23" backgroundColor="bg-gray-300" title="post info" />
-      <div className="mt-6">
-        <div className="grid grid-cols-1 gap-5 pb-15 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4">
-          {[...Array(15)].map((_, i) => (
-            <PostCardLayout key={i + 1} item={i + 1} />
-          ))}
-        </div>
-      </div>
+
+      <TabSection activeTab={tab as string} />
+      <RenderContent activeTab={tab as string} postcardItems={postcardItems} />
     </div>
   );
 };

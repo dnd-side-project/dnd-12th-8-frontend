@@ -1,14 +1,9 @@
-import PostCardLayout from '@/components/layout/PostCardLayout';
+import PostCard from '@/components/home/PostCard';
+import { PostCardItemSchema } from '@/types/schema';
 
 interface RenderTabContentProps {
   activeTab: string;
-  postcardItems: {
-    id: number;
-    item: number;
-    title: string;
-    recommendRank: number;
-    popularRank: number;
-  }[];
+  postcardItems: PostCardItemSchema[];
 }
 
 const renderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) => {
@@ -21,11 +16,15 @@ const renderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
       return (
         <div className={gridClassName}>
           {postcardItems.map((item) => (
-            <PostCardLayout
+            <PostCard
               key={item.id}
-              item={item.item}
-              recommendRank={item.recommendRank}
-              popularRank={item.popularRank}
+              id={item.id}
+              imageUrl={item.imageUrl}
+              thumbnailUrl={item.thumbnailUrl}
+              title={item.title}
+              point={item.point}
+              target={item.target}
+              questionCount={item.questionCount}
             />
           ))}
         </div>

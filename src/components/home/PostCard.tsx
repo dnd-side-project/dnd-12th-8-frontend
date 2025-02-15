@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { PostCardItemSchema } from '@/types/schema';
 
-export default function PostCardLayout({
+const PostCard = ({
   id,
   imageUrl,
   thumbnailUrl,
@@ -9,7 +9,7 @@ export default function PostCardLayout({
   point,
   target,
   questionCount,
-}: PostCardItemSchema) {
+}: PostCardItemSchema) => {
   console.log(id, imageUrl, thumbnailUrl, title, point, target, questionCount);
   return (
     <div className="h-70 overflow-hidden rounded-lg bg-red-400 shadow-md transition-colors duration-300 tablet:bg-blue-400 laptop:bg-green-400 desktop:bg-purple-400">
@@ -20,4 +20,6 @@ export default function PostCardLayout({
       <h2 className="p-4 text-lg font-bold text-white">{title}</h2>
     </div>
   );
-}
+};
+
+export default PostCard;

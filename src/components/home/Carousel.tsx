@@ -3,13 +3,10 @@ import { useCallback } from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
 import { LeftIcon, RightIcon } from '@/assets/icons';
+import { CarouselItemSchema } from '@/types/schema/main';
 
 interface CarouselProps {
-  items: Array<{
-    imageUrl: string;
-    title: string;
-    id: number;
-  }>;
+  items: CarouselItemSchema[];
 }
 
 const Carousel = ({ items }: CarouselProps) => {

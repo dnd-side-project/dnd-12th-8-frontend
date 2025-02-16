@@ -1,4 +1,4 @@
-import PostCard from '@/components/home/PostCard';
+import PostCard from '@/components/@shared/card/post-card/PostCard';
 import { PostCardItemSchema } from '@/types/schema';
 
 interface RenderTabContentProps {

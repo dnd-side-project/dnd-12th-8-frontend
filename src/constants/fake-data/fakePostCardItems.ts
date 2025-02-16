@@ -2,7 +2,7 @@ export const fakePostCardItems = [
   {
     id: 1,
     imageUrl: 'https://picsum.photos/id/237/200/300',
-    thumbnailUrl: 'https://picsum.photos/id/237/100/100',
+    thumbnailUrl: 'https://picsum.photos/id/217/100/100',
     title: '초등학교 1학년 덧셈과 뺄셈 문제',
     point: 250,
     target: '초등 1학년',
@@ -11,16 +11,16 @@ export const fakePostCardItems = [
   {
     id: 2,
     imageUrl: 'https://picsum.photos/id/238/200/300',
-    thumbnailUrl: 'https://picsum.photos/id/238/100/100',
-    title: '영어 알파벳 대소문자 구별하기',
-    point: 300,
+    thumbnailUrl: 'https://picsum.photos/id/218/100/100',
+    title: '영어 알파벳 대소문자 구별하기 글자수를 넘어가는지 테스트 테스트',
+    point: 200,
     target: '유치원',
     questionCount: 12,
   },
   {
     id: 3,
     imageUrl: 'https://picsum.photos/id/239/200/300',
-    thumbnailUrl: 'https://picsum.photos/id/239/100/100',
+    thumbnailUrl: 'https://picsum.photos/id/219/100/100',
     title: '기초 한자 퀴즈 - 숫자편',
     point: 350,
     target: '초등 전체',
@@ -74,7 +74,7 @@ export const fakePostCardItems = [
   {
     id: 9,
     imageUrl: 'https://picsum.photos/id/211/200/300',
-    thumbnailUrl: 'https://picsum.photos/id/245/100/100',
+    thumbnailUrl: 'https://picsum.photos/id/215/100/100',
     title: '곱셈표 완성하기',
     point: 350,
     target: '초등 2-3학년',
@@ -83,7 +83,7 @@ export const fakePostCardItems = [
   {
     id: 10,
     imageUrl: 'https://picsum.photos/id/232/200/300',
-    thumbnailUrl: 'https://picsum.photos/id/246/100/100',
+    thumbnailUrl: 'https://picsum.photos/id/202/100/100',
     title: '기초 과학 실험 도구 익히기',
     point: 270,
     target: '초등 3-4학년',

@@ -3,6 +3,8 @@ import { useCallback } from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
 import { LeftIcon, RightIcon } from '@/assets/icons';
+import MoneyChip from '@/components/@shared/chip/MoneyChip';
+import RoleChip from '@/components/@shared/chip/RoleChip';
 import { PostCardItemSchema } from '@/types/schema/main';
 
 interface CarouselProps {
@@ -76,7 +78,7 @@ const Carousel = ({ items }: CarouselProps) => {
   }, [currentIndex, extendedItems.length]);
 
   return (
-    <div className="relative h-[400px] w-full overflow-hidden">
+    <div className="relative h-[300px] w-full overflow-hidden tablet:h-[340px] laptop:h-[400px]">
       <button
         onClick={goToPrevious}
         className="absolute top-1/2 left-12 z-10 hidden -translate-y-1/2 rounded-full bg-gray-500 p-2 tablet:block"
@@ -122,11 +124,15 @@ const Carousel = ({ items }: CarouselProps) => {
                   sizes="33vw"
                   className="object-cover"
                 />
-                <div className="absolute top-0 right-0 left-0 bg-gradient-to-b from-black/30 to-transparent p-8">
+                <div className="absolute top-0 right-0 left-0 bg-gradient-to-b from-black/30 to-transparent p-5 tablet:p-8">
                   <h3 className="truncate font-subtitle text-gray-50">{item.title}</h3>
                   <p className="mt-1 font-body2-regular text-gray-50">
                     사전퀴즈 • {item.questionCount}문항
                   </p>
+                </div>
+                <div className="absolute right-0 bottom-0 left-0 flex gap-2 bg-gradient-to-t from-black/30 to-transparent p-5 tablet:p-8">
+                  <MoneyChip amount={item.point} />
+                  <RoleChip variant={item.role} />
                 </div>
               </div>
             </div>

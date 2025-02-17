@@ -7,6 +7,7 @@ export const fakePostCardItems = [
     point: 250,
     target: '초등 1학년',
     questionCount: 8,
+    role: 'all',
   },
   {
     id: 2,
@@ -16,6 +17,7 @@ export const fakePostCardItems = [
     point: 200,
     target: '유치원',
     questionCount: 12,
+    role: 'designer',
   },
   {
     id: 3,
@@ -25,6 +27,7 @@ export const fakePostCardItems = [
     point: 350,
     target: '초등 전체',
     questionCount: 10,
+    role: 'planner',
   },
   {
     id: 4,
@@ -34,6 +37,7 @@ export const fakePostCardItems = [
     point: 200,
     target: '초등 3-4학년',
     questionCount: 6,
+    role: 'developer',
   },
   {
     id: 5,
@@ -43,6 +47,7 @@ export const fakePostCardItems = [
     point: 400,
     target: '초등 5-6학년',
     questionCount: 15,
+    role: 'all',
   },
   {
     id: 6,
@@ -52,6 +57,7 @@ export const fakePostCardItems = [
     point: 280,
     target: '초등 2학년',
     questionCount: 9,
+    role: 'all',
   },
   {
     id: 7,
@@ -61,6 +67,7 @@ export const fakePostCardItems = [
     point: 320,
     target: '초등 3학년',
     questionCount: 8,
+    role: 'developer',
   },
   {
     id: 8,
@@ -70,6 +77,7 @@ export const fakePostCardItems = [
     point: 300,
     target: '초등 1-2학년',
     questionCount: 12,
+    role: 'all',
   },
   {
     id: 9,
@@ -79,6 +87,7 @@ export const fakePostCardItems = [
     point: 350,
     target: '초등 2-3학년',
     questionCount: 10,
+    role: 'developer',
   },
   {
     id: 10,
@@ -88,6 +97,7 @@ export const fakePostCardItems = [
     point: 270,
     target: '초등 3-4학년',
     questionCount: 8,
+    role: 'developer',
   },
   {
     id: 11,
@@ -97,5 +107,6 @@ export const fakePostCardItems = [
     point: 380,
     target: '초등 4-5학년',
     questionCount: 14,
+    role: 'developer',
   },
 ];

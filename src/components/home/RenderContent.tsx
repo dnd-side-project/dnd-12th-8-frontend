@@ -25,6 +25,7 @@ const renderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
               point={item.point}
               target={item.target}
               questionCount={item.questionCount}
+              role={item.role}
             />
           ))}
         </div>

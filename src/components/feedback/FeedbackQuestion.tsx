@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import ABTestForm from './@shared/ABTestForm';
 import type { FeedbackQuestion as FeedbackQuestionType } from '@/types/schema/feedback';
 
 interface FeedbackQuestionProps extends FeedbackQuestionType {
@@ -49,42 +49,12 @@ const FeedbackQuestion = ({
 
       case 'AB_TEST':
         return (
-          <div className="grid grid-cols-2 gap-4">
-            <div className="flex flex-col items-center gap-2">
-              <div className="relative h-50 w-50 shrink-0 overflow-hidden rounded-[10px]">
-                <Image
-                  src={abImageAUrl || ''}
-                  alt="A안"
-                  fill
-                  sizes="100px"
-                  className="rounded-lg"
-                />
-              </div>
-              <button
-                className={`rounded-lg px-4 py-2 text-gray-50 ${answer === 'A' ? 'bg-purple-500' : 'bg-gray-700 hover:bg-purple-500'}`}
-                onClick={() => onAnswerChange('A')}
-              >
-                A안 선택
-              </button>
-            </div>
-            <div className="flex flex-col items-center gap-2">
-              <div className="relative h-50 w-50 shrink-0 overflow-hidden rounded-[10px]">
-                <Image
-                  src={abImageBUrl || ''}
-                  alt="A안"
-                  fill
-                  sizes="100px"
-                  className="rounded-lg"
-                />
-              </div>
-              <button
-                className={`rounded-lg px-4 py-2 text-gray-50 ${answer === 'B' ? 'bg-purple-500' : 'bg-gray-700 hover:bg-purple-500'}`}
-                onClick={() => onAnswerChange('B')}
-              >
-                B안 선택
-              </button>
-            </div>
-          </div>
+          <ABTestForm
+            abImageAUrl={abImageAUrl}
+            abImageBUrl={abImageBUrl}
+            answer={answer}
+            onAnswerChange={onAnswerChange}
+          />
         );
 
       case 'MULTIPLE_CHOICE':
@@ -108,8 +78,8 @@ const FeedbackQuestion = ({
   };
 
   return (
-    <div className="flex flex-col gap-6">
-      <h3 className="font-subtitle text-gray-50">{questionText}</h3>
+    <div className="rounded-xl bg-gray-800 px-6 py-10">
+      <h3 className="font-title2 text-gray-50">{questionText}</h3>
       {renderQuestionContent()}
     </div>
   );

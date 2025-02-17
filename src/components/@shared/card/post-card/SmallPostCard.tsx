@@ -18,7 +18,7 @@ const SmallPostCard = ({
   categoryNames,
 }: SmallPostCardProps) => {
   return (
-    <div className="w-full overflow-hidden rounded-[10px]">
+    <div className="w-full overflow-hidden border-b border-gray-600 pb-4">
       <div className="flex gap-2">
         <RoleChip variant={targetJob as RoleVariant} />
         {categoryNames.map((categoryName) => (

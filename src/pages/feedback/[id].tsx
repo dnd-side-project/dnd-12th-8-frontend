@@ -60,7 +60,7 @@ const FeedbackPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-8 p-4 laptop:flex-row">
+      <div className="mx-auto flex flex-col gap-8 p-4 laptop:flex-row">
         <div className="flex-1">
           <div className="mb-8">
             <SmallPostCard
@@ -71,15 +71,12 @@ const FeedbackPage = () => {
             />
           </div>
 
-          <div className="min-h-[500px] rounded-lg bg-gray-800 p-6">
-            <h2 className="font-title1 text-gray-50">{`질문 ${currentStep}`}</h2>
-            <FeedbackQuestion
-              {...currentQuestion}
-              questionId={currentStep}
-              answer={currentAnswer}
-              onAnswerChange={handleAnswerChange}
-            />
-          </div>
+          <FeedbackQuestion
+            {...currentQuestion}
+            questionId={currentStep}
+            answer={currentAnswer}
+            onAnswerChange={handleAnswerChange}
+          />
         </div>
 
         <FeedbackStepController

@@ -59,7 +59,7 @@ const FeedbackPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900">
+    <div className="bg-gray-900">
       <div className="mx-auto flex flex-col gap-8 p-4 laptop:flex-row">
         <div className="flex-1">
           <div className="mb-8">

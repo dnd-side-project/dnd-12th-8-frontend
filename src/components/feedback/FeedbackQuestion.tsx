@@ -1,4 +1,5 @@
-import ABTestForm from './@shared/ABTestForm';
+import ABTestForm from '@/components/feedback/@shared/ABTestForm';
+import LikertScaleForm from '@/components/feedback/@shared/LikertScaleForm';
 import type { FeedbackQuestion as FeedbackQuestionType } from '@/types/schema/feedback';
 
 interface FeedbackQuestionProps extends FeedbackQuestionType {
@@ -21,21 +22,7 @@ const FeedbackQuestion = ({
   const renderQuestionContent = () => {
     switch (questionType) {
       case 'LIKERT_SCALE':
-        return (
-          <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-5 gap-4">
-              {options?.map((option, index) => (
-                <button
-                  key={index}
-                  className={`rounded-lg px-4 py-2 text-gray-50 ${answer === option ? 'bg-purple-500' : 'bg-gray-700 hover:bg-purple-500'}`}
-                  onClick={() => onAnswerChange(option)}
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          </div>
-        );
+        return <LikertScaleForm onSelect={onAnswerChange} />;
 
       case 'SHORT_ANSWER':
         return (

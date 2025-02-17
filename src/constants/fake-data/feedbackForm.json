@@ -31,8 +31,8 @@
         {
           "questionText": "A/B 테스트: 어떤 디자인이 더 좋은가요?",
           "questionType": "AB_TEST",
-          "abImageAUrl": "https://example.com/imageA.png",
-          "abImageBUrl": "https://example.com/imageB.png"
+          "abImageAUrl": "https://picsum.photos/id/238/200/300",
+          "abImageBUrl": "https://picsum.photos/id/239/200/300"
         },
         {
           "questionText": "이 프로젝트가 기능적으로 만족스러운가요?",

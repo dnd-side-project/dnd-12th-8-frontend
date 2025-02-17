@@ -6,16 +6,20 @@ interface FeedbackStepControllerProps {
   currentStep: number;
   totalSteps: number;
   onMoveStep: (step: number) => void;
+  hasCurrentAnswer: boolean;
 }
 
 export default function FeedbackStepController({
   currentStep,
   totalSteps,
   onMoveStep,
+  hasCurrentAnswer,
 }: FeedbackStepControllerProps) {
+  const isLastStep = currentStep === totalSteps;
+
   return (
     <div className="fixed bottom-0 left-0 z-30 w-full border-t-[1px] border-gray-700 bg-gray-900 px-4 py-4 laptop:relative laptop:w-[360px] laptop:border-none">
-      <div className="mx-auto flex w-full items-center justify-between gap-2 laptop:flex-col laptop:items-stretch">
+      <div className="mx-auto flex w-full items-center justify-between gap-2 tablet:max-w-[800px] laptop:flex-col laptop:items-stretch">
         <div className="flex w-auto flex-col gap-2 pr-2 font-subtitle text-gray-50 laptop:hidden">
           {currentStep}/{totalSteps} 문항 완료
           <div className="grid grid-cols-10 gap-2">
@@ -32,12 +36,15 @@ export default function FeedbackStepController({
         </div>
 
         <Button
-          variant="gray"
+          variant="primary"
           size="lg"
           onClick={() => onMoveStep(currentStep + 1)}
-          className="h-[48px] max-w-55 px-4 tablet:max-w-100 laptop:h-[60px]"
+          disabled={!hasCurrentAnswer}
+          className={`h-[48px] max-w-55 px-4 tablet:max-w-100 laptop:h-[60px] ${
+            !hasCurrentAnswer ? 'cursor-not-allowed opacity-50' : ''
+          }`}
         >
-          다음으로
+          {isLastStep ? '제출하기' : '다음으로'}
         </Button>
 
         <Button variant="lined" size="lg" className="hidden px-4 laptop:block laptop:w-auto">

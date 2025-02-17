@@ -47,6 +47,7 @@ jobs:
         with:
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
           token: ${{ secrets.GITHUB_TOKEN }}
+          autoAcceptChanges: true 
 
       - name: Comment PR
         uses: thollander/actions-comment-pull-request@v1

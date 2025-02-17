@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import MoneyChip from '@/components/@shared/chip/MoneyChip';
 import RoleChip from '@/components/@shared/chip/RoleChip';
 import { PostCardItemSchema } from '@/types/schema';
 
@@ -17,7 +18,8 @@ const PostCard = ({
     <div className="h-70 w-full overflow-hidden rounded-[10px]">
       <div className="relative h-55 overflow-hidden rounded-[10px]">
         <Image src={imageUrl} alt={`카드 이미지`} fill sizes="100%" className="object-cover" />
-        <div className="absolute top-0 right-0">
+        <div className="absolute top-3 left-3 flex gap-2">
+          <MoneyChip amount={point} />
           <RoleChip variant={role} />
         </div>
       </div>

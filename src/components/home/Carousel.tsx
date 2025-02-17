@@ -3,10 +3,10 @@ import { useCallback } from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
 import { LeftIcon, RightIcon } from '@/assets/icons';
-import { CarouselItemSchema } from '@/types/schema/main';
+import { PostCardItemSchema } from '@/types/schema/main';
 
 interface CarouselProps {
-  items: CarouselItemSchema[];
+  items: PostCardItemSchema[];
 }
 
 const Carousel = ({ items }: CarouselProps) => {
@@ -122,8 +122,11 @@ const Carousel = ({ items }: CarouselProps) => {
                   sizes="33vw"
                   className="object-cover"
                 />
-                <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/60 to-transparent p-6">
-                  <h3 className="text-xl font-bold text-white">{item.title}</h3>
+                <div className="absolute top-0 right-0 left-0 bg-gradient-to-b from-black/30 to-transparent p-8">
+                  <h3 className="truncate font-subtitle text-gray-50">{item.title}</h3>
+                  <p className="mt-1 font-body2-regular text-gray-50">
+                    사전퀴즈 • {item.questionCount}문항
+                  </p>
                 </div>
               </div>
             </div>

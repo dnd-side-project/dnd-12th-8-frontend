@@ -1,7 +1,9 @@
 import '@/styles/globals.css';
+import { ReactElement, ReactNode } from 'react';
+import { NextPage } from 'next';
 import { IBM_Plex_Sans } from 'next/font/google';
 import localFont from 'next/font/local';
-import Layout from '@/components/@shared/layout/Layout';
+import getPageLayout from '@/components/@shared/layout/Layout';
 import type { AppProps } from 'next/app';
 
 export const pretendard = localFont({
@@ -16,12 +18,20 @@ const ibmPlexSans = IBM_Plex_Sans({
   variable: '--font-ibm-plex-sans',
 });
 
-export default function App({ Component, pageProps }: AppProps) {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function App({ Component, pageProps, router }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => getPageLayout(page, router.pathname));
+
   return (
     <main className={`${pretendard.variable} ${ibmPlexSans.variable} font-sans`}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      {getLayout(<Component {...pageProps} />)}
     </main>
   );
 }

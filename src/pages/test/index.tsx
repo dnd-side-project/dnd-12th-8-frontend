@@ -43,7 +43,6 @@ const palettes = [
   {
     name: 'Gray Palette',
     colors: [
-      { name: '0', class: 'bg-gray-0' },
       { name: '50', class: 'bg-gray-50' },
       { name: '100', class: 'bg-gray-100' },
       { name: '200', class: 'bg-gray-200' },
@@ -80,7 +79,7 @@ export default function Test() {
       {/* 색상 팔레트 */}
       {palettes.map((palette, index) => (
         <section key={index} className="space-y-2">
-          <h2 className="font-headline mb-4 text-center">{palette.name}</h2>
+          <h2 className="mb-4 text-center font-headline">{palette.name}</h2>
           <div
             className={cn('grid', {
               'grid-cols-10': palette.name === 'Purple Palette',

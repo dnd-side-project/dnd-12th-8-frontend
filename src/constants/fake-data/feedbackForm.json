@@ -1,0 +1,45 @@
+{
+  "title": "AI 추천 시스템 프로젝트 AI 추천 시스템 이 프로젝트는 AI 기반 추천 시스템을 개발하는 프로젝트입니다. 이 프로젝트는 AI 기반 추천 시스템을 개발하는 프로젝트입니다. 시스템 이 프로젝트는 AI 기반 추천 시스템을 개발하는 프로젝트입니다. 이 프로젝트는 AI 기반 추천 시스템을 개발하는 프로젝트입니다.",
+  "description": "이 프로젝트는 AI 기반 추천 시스템을 개발하는 프로젝트입니다.",
+  "startDate": "2025-02-10",
+  "dueDate": "2025-03-10",
+  "targetJob": "developer",
+  "targetLevel": "LEARNER",
+  "logoImgUrl": "https://picsum.photos/id/217/100/100",
+  "thumbnailImgUrl": "https://picsum.photos/id/217/100/100",
+  "projectMembers": "김철수, 이영희, 박민수",
+  "categoryIds": [1, 3],
+  "categoryNames": ["웹", "식음료"],
+
+  "quizRequest": {
+    "question": "AI 추천 시스템이 사용하는 주요 알고리즘은?",
+    "options": ["협업 필터링", "콘텐츠 기반 필터링", "하이브리드 필터링", "딥러닝 추천 모델"]
+  },
+
+  "feedbackFormRequests": [
+    {
+      "feedbackQuestions": [
+        {
+          "questionText": "이 프로젝트의 UI는 얼마나 만족스러운가요?",
+          "questionType": "LIKERT_SCALE",
+          "options": ["매우 나쁨", "나쁨", "보통", "좋음", "매우 좋음"]
+        },
+        {
+          "questionText": "어떤 점을 개선하면 좋을까요?",
+          "questionType": "SHORT_ANSWER"
+        },
+        {
+          "questionText": "A/B 테스트: 어떤 디자인이 더 좋은가요?",
+          "questionType": "AB_TEST",
+          "abImageAUrl": "https://example.com/imageA.png",
+          "abImageBUrl": "https://example.com/imageB.png"
+        },
+        {
+          "questionText": "이 프로젝트가 기능적으로 만족스러운가요?",
+          "questionType": "MULTIPLE_CHOICE",
+          "options": ["매우 불만족", "불만족", "보통", "만족", "매우 만족"]
+        }
+      ]
+    }
+  ]
+}

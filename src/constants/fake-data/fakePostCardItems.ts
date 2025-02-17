@@ -1,4 +1,6 @@
-export const fakePostCardItems = [
+import { PostCardItemSchema } from '@/types/schema';
+
+export const fakePostCardItems: PostCardItemSchema[] = [
   {
     id: 1,
     imageUrl: 'https://picsum.photos/id/237/200/300',

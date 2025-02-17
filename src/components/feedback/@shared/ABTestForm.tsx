@@ -25,7 +25,7 @@ const ABTestForm = ({ abImageAUrl, abImageBUrl, answer, onAnswerChange }: ABTest
         {['A', 'B'].map((option) => (
           <div key={option} className="flex w-full flex-col items-center">
             <button
-              className={`my-5 rounded-full px-4 py-2 text-gray-50 ${
+              className={`my-5 rounded-full px-4 py-2 text-gray-50 transition-all duration-250 ${
                 selectedOption === option ? 'bg-purple-500' : 'bg-gray-700'
               }`}
               onClick={() => handleOptionSelect(option)}

@@ -1,5 +1,7 @@
 import ABTestForm from '@/components/feedback/@shared/ABTestForm';
 import LikertScaleForm from '@/components/feedback/@shared/LikertScaleForm';
+import SelectForm from '@/components/feedback/@shared/SelectForm';
+import ShortAnswerForm from '@/components/feedback/@shared/ShortAnswerForm';
 import type { FeedbackQuestion as FeedbackQuestionType } from '@/types/schema/feedback';
 
 interface FeedbackQuestionProps extends FeedbackQuestionType {
@@ -25,14 +27,7 @@ const FeedbackQuestion = ({
         return <LikertScaleForm onSelect={onAnswerChange} />;
 
       case 'SHORT_ANSWER':
-        return (
-          <textarea
-            className="h-32 w-full rounded-lg bg-gray-700 p-4 text-gray-50"
-            placeholder="답변을 입력해주세요"
-            value={(answer as string) || ''}
-            onChange={(e) => onAnswerChange(e.target.value)}
-          />
-        );
+        return <ShortAnswerForm answer={answer} onAnswerChange={onAnswerChange} />;
 
       case 'AB_TEST':
         return (
@@ -45,19 +40,7 @@ const FeedbackQuestion = ({
         );
 
       case 'MULTIPLE_CHOICE':
-        return (
-          <div className="flex flex-col gap-4">
-            {options?.map((option, index) => (
-              <button
-                key={index}
-                className={`w-full rounded-lg px-4 py-2 text-left text-gray-50 ${answer === option ? 'bg-purple-500' : 'bg-gray-700 hover:bg-purple-500'}`}
-                onClick={() => onAnswerChange(option)}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-        );
+        return <SelectForm options={options} answer={answer} onAnswerChange={onAnswerChange} />;
 
       default:
         return null;

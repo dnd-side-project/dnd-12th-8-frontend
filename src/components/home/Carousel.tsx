@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
 import { LeftIcon, RightIcon } from '@/assets/icons';
+import RoleChip from '@/components/@shared/chip/RoleChip';
 import { PostCardItemSchema } from '@/types/schema/main';
 
 interface CarouselProps {
@@ -127,6 +128,9 @@ const Carousel = ({ items }: CarouselProps) => {
                   <p className="mt-1 font-body2-regular text-gray-50">
                     사전퀴즈 • {item.questionCount}문항
                   </p>
+                </div>
+                <div className="absolute right-0 bottom-0 left-0 bg-gradient-to-t from-black/30 to-transparent p-8">
+                  <RoleChip variant={item.role} />
                 </div>
               </div>
             </div>

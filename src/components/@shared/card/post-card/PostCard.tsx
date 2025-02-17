@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import RoleChip from '@/components/@shared/chip/RoleChip';
 import { PostCardItemSchema } from '@/types/schema';
 
 const PostCard = ({
@@ -9,12 +10,16 @@ const PostCard = ({
   point,
   target,
   questionCount,
+  role,
 }: PostCardItemSchema) => {
   console.log(id, point, target, questionCount);
   return (
     <div className="h-70 w-full overflow-hidden rounded-[10px]">
       <div className="relative h-55 overflow-hidden rounded-[10px]">
         <Image src={imageUrl} alt={`카드 이미지`} fill sizes="100%" className="object-cover" />
+        <div className="absolute top-0 right-0">
+          <RoleChip variant={role} />
+        </div>
       </div>
 
       <div className="pt-2">

@@ -1,4 +1,4 @@
-import { UsersIcon } from '@/assets/icons';
+import StatisticsInfoHeader from '@/components/mypage/StatisticsInfoHeader';
 
 interface LikertScaleProps {
   title: string;
@@ -18,17 +18,10 @@ const LikertScale = ({ title, required = false, results }: LikertScaleProps) => 
 
   return (
     <div className="rounded-[10px] bg-gray-800 px-6 py-10">
-      <div className="mb-3 flex items-center gap-1">
-        <h3 className="font-title2 text-gray-50">{title}</h3>
-        {required && <span className="text-red-500">*</span>}
+      <StatisticsInfoHeader title={title} required={required} totalResponses={totalResponses} />
+      <div className="-mt-4 mb-7 font-caption1 text-purple-400">
+        평균 {averageScore.toFixed(1)}점
       </div>
-      <div className="mb-3 flex items-center">
-        <div className="flex items-center gap-2">
-          <UsersIcon className="h-5 w-5 text-gray-300" />
-          <span className="font-caption1 text-gray-300">{totalResponses}명 응답</span>
-        </div>
-      </div>
-      <div className="mb-7 font-caption1 text-purple-400">평균 {averageScore.toFixed(1)}점</div>
 
       <div className="mb-4 flex h-10 w-full overflow-hidden rounded-sm font-body3 tablet:font-body1">
         {percentages.map((percentage, index) => (

@@ -1,8 +1,8 @@
 import Image from 'next/image';
-import { UsersIcon } from '@/assets/icons';
+import TextChip from '@/components/@shared/chip/TextChip';
 import DonutChart from '@/components/mypage/DonutChart';
+import StatisticsInfoHeader from '@/components/mypage/StatisticsInfoHeader';
 import { processChartItems } from '@/utils/svgUtils';
-import TextChip from '../@shared/chip/TextChip';
 
 interface ABTestStatisticsProps {
   title: string;
@@ -34,17 +34,7 @@ const ABTestStatistics = ({
 
   return (
     <div className="rounded-[10px] bg-gray-800 px-6 py-10">
-      <div className="mb-3 flex items-center gap-1">
-        <h3 className="font-title2 text-gray-50">{title}</h3>
-        {required && <span className="text-red-500">*</span>}
-      </div>
-      <div className="mb-7 flex items-center">
-        <div className="flex items-center gap-2">
-          <UsersIcon className="h-5 w-5 text-gray-300" />
-          <span className="font-caption1 text-gray-300">{totalCount}명 응답</span>
-        </div>
-      </div>
-
+      <StatisticsInfoHeader title={title} required={required} totalResponses={totalCount} />
       <div className="flex flex-col items-center gap-8 laptop:flex-row laptop:items-center">
         <div className="flex w-full justify-center laptop:w-auto">
           <DonutChart items={chartItems} isABTest={true} />

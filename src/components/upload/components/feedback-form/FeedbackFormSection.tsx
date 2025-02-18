@@ -15,6 +15,43 @@ interface FeedbackQuestion {
   options?: string[];
 }
 
+const MoveButton = ({ direction, onClick }: { direction: 'up' | 'down'; onClick: () => void }) => (
+  <div className={`${direction === 'up' ? 'mb-4' : 'mt-4'} flex justify-center`}>
+    <Button
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={onClick}
+      variant="gray"
+      size="icon-sm"
+      className="flex items-center justify-center rounded-full py-2"
+    >
+      <Icon icon={direction === 'up' ? ArrowUpIcon : ArrowDownIcon} />
+    </Button>
+  </div>
+);
+
+const QuestionControls = ({
+  onToggleArrows,
+  onDelete,
+}: {
+  onToggleArrows: () => void;
+  onDelete: () => void;
+}) => (
+  <div className="absolute top-4 right-4 flex items-center gap-2">
+    <button
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggleArrows();
+      }}
+      className="rounded-full"
+    >
+      <Icon icon={FilterLinesIcon} className="h-5 w-5" />
+    </button>
+    <button onClick={onDelete} className="rounded-full">
+      <Icon icon={CloseIcon} />
+    </button>
+  </div>
+);
+
 function FeedbackFormSection() {
   const [questions, setQuestions] = useState<FeedbackQuestion[]>([]);
   const [focusedId, setFocusedId] = useState<number | null>(null);
@@ -69,59 +106,38 @@ function FeedbackFormSection() {
       {questions.map((question, index) => (
         <div key={question.id} className="transition-all duration-300 ease-in-out">
           {showArrows === question.id && index > 0 && (
-            <div className="mb-4 flex justify-center transition-all duration-300 ease-in-out">
-              <Button
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => {
-                  handleMoveQuestion(question.id, 'up');
-                  setShowArrows(null);
-                }}
-                variant="gray"
-                size="icon-sm"
-                className="flex items-center justify-center rounded-full py-2"
-              >
-                <Icon icon={ArrowUpIcon} />
-              </Button>
-            </div>
+            <MoveButton
+              direction="up"
+              onClick={() => {
+                handleMoveQuestion(question.id, 'up');
+                setShowArrows(null);
+              }}
+            />
           )}
 
           <section
             role="button"
             className={`relative rounded-[10px] bg-gray-700 p-4 ${
-              focusedId === question.id ? 'border-1 border-white' : ''
+              focusedId === question.id ? 'border-1 border-gray-100' : ''
             }`}
             onClick={() => setFocusedId(question.id)}
-            onBlur={(e) => {
-              const currentTarget = e.currentTarget;
-
-              if (currentTarget && !currentTarget.contains(document.activeElement)) {
-                setFocusedId(null);
-              }
+            onBlur={() => {
+              setFocusedId(null);
               setShowArrows(null);
             }}
             tabIndex={0}
           >
-            <div className="absolute top-4 right-4 flex items-center gap-2">
-              <button
-                className="rounded-full p-1 hover:bg-gray-600"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowArrows(showArrows === question.id ? null : question.id);
-                }}
-              >
-                <Icon icon={FilterLinesIcon} className="h-5 w-5" />
-              </button>
-              <button onClick={() => handleDeleteQuestion(question.id)}>
-                <Icon icon={CloseIcon} />
-              </button>
-            </div>
+            <QuestionControls
+              onToggleArrows={() => setShowArrows(showArrows === question.id ? null : question.id)}
+              onDelete={() => handleDeleteQuestion(question.id)}
+            />
 
             <input
               type="text"
               value={question.question}
               onChange={(e) => handleQuestionChange(question.id, e.target.value)}
               placeholder="질문을 입력해주세요"
-              className="mb-4 w-full font-body2 text-gray-50 placeholder:text-gray-200"
+              className="mb-4 w-full bg-transparent font-body2 text-gray-50 placeholder:text-gray-200 focus:outline-none"
             />
 
             {question.type === 'MULTIPLE_CHOICE' && (
@@ -142,25 +158,17 @@ function FeedbackFormSection() {
           </section>
 
           {showArrows === question.id && index < questions.length - 1 && (
-            <div className="mt-4 flex justify-center transition-all duration-300 ease-in-out">
-              <Button
-                onMouseDown={(e) => e.preventDefault()}
-                onClick={() => {
-                  handleMoveQuestion(question.id, 'down');
-                  setShowArrows(null);
-                }}
-                variant="gray"
-                size="icon-sm"
-                className="flex items-center justify-center rounded-full py-2"
-              >
-                <Icon icon={ArrowDownIcon} />
-              </Button>
-            </div>
+            <MoveButton
+              direction="down"
+              onClick={() => {
+                handleMoveQuestion(question.id, 'down');
+                setShowArrows(null);
+              }}
+            />
           )}
         </div>
       ))}
 
-      {/* 하단 질문 유형 선택기 */}
       <div className="rounded-[20px] bg-gray-800 p-6">
         <QuestionTypeSelector onSelect={handleAddQuestion} />
       </div>

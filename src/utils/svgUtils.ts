@@ -9,11 +9,11 @@ const COLOR_SCHEMES = {
     'var(--color-purple-200)',
   ],
   orange: [
-    'var(--color-orange-100)',
+    'var(--color-orange-500)',
     'var(--color-orange-300)',
+    'var(--color-orange-100)',
     'var(--color-orange-200)',
     'var(--color-orange-400)',
-    'var(--color-orange-500)',
   ],
 };
 

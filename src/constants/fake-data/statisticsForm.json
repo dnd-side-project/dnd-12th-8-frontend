@@ -27,31 +27,25 @@
       "results": [
         {
           "option": "매우 나쁨",
-          "count": 1,
-          "percentage": 4
+          "count": 1
         },
         {
           "option": "나쁨",
-          "count": 3,
-          "percentage": 12
+          "count": 3
         },
         {
           "option": "보통",
-          "count": 8,
-          "percentage": 32
+          "count": 8
         },
         {
           "option": "좋음",
-          "count": 10,
-          "percentage": 40
+          "count": 10
         },
         {
           "option": "매우 좋음",
-          "count": 3,
-          "percentage": 12
+          "count": 3
         }
-      ],
-      "averageScore": 3.44
+      ]
     },
     {
       "questionId": 3,

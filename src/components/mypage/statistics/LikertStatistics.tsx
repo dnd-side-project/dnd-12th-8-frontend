@@ -1,4 +1,4 @@
-import StatisticsInfoHeader from '@/components/mypage/StatisticsInfoHeader';
+import StatisticsInfoHeader from '@/components/mypage/statistics/StatisticsInfoHeader';
 
 interface LikertScaleProps {
   title: string;

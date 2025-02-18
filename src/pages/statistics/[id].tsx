@@ -1,10 +1,10 @@
 import { useRouter } from 'next/router';
 import SmallPostCard from '@/components/@shared/card/post-card/SmallPostCard';
-import ABTestStatistics from '@/components/mypage/ABTestStatistics';
-import LikertStatistics from '@/components/mypage/LikertStatistics';
-import SelectStatistics from '@/components/mypage/SelectStatistics';
-import ShortAnswerStatistics from '@/components/mypage/ShortAnswerStatistics';
-import StatisticsSidebar from '@/components/mypage/StatisticsSidebar';
+import ABTestStatistics from '@/components/mypage/statistics/ABTestStatistics';
+import LikertStatistics from '@/components/mypage/statistics/LikertStatistics';
+import SelectStatistics from '@/components/mypage/statistics/SelectStatistics';
+import ShortAnswerStatistics from '@/components/mypage/statistics/ShortAnswerStatistics';
+import StatisticsSidebar from '@/components/mypage/statistics/StatisticsSidebar';
 
 const statisticsFormHeader = {
   title: 'AI 추천 시스템 프로젝트',

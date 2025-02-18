@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import TextChip from '@/components/@shared/chip/TextChip';
-import DonutChart from '@/components/mypage/DonutChart';
-import StatisticsInfoHeader from '@/components/mypage/StatisticsInfoHeader';
+import DonutChart from '@/components/mypage/statistics/DonutChart';
+import StatisticsInfoHeader from '@/components/mypage/statistics/StatisticsInfoHeader';
 import { processChartItems } from '@/utils/svgUtils';
 
 interface ABTestStatisticsProps {

@@ -20,7 +20,7 @@ const roleTagVariants = cva(
   },
 );
 
-type RoleVariant = 'designer' | 'planner' | 'developer' | 'all';
+export type RoleVariant = 'designer' | 'planner' | 'developer' | 'all';
 
 interface RoleTagProps {
   className?: string;

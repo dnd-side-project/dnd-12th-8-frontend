@@ -20,6 +20,7 @@ import LinkIcon from './link.svg';
 import LogoFullIcon from './logo-full.svg';
 import LogoShortIcon from './logo-short.svg';
 import MessageIcon from './message.svg';
+import PencilIcon from './pencil.svg';
 import PieChartIcon from './pie-chart.svg';
 import PlannerIcon from './planner.svg';
 import PlusIcon from './plus.svg';
@@ -70,4 +71,5 @@ export {
   TextIcon,
   UsersIcon,
   YoutubeIcon,
+  PencilIcon,
 };

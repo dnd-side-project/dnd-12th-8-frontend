@@ -3,25 +3,32 @@ import { cn } from '@/utils/cn';
 
 interface TabSectionProps {
   activeTab: string;
+  isMyPage?: boolean;
 }
 
-const TabSection = ({ activeTab }: TabSectionProps) => {
+const TabSection = ({ activeTab, isMyPage = false }: TabSectionProps) => {
   const tabs = [
     { id: 'popular', label: '인기 Post' },
     { id: 'recommend', label: '추천 Post' },
     { id: 'search', label: '검색' },
-  ] as const;
+  ];
+
+  const myPageTabs = [
+    { id: 'writtenPosts', label: '작성한 Post' },
+    { id: 'likedPosts', label: '좋아요한 Post' },
+    { id: 'writtenReviews', label: '작성한 Review' },
+  ];
 
   return (
     <div>
       {/* Tab Bar */}
       <div className="mb-6 border-b-2 border-gray-600">
         <div className="flex space-x-8">
-          {tabs.map((tab) => (
+          {(isMyPage ? myPageTabs : tabs).map((tab) => (
             <Link
               key={tab.id}
               href={{
-                pathname: '/main',
+                pathname: isMyPage ? '/mypage' : '/main',
                 query: { tab: tab.id },
               }}
               className={cn(

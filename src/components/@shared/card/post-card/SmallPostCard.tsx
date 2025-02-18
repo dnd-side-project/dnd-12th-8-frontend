@@ -4,6 +4,7 @@ import { RightIcon } from '@/assets/icons';
 import Button from '@/components/@shared/button/Button';
 import RoleChip from '@/components/@shared/chip/RoleChip';
 import TextChip from '@/components/@shared/chip/TextChip';
+import { cn } from '@/utils/cn';
 
 type RoleVariant = 'developer' | 'designer' | 'planner' | 'all';
 
@@ -13,6 +14,7 @@ interface SmallPostCardProps {
   thumbnailImgUrl: string;
   categoryNames: string[];
   moveToDetail?: string;
+  isMyPage?: boolean;
 }
 
 const SmallPostCard = ({
@@ -21,9 +23,15 @@ const SmallPostCard = ({
   thumbnailImgUrl,
   categoryNames,
   moveToDetail,
+  isMyPage,
 }: SmallPostCardProps) => {
   return (
-    <div className="w-full overflow-hidden border-b border-gray-600 pb-4">
+    <div
+      className={cn(
+        'w-full overflow-hidden pb-4',
+        isMyPage ? 'rounded-[10px] bg-gray-800 pt-5 pb-7 px-5' : 'border-b border-gray-600',
+      )}
+    >
       <div className="flex gap-2">
         <RoleChip variant={targetJob as RoleVariant} />
         {categoryNames.map((categoryName) => (
@@ -42,7 +50,14 @@ const SmallPostCard = ({
           />
         </div>
         <div className="min-w-0 flex-1 flex-col pl-4">
-          <h3 className="line-clamp-2 font-title1 text-gray-50">{title}</h3>
+          <h3
+            className={cn(
+              'line-clamp-2 font-title2 text-gray-50',
+              isMyPage ? 'font-body2' : 'font-title2',
+            )}
+          >
+            {title}
+          </h3>
         </div>
       </div>
 

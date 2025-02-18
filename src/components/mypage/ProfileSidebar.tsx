@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { CoinsStackedIcon, FileIcon, HeartIcon, PencilIcon } from '@/assets/icons';
+import Button from '@/components/@shared/button/Button';
 import RoleChip, { RoleVariant } from '@/components/@shared/chip/RoleChip';
 
 interface ProfileSidebarProps {
@@ -54,19 +55,19 @@ const ProfileSidebar = ({
     ];
 
     const InfoItem = ({ icon, label, value }: InfoItemProps) => (
-      <div className="flex flex-col gap-1 rounded-[10px] bg-gray-700 p-4">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-col gap-1 rounded-[10px] bg-gray-700 p-4 laptop:flex-row laptop:justify-between laptop:bg-transparent laptop:p-1">
+        <div className="flex items-center gap-2 font-body3">
           {icon}
           <span className="text-gray-200">{label}</span>
         </div>
         <div className="flex justify-end">
-          <span className="font-subtitle text-gray-50">{value}</span>
+          <span className="font-subtitle text-gray-50 laptop:font-body3">{value}</span>
         </div>
       </div>
     );
 
     return (
-      <div className="laptop:grid-row mt-10 grid grid-cols-2 gap-3 rounded-[10px] font-body3 text-gray-50 sm:grid-cols-4">
+      <div className="mt-8 grid grid-cols-2 gap-3 rounded-[10px] font-body3 text-gray-50 sm:grid-cols-4 laptop:flex laptop:flex-col laptop:gap-2">
         {items.map((item, index) => (
           <InfoItem key={index} {...item} />
         ))}
@@ -95,29 +96,28 @@ const ProfileSidebar = ({
     );
   };
 
-  // const onClickLogout = () => {
-  //   console.log('로그아웃하기');
-  // };
+  const onClickLogout = () => {
+    console.log('로그아웃하기');
+  };
 
   return (
-    <div className="z-30 w-full rounded-[10px] bg-gray-800 px-5 pt-9 pb-6 laptop:sticky laptop:top-30 laptop:h-fit laptop:w-[360px] laptop:border-none">
-      <div className="mx-auto w-full flex-col items-stretch justify-between gap-2 tablet:max-w-[800px] laptop:flex">
+    <div className="z-30 w-full laptop:sticky laptop:top-30 laptop:h-fit laptop:w-[360px] laptop:border-none desktop:w-[400px]">
+      <div className="mx-auto w-full flex-col items-stretch justify-between gap-2 rounded-[10px] bg-gray-800 px-5 pt-9 pb-6 tablet:max-w-[800px] laptop:flex">
         <div className="flex-1">{sidebarHeader()}</div>
         <div className="flex-1">{sidebarInfo()}</div>
         <div className="flex flex-row gap-4 laptop:flex-col laptop:gap-2">
           {/* <button className="w-full rounded-lg bg-gray-700 py-3 text-white">
             내 정보 수정하기
           </button> */}
-
-          {/* <Button
-            variant="lined"
-            size="lg"
-            className="h-[48px] max-w-55 px-4 font-body2 tablet:max-w-100 laptop:h-[60px]"
-            onClick={onClickLogout}
-          >
-            로그아웃하기
-          </Button> */}
         </div>
+        <Button
+          variant="lined"
+          size="lg"
+          className="mt-4 hidden max-w-55 px-4 font-body2 tablet:max-w-100 laptop:block laptop:h-[60px]"
+          onClick={onClickLogout}
+        >
+          로그아웃하기
+        </Button>
       </div>
     </div>
   );

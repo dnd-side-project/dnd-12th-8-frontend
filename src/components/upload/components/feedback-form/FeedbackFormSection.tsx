@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CloseIcon, ArrowUpIcon, ArrowDownIcon } from '@/assets/icons';
+import { CloseIcon, ArrowUpIcon, ArrowDownIcon, FilterLinesIcon } from '@/assets/icons';
 import Button from '@/components/@shared/button/Button';
 import { Icon } from '@/components/@shared/icons/Icon';
 import ABTestForm from './ABTestForm';
@@ -18,16 +18,20 @@ interface FeedbackQuestion {
 function FeedbackFormSection() {
   const [questions, setQuestions] = useState<FeedbackQuestion[]>([]);
   const [focusedId, setFocusedId] = useState<number | null>(null);
+  const [lastId, setLastId] = useState(0);
+  const [showArrows, setShowArrows] = useState<number | null>(null);
 
   const handleQuestionChange = (id: number, value: string) => {
     setQuestions(questions.map((q) => (q.id === id ? { ...q, question: value } : q)));
   };
 
   const handleAddQuestion = (type: QuestionType) => {
+    const newId = lastId + 1;
+    setLastId(newId);
     setQuestions([
       ...questions,
       {
-        id: questions.length + 1,
+        id: newId,
         type,
         question: '',
         options: type === 'MULTIPLE_CHOICE' ? [''] : undefined,
@@ -55,22 +59,23 @@ function FeedbackFormSection() {
       newQuestions[currentIndex],
     ];
 
-    const updatedQuestions = newQuestions.map((q, index) => ({
-      ...q,
-      id: index + 1,
-    }));
-
-    setQuestions(updatedQuestions);
+    setQuestions(newQuestions);
+    console.log(questions);
+    setFocusedId(null);
   };
 
   return (
     <div className="flex flex-col gap-6">
       {questions.map((question, index) => (
-        <div key={`question-${question.id}-${index}`}>
-          {index > 0 && focusedId === question.id && (
-            <div className="mb-4 flex justify-center">
+        <div key={question.id} className="transition-all duration-300 ease-in-out">
+          {showArrows === question.id && index > 0 && (
+            <div className="mb-4 flex justify-center transition-all duration-300 ease-in-out">
               <Button
-                onClick={() => handleMoveQuestion(question.id, 'up')}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  handleMoveQuestion(question.id, 'up');
+                  setShowArrows(null);
+                }}
                 variant="gray"
                 size="icon-sm"
                 className="flex items-center justify-center rounded-full py-2"
@@ -85,20 +90,27 @@ function FeedbackFormSection() {
             className={`relative rounded-[10px] bg-gray-700 p-4 ${
               focusedId === question.id ? 'border-1 border-white' : ''
             }`}
-            onFocus={() => setFocusedId(question.id)}
+            onClick={() => setFocusedId(question.id)}
             onBlur={(e) => {
-              if (!e.currentTarget.contains(e.relatedTarget)) {
+              const currentTarget = e.currentTarget;
+
+              if (currentTarget && !currentTarget.contains(document.activeElement)) {
                 setFocusedId(null);
               }
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                setFocusedId(question.id);
-              }
+              setShowArrows(null);
             }}
             tabIndex={0}
           >
-            <div className="absolute top-4 right-4">
+            <div className="absolute top-4 right-4 flex items-center gap-2">
+              <button
+                className="rounded-full p-1 hover:bg-gray-600"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowArrows(showArrows === question.id ? null : question.id);
+                }}
+              >
+                <Icon icon={FilterLinesIcon} className="h-5 w-5" />
+              </button>
               <button onClick={() => handleDeleteQuestion(question.id)}>
                 <Icon icon={CloseIcon} />
               </button>
@@ -129,10 +141,14 @@ function FeedbackFormSection() {
             {question.type === 'AB_TEST' && <ABTestForm />}
           </section>
 
-          {index < questions.length - 1 && focusedId === question.id && (
-            <div className="mt-4 flex justify-center">
+          {showArrows === question.id && index < questions.length - 1 && (
+            <div className="mt-4 flex justify-center transition-all duration-300 ease-in-out">
               <Button
-                onClick={() => handleMoveQuestion(question.id, 'down')}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => {
+                  handleMoveQuestion(question.id, 'down');
+                  setShowArrows(null);
+                }}
                 variant="gray"
                 size="icon-sm"
                 className="flex items-center justify-center rounded-full py-2"

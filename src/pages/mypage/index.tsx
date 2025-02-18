@@ -1,4 +1,6 @@
+import { useRouter } from 'next/router';
 import SmallPostCard from '@/components/@shared/card/post-card/SmallPostCard';
+import TabSection from '@/components/home/TabSection';
 import ProfileSidebar from '@/components/mypage/ProfileSidebar';
 import feedbackFormRequests from '@/constants/fake-data/feedbackForm.json';
 
@@ -15,18 +17,26 @@ const profileSidebarInfo = {
 };
 
 const MyPage = () => {
+  const router = useRouter();
+  const { tab = 'writtenPosts' } = router.query;
+
   return (
     <div className="mx-auto flex flex-col gap-8 pb-55 laptop:flex-row laptop:pb-10">
       <ProfileSidebar {...profileSidebarInfo} />
       <div className="flex-1">
         <div className="mb-8">
+          <TabSection activeTab={tab as string} isMyPage />
           <div className="flex flex-col gap-8">
-            <SmallPostCard
-              title={feedbackFormRequests.title}
-              targetJob={feedbackFormRequests.targetJob}
-              thumbnailImgUrl={feedbackFormRequests.thumbnailImgUrl}
-              categoryNames={feedbackFormRequests.categoryNames}
-            />
+            {[...Array(10)].map((_, index) => (
+              <SmallPostCard
+                key={index}
+                title={feedbackFormRequests.title}
+                targetJob={feedbackFormRequests.targetJob}
+                thumbnailImgUrl={feedbackFormRequests.thumbnailImgUrl}
+                categoryNames={feedbackFormRequests.categoryNames}
+                isMyPage
+              />
+            ))}
           </div>
         </div>
       </div>

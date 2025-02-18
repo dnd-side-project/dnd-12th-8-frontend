@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import SmallPostCard from '@/components/@shared/card/post-card/SmallPostCard';
+import SelectStatistics from '@/components/mypage/SelectStatistics';
 import StatisticsSidebar from '@/components/mypage/StatisticsSidebar';
 
 const statisticsFormHeader = {
@@ -16,6 +17,20 @@ const sidebarInfo = {
   dueDate: '25.03.13',
 };
 
+const statisticsData = {
+  title: '객관식 질문',
+  required: true,
+  items: [
+    { label: 'A', value: 5 },
+    { label: 'B', value: 6 },
+    { label: 'D', value: 8 },
+    { label: 'E', value: 9 },
+    { label: 'F', value: 10 },
+  ],
+};
+
+// 컴포넌트에서 사용
+
 const StatisticsPage = () => {
   const router = useRouter();
   const { id } = router.query;
@@ -30,7 +45,7 @@ const StatisticsPage = () => {
   };
 
   return (
-    <div className="mx-auto flex flex-col gap-8 p-4 laptop:flex-row">
+    <div className="mx-auto flex flex-col gap-8 p-4 laptop:flex-row pb-55">
       <div className="flex-1">
         <div className="mb-8">
           <SmallPostCard
@@ -40,6 +55,7 @@ const StatisticsPage = () => {
             categoryNames={statisticsFormHeader.categoryNames}
           />
         </div>
+        <SelectStatistics {...statisticsData} />
       </div>
       <StatisticsSidebar
         onClickDelete={onClickDelete}

@@ -18,7 +18,7 @@ const sidebarInfo = {
 };
 
 const statisticsData = {
-  title: '객관식 질문',
+  title: '질문 예시입니다..!',
   required: true,
   items: [
     { label: 'A', value: 5 },
@@ -45,7 +45,7 @@ const StatisticsPage = () => {
   };
 
   return (
-    <div className="mx-auto flex flex-col gap-8 p-4 laptop:flex-row pb-55">
+    <div className="mx-auto flex flex-col gap-8 p-4 pb-55 laptop:flex-row">
       <div className="flex-1">
         <div className="mb-8">
           <SmallPostCard
@@ -53,6 +53,7 @@ const StatisticsPage = () => {
             targetJob={statisticsFormHeader.targetJob}
             thumbnailImgUrl={statisticsFormHeader.thumbnailImgUrl}
             categoryNames={statisticsFormHeader.categoryNames}
+            moveToDetail={`/projects/${id}`}
           />
         </div>
         <SelectStatistics {...statisticsData} />

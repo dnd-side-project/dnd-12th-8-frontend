@@ -30,7 +30,7 @@ const SelectStatistics = ({
   const totalCount = processedItems.reduce((acc, item) => acc + item.value, 0);
 
   return (
-    <div>
+    <div className="rounded-[10px] bg-gray-800 px-6 py-10">
       <div className="mb-3 flex items-center gap-1">
         <h3 className="font-title2 text-gray-50">{title}</h3>
         {required && <span className="text-red-500">*</span>}

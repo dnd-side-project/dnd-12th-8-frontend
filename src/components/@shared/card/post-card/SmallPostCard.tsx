@@ -1,4 +1,7 @@
 import Image from 'next/image';
+import Link from 'next/link';
+import { RightIcon } from '@/assets/icons';
+import Button from '@/components/@shared/button/Button';
 import RoleChip from '@/components/@shared/chip/RoleChip';
 import TextChip from '@/components/@shared/chip/TextChip';
 
@@ -9,6 +12,7 @@ interface SmallPostCardProps {
   targetJob: string;
   thumbnailImgUrl: string;
   categoryNames: string[];
+  moveToDetail?: string;
 }
 
 const SmallPostCard = ({
@@ -16,6 +20,7 @@ const SmallPostCard = ({
   targetJob,
   thumbnailImgUrl,
   categoryNames,
+  moveToDetail,
 }: SmallPostCardProps) => {
   return (
     <div className="w-full overflow-hidden border-b border-gray-600 pb-4">
@@ -40,6 +45,21 @@ const SmallPostCard = ({
           <h3 className="line-clamp-2 font-title1 text-gray-50">{title}</h3>
         </div>
       </div>
+
+      {moveToDetail && (
+        <div className="flex justify-end">
+          <Link href={moveToDetail as string}>
+            <Button
+              variant="lined"
+              size="sm"
+              className="h-[40px] w-[180px] gap-2 rounded-full pl-2"
+            >
+              프로젝트 상세보기
+              <RightIcon className="h-5 w-5 text-gray-50" />
+            </Button>
+          </Link>
+        </div>
+      )}
     </div>
   );
 };

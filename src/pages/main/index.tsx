@@ -1,8 +1,8 @@
 import { useRouter } from 'next/router';
 import Header from '@/components/@shared/layout/Header';
+import TabSection from '@/components/@shared/tab/TabSection';
 import Carousel from '@/components/home/Carousel';
 import RenderContent from '@/components/home/RenderContent';
-import TabSection from '@/components/home/TabSection';
 import { fakePostCardItems } from '@/constants/fake-data/fakePostCardItems';
 
 const MainPage = () => {

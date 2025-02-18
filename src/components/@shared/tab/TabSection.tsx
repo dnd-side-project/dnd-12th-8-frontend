@@ -14,9 +14,9 @@ const TabSection = ({ activeTab, isMyPage = false }: TabSectionProps) => {
   ];
 
   const myPageTabs = [
-    { id: 'writtenPosts', label: '작성한 포스트' },
-    { id: 'likedPosts', label: '좋아요한 포스트' },
-    { id: 'writtenReviews', label: '작성한 리뷰' },
+    { id: 'writtenPosts', label: '작성한 Post' },
+    { id: 'likedPosts', label: '좋아요한 Post' },
+    { id: 'writtenReviews', label: '작성한 Review' },
   ];
 
   return (

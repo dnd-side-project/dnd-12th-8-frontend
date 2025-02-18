@@ -9,8 +9,8 @@ interface ButtonProps
 const buttonVariants = cva(`flex items-center justify-center rounded-md w-full`, {
   variants: {
     size: {
-      sm: `font-body2 h-[48px]`,
-      lg: `font-body2 h-[60px]`,
+      sm: `font-body3 h-[48px] min-w-[120px]`,
+      lg: `font-body2 h-[60px] min-w-[160px]`,
       'icon-sm': `h-[48px] w-[48px]`,
       'icon-lg': `h-[60px] w-[60px]`,
     },

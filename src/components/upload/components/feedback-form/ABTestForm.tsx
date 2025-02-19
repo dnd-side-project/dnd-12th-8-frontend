@@ -26,14 +26,29 @@ const ABTestForm = () => {
       <div className="grid grid-cols-2 gap-6">
         {(['A', 'B'] as const).map((type) => (
           <div key={type} className="flex w-full flex-col items-center">
-            <span className="mb-2 rounded-full bg-purple-400 px-4 py-2 text-white">{type}</span>
-            <div className="relative h-[260px] w-full overflow-hidden rounded-[10px] bg-gray-600">
+            <div className="relative h-[200px] w-full overflow-hidden rounded-[10px] bg-gray-600 tablet:h-[260px] desktop:h-[300px]">
               {images[type] ? (
-                <Image src={images[type]!.url} alt={`${type}안`} fill className="object-cover" />
+                <label className="relative block h-full w-full cursor-pointer">
+                  <Image src={images[type]!.url} alt={`${type}안`} fill className="object-cover" />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
+                    <div className="rounded-full bg-gray-50 px-4 py-2">
+                      <span className="font-body3 text-gray-900">{type}</span>
+                    </div>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) void handleImageUpload(type, file);
+                    }}
+                  />
+                </label>
               ) : (
                 <label className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2">
                   <ImageIcon className="h-8 w-8 text-gray-300" />
-                  <span className="text-gray-300">이미지를 업로드해주세요</span>
+                  <span className="text-gray-300 px-4">이미지를 업로드해주세요</span>
                   <input
                     type="file"
                     accept="image/*"
@@ -49,11 +64,12 @@ const ABTestForm = () => {
           </div>
         ))}
       </div>
-      <div className="mt-4">
+
+      <div className="mt-7 flex flex-col rounded-[10px] bg-gray-700 px-4 py-3">
         <textarea
-          placeholder="피드백을 입력해주세요"
-          className="w-full rounded-[10px] bg-gray-600 p-4 font-body2 text-gray-50 placeholder:text-gray-200"
-          rows={3}
+          placeholder="자유 응답 필드"
+          className="w-full resize-y bg-transparent font-body2 text-gray-50 placeholder:text-gray-200 focus:outline-none"
+          disabled
         />
       </div>
     </div>

@@ -87,6 +87,10 @@ function FeedbackFormSection() {
     );
   };
 
+  const handleOptionsChange = (id: number, newOptions: string[]) => {
+    setQuestions((prev) => prev.map((q) => (q.id === id ? { ...q, options: newOptions } : q)));
+  };
+
   return (
     <div className="flex flex-col gap-6">
       {questions.map((question, index) => (
@@ -124,17 +128,15 @@ function FeedbackFormSection() {
             {question.type === 'MULTIPLE_CHOICE' && (
               <MultipleChoiceForm
                 options={question.options || []}
-                onChange={(newOptions) =>
-                  setQuestions(
-                    questions.map((q) =>
-                      q.id === question.id ? { ...q, options: newOptions } : q,
-                    ),
-                  )
-                }
+                onChange={(newOptions) => handleOptionsChange(question.id, newOptions)}
               />
             )}
             {question.type === 'SHORT_ANSWER' && <ShortAnswerForm />}
-            {question.type === 'LIKERT_SCALE' && <LikertScaleForm />}
+            {question.type === 'LIKERT_SCALE' && (
+              <LikertScaleForm
+                onChange={(newOptions) => handleOptionsChange(question.id, newOptions)}
+              />
+            )}
             {question.type === 'AB_TEST' && <ABTestForm />}
           </section>
 

@@ -13,6 +13,7 @@ interface FeedbackQuestion {
   type: QuestionType;
   question: string;
   options?: string[];
+  isRequired: boolean;
 }
 
 const MoveButton = ({ direction, onClick }: { direction: 'up' | 'down'; onClick: () => void }) => (
@@ -36,7 +37,7 @@ const QuestionControls = ({
   onToggleArrows: () => void;
   onDelete: () => void;
 }) => (
-  <div className="absolute top-4 right-4 flex items-center gap-2">
+  <div className="absolute top-10 right-6 flex items-center gap-2">
     <button
       onClick={(e) => {
         e.stopPropagation();
@@ -54,6 +55,7 @@ const QuestionControls = ({
 
 function FeedbackFormSection() {
   const [questions, setQuestions] = useState<FeedbackQuestion[]>([]);
+  console.log('🚀 ~ FeedbackFormSection ~ questions:', questions);
   const [focusedId, setFocusedId] = useState<number | null>(null);
   const [lastId, setLastId] = useState(0);
   const [showArrows, setShowArrows] = useState<number | null>(null);
@@ -72,6 +74,7 @@ function FeedbackFormSection() {
         type,
         question: '',
         options: type === 'MULTIPLE_CHOICE' ? [''] : undefined,
+        isRequired: false,
       },
     ]);
   };
@@ -97,7 +100,6 @@ function FeedbackFormSection() {
     ];
 
     setQuestions(newQuestions);
-    console.log(questions);
     setFocusedId(null);
   };
 
@@ -117,7 +119,7 @@ function FeedbackFormSection() {
 
           <section
             role="button"
-            className={`relative rounded-[10px] bg-gray-700 p-4 ${
+            className={`relative rounded-[10px] bg-gray-800 px-6 py-10 ${
               focusedId === question.id ? 'border-1 border-gray-100' : ''
             }`}
             onClick={() => setFocusedId(question.id)}
@@ -137,7 +139,7 @@ function FeedbackFormSection() {
               value={question.question}
               onChange={(e) => handleQuestionChange(question.id, e.target.value)}
               placeholder="질문을 입력해주세요"
-              className="mb-4 w-full bg-transparent font-body2 text-gray-50 placeholder:text-gray-200 focus:outline-none"
+              className="mb-4 w-full bg-transparent font-title2 text-gray-50 placeholder:text-gray-200 focus:outline-none"
             />
 
             {question.type === 'MULTIPLE_CHOICE' && (
@@ -152,7 +154,18 @@ function FeedbackFormSection() {
                 }
               />
             )}
-            {question.type === 'SHORT_ANSWER' && <ShortAnswerForm />}
+            {question.type === 'SHORT_ANSWER' && (
+              <ShortAnswerForm
+                isRequired={question.isRequired}
+                onRequiredChange={(required) =>
+                  setQuestions(prev =>
+                    prev.map((q) =>
+                      q.id === question.id ? { ...q, isRequired: required } : q,
+                    ),
+                  )
+                }
+              />
+            )}
             {question.type === 'LIKERT_SCALE' && <LikertScaleForm />}
             {question.type === 'AB_TEST' && <ABTestForm />}
           </section>

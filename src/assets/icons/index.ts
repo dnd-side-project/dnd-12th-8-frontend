@@ -1,5 +1,7 @@
 import AlarmIcon from './alarm.svg';
 import AlertTriangleIcon from './alert-triangle.svg';
+import ArrowDownIcon from './arrow-down.svg';
+import ArrowUpIcon from './arrow-up.svg';
 import CalendarIcon from './calendar.svg';
 import CheckIcon from './check.svg';
 import CloseIcon from './close.svg';
@@ -72,4 +74,6 @@ export {
   UsersIcon,
   YoutubeIcon,
   PencilIcon,
+  ArrowUpIcon,
+  ArrowDownIcon,
 };

@@ -1,8 +1,4 @@
-import { useState } from 'react';
-
 function LikertScaleForm() {
-  const [selectedValue, setSelectedValue] = useState<number | null>(null);
-
   const options = [
     { value: 1, label: '매우 나쁨' },
     { value: 2, label: '나쁨' },
@@ -17,12 +13,9 @@ function LikertScaleForm() {
         {options.map((option) => (
           <div
             key={option.value}
-            className={`flex h-12 w-12 cursor-pointer flex-col items-center justify-center rounded-full border-2 ${
-              selectedValue === option.value
-                ? 'border-purple-400 bg-purple-400 text-white'
-                : 'border-gray-500 text-gray-300'
-            }`}
-            onClick={() => setSelectedValue(option.value)}
+            className={
+              'flex h-12 w-12 cursor-pointer flex-col items-center justify-center rounded-full border-2'
+            }
           >
             {option.value}
           </div>

@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { CloseIcon, ArrowUpIcon, ArrowDownIcon, FilterLinesIcon } from '@/assets/icons';
+import { ArrowUpIcon, ArrowDownIcon } from '@/assets/icons';
 import Button from '@/components/@shared/button/Button';
 import { Icon } from '@/components/@shared/icons/Icon';
 import ABTestForm from './ABTestForm';
+import FeedbackHeader from './FeedbackHeader';
 import LikertScaleForm from './LikertScaleForm';
 import MultipleChoiceForm from './MultipleChoiceForm';
 import QuestionTypeSelector, { QuestionType } from './QuestionTypeSelector';
@@ -30,29 +31,6 @@ const MoveButton = ({ direction, onClick }: { direction: 'up' | 'down'; onClick:
   </div>
 );
 
-const QuestionControls = ({
-  onToggleArrows,
-  onDelete,
-}: {
-  onToggleArrows: () => void;
-  onDelete: () => void;
-}) => (
-  <div className="absolute top-10 right-6 flex items-center gap-2">
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        onToggleArrows();
-      }}
-      className="rounded-full"
-    >
-      <Icon icon={FilterLinesIcon} className="h-5 w-5" />
-    </button>
-    <button onClick={onDelete} className="rounded-full">
-      <Icon icon={CloseIcon} />
-    </button>
-  </div>
-);
-
 function FeedbackFormSection() {
   const [questions, setQuestions] = useState<FeedbackQuestion[]>([]);
   console.log('🚀 ~ FeedbackFormSection ~ questions:', questions);
@@ -60,8 +38,24 @@ function FeedbackFormSection() {
   const [lastId, setLastId] = useState(0);
   const [showArrows, setShowArrows] = useState<number | null>(null);
 
-  const handleQuestionChange = (id: number, value: string) => {
-    setQuestions(questions.map((q) => (q.id === id ? { ...q, question: value } : q)));
+  const handleMoveQuestion = (id: number, direction: 'up' | 'down') => {
+    const currentIndex = questions.findIndex((q) => q.id === id);
+    if (
+      (direction === 'up' && currentIndex === 0) ||
+      (direction === 'down' && currentIndex === questions.length - 1)
+    )
+      return;
+
+    const newQuestions = [...questions];
+    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+
+    [newQuestions[currentIndex], newQuestions[newIndex]] = [
+      newQuestions[newIndex],
+      newQuestions[currentIndex],
+    ];
+
+    setQuestions(newQuestions);
+    setFocusedId(null);
   };
 
   const handleAddQuestion = (type: QuestionType) => {
@@ -83,24 +77,14 @@ function FeedbackFormSection() {
     setQuestions(questions.filter((q) => q.id !== id));
   };
 
-  const handleMoveQuestion = (id: number, direction: 'up' | 'down') => {
-    const currentIndex = questions.findIndex((q) => q.id === id);
-    if (
-      (direction === 'up' && currentIndex === 0) ||
-      (direction === 'down' && currentIndex === questions.length - 1)
-    )
-      return;
+  const handleQuestionChange = (id: number, value: string) => {
+    setQuestions((prev) => prev.map((q) => (q.id === id ? { ...q, question: value } : q)));
+  };
 
-    const newQuestions = [...questions];
-    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
-
-    [newQuestions[currentIndex], newQuestions[newIndex]] = [
-      newQuestions[newIndex],
-      newQuestions[currentIndex],
-    ];
-
-    setQuestions(newQuestions);
-    setFocusedId(null);
+  const handleRequiredChange = (id: number) => {
+    setQuestions((prev) =>
+      prev.map((q) => (q.id === id ? { ...q, isRequired: !q.isRequired } : q)),
+    );
   };
 
   return (
@@ -129,17 +113,12 @@ function FeedbackFormSection() {
             }}
             tabIndex={0}
           >
-            <QuestionControls
+            <FeedbackHeader
+              question={question}
+              onQuestionChange={handleQuestionChange}
+              onRequiredChange={handleRequiredChange}
               onToggleArrows={() => setShowArrows(showArrows === question.id ? null : question.id)}
               onDelete={() => handleDeleteQuestion(question.id)}
-            />
-
-            <input
-              type="text"
-              value={question.question}
-              onChange={(e) => handleQuestionChange(question.id, e.target.value)}
-              placeholder="질문을 입력해주세요"
-              className="mb-4 w-full bg-transparent font-title2 text-gray-50 placeholder:text-gray-200 focus:outline-none"
             />
 
             {question.type === 'MULTIPLE_CHOICE' && (
@@ -154,16 +133,7 @@ function FeedbackFormSection() {
                 }
               />
             )}
-            {question.type === 'SHORT_ANSWER' && (
-              <ShortAnswerForm
-                isRequired={question.isRequired}
-                onRequiredChange={(required) =>
-                  setQuestions((prev) =>
-                    prev.map((q) => (q.id === question.id ? { ...q, isRequired: required } : q)),
-                  )
-                }
-              />
-            )}
+            {question.type === 'SHORT_ANSWER' && <ShortAnswerForm />}
             {question.type === 'LIKERT_SCALE' && <LikertScaleForm />}
             {question.type === 'AB_TEST' && <ABTestForm />}
           </section>

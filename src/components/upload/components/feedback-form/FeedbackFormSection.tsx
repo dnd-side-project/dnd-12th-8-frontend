@@ -158,10 +158,8 @@ function FeedbackFormSection() {
               <ShortAnswerForm
                 isRequired={question.isRequired}
                 onRequiredChange={(required) =>
-                  setQuestions(prev =>
-                    prev.map((q) =>
-                      q.id === question.id ? { ...q, isRequired: required } : q,
-                    ),
+                  setQuestions((prev) =>
+                    prev.map((q) => (q.id === question.id ? { ...q, isRequired: required } : q)),
                   )
                 }
               />
@@ -182,9 +180,7 @@ function FeedbackFormSection() {
         </div>
       ))}
 
-      <div className="rounded-[20px] bg-gray-800 p-6">
-        <QuestionTypeSelector onSelect={handleAddQuestion} />
-      </div>
+      <QuestionTypeSelector onSelect={handleAddQuestion} />
     </div>
   );
 }

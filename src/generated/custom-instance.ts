@@ -1,8 +1,7 @@
 import Axios, { AxiosRequestConfig } from 'axios';
 
 export const AXIOS_INSTANCE = Axios.create({
-  baseURL:
-    'http://ec2-3-36-160-44.ap-northeast-2.compute.amazonaws.com:8080/v3/api-docs/springdoc-openapi',
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -19,6 +18,7 @@ AXIOS_INSTANCE.interceptors.request.use(
   },
   (error) => Promise.reject(error),
 );
+
 AXIOS_INSTANCE.interceptors.response.use(
   (response) => response,
   (error) => {

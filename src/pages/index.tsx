@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { AlertTriangleIcon } from '@/assets/icons';
 import CoinsStackedIcon from '@/assets/icons/coins-stacked.svg';
 import Button from '@/components/@shared/button/Button';
@@ -33,6 +34,10 @@ const Home = () => {
         <Icon icon={AlertTriangleIcon} />
         <CoinsStackedIcon width={48} height={48} />
       </div>
+
+      <Link href="https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=80a36ec68ac5bcee817bc93a0a8d0053&redirect_uri=http://localhost:3000/oauth/kakao">
+        로그인
+      </Link>
     </main>
   );
 };

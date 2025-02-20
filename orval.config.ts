@@ -24,8 +24,7 @@ export default defineConfig({
       },
     },
     input: {
-      target:
-        'http://ec2-3-36-160-44.ap-northeast-2.compute.amazonaws.com:8080/v3/api-docs/springdoc-openapi',
+      target: `http://3.37.76.228:8080/api-docs`,
     },
   },
 });

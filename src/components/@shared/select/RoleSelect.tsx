@@ -11,6 +11,21 @@ interface RoleSelectProps {
   onChange: () => void;
 }
 
+export const ROLE_MAP = {
+  DEVELOPER: {
+    label: '개발자',
+    icon: DeveloperIcon,
+  },
+  DESIGNER: {
+    label: '디자이너',
+    icon: DesignerIcon,
+  },
+  PLANNER: {
+    label: 'PM/PO',
+    icon: PlannerIcon,
+  },
+};
+
 const roleButtonVariants = cva('', {
   variants: {
     variant: {
@@ -60,28 +75,6 @@ const roleButtonVariants = cva('', {
 function RoleSelect({ type = 'outline', role, isSelected = false, onChange }: RoleSelectProps) {
   console.log('isSelected', isSelected, role, type);
 
-  const renderIcon = () => {
-    switch (role) {
-      case 'DEVELOPER':
-        return <Icon icon={DeveloperIcon} color="currentColor" />;
-      case 'DESIGNER':
-        return <Icon icon={DesignerIcon} color="currentColor" />;
-      case 'PLANNER':
-        return <Icon icon={PlannerIcon} color="currentColor" />;
-    }
-  };
-
-  const renderLabel = () => {
-    switch (role) {
-      case 'DEVELOPER':
-        return '개발자';
-      case 'DESIGNER':
-        return '디자이너';
-      case 'PLANNER':
-        return 'PM/PO';
-    }
-  };
-
   return (
     <button
       onClick={() => onChange()}
@@ -95,8 +88,8 @@ function RoleSelect({ type = 'outline', role, isSelected = false, onChange }: Ro
         !isSelected && 'border-gray-600 bg-gray-600 text-gray-400',
       )}
     >
-      {renderIcon()}
-      <p className="font-body3">{renderLabel()}</p>
+      <Icon icon={ROLE_MAP[role].icon} color="currentColor" />
+      <p className="font-body3">{ROLE_MAP[role].label}</p>
     </button>
   );
 }

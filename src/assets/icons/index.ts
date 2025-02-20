@@ -13,9 +13,12 @@ import DotsVerticalIcon from './dots-vertical.svg';
 import FaceHappyIcon from './face-happy.svg';
 import FileIcon from './file.svg';
 import FilterLinesIcon from './filter-lines.svg';
+import GoogleIcon from './google.svg';
+import GraduationHatIcon from './graduation-hat.svg';
 import HeartActiveIcon from './heart-active.svg';
 import HeartIcon from './heart.svg';
 import ImageIcon from './image.svg';
+import KakaoIcon from './kakao.svg';
 import LeftIcon from './left.svg';
 import LightbulbIcon from './lightbulb.svg';
 import LinkIcon from './link.svg';
@@ -51,9 +54,12 @@ export {
   FaceHappyIcon,
   FileIcon,
   FilterLinesIcon,
+  GoogleIcon,
+  GraduationHatIcon,
   HeartActiveIcon,
   HeartIcon,
   ImageIcon,
+  KakaoIcon,
   LeftIcon,
   LightbulbIcon,
   LinkIcon,

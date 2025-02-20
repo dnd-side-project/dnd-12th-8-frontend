@@ -97,7 +97,8 @@ const ProfileSidebar = ({
   };
 
   const onClickLogout = () => {
-    console.log('로그아웃하기');
+    localStorage.removeItem('token');
+    window.location.href = '/';
   };
 
   return (

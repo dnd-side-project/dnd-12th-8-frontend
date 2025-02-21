@@ -12,7 +12,12 @@ import {
   useSuspenseQuery,
 } from '@tanstack/react-query';
 import { customInstance } from '../../custom-instance';
-import type { MemberResponse, OnboardingRequest, PointResponseDto } from '../../models';
+import type {
+  MemberResponse,
+  OnboardingRequest,
+  PointResponseDto,
+  UpdateOnboardingStatusParams,
+} from '../../models';
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -118,6 +123,73 @@ export const useCompleteOnboarding = <
   request?: SecondParameter<typeof customInstance>;
 }): UseMutationResult<TData, TError, { memberId: string; data: OnboardingRequest }, TContext> => {
   const mutationOptions = getCompleteOnboardingMutationOptions(options);
+
+  return useMutation(mutationOptions);
+};
+/**
+ * 사용자의 온보딩 완료 여부를 변경합니다.
+ * @summary 온보딩 상태 변경
+ */
+export const updateOnboardingStatus = (
+  params: UpdateOnboardingStatusParams,
+  options?: SecondParameter<typeof customInstance>,
+) => {
+  return customInstance<string>(
+    { url: `/members/onboarding-status`, method: 'PATCH', params },
+    options,
+  );
+};
+
+export const getUpdateOnboardingStatusMutationOptions = <
+  TData = Awaited<ReturnType<typeof updateOnboardingStatus>>,
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<TData, TError, { params: UpdateOnboardingStatusParams }, TContext>;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const mutationKey = ['updateOnboardingStatus'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof updateOnboardingStatus>>,
+    { params: UpdateOnboardingStatusParams }
+  > = (props) => {
+    const { params } = props ?? {};
+
+    return updateOnboardingStatus(params, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions } as UseMutationOptions<
+    TData,
+    TError,
+    { params: UpdateOnboardingStatusParams },
+    TContext
+  >;
+};
+
+export type UpdateOnboardingStatusMutationResult = NonNullable<
+  Awaited<ReturnType<typeof updateOnboardingStatus>>
+>;
+
+export type UpdateOnboardingStatusMutationError = unknown;
+
+/**
+ * @summary 온보딩 상태 변경
+ */
+export const useUpdateOnboardingStatus = <
+  TData = Awaited<ReturnType<typeof updateOnboardingStatus>>,
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<TData, TError, { params: UpdateOnboardingStatusParams }, TContext>;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationResult<TData, TError, { params: UpdateOnboardingStatusParams }, TContext> => {
+  const mutationOptions = getUpdateOnboardingStatusMutationOptions(options);
 
   return useMutation(mutationOptions);
 };

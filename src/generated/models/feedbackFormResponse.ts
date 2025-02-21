@@ -7,6 +7,7 @@
 import type { FeedbackFormResponseType } from './feedbackFormResponseType';
 
 export interface FeedbackFormResponse {
+  questionId?: string;
   question?: string;
   type?: FeedbackFormResponseType;
   options?: string[];

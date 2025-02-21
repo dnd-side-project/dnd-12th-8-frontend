@@ -6,23 +6,32 @@
  */
 import {
   useInfiniteQuery,
+  useMutation,
   useQuery,
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
 } from '@tanstack/react-query';
 import { customInstance } from '../../custom-instance';
-import type { FeedbackFormResponse } from '../../models';
+import type {
+  ApiResponseFeedbackResultResponse,
+  ApiResponseString,
+  FeedbackFormResponse,
+  FeedbackResponseRequest,
+} from '../../models';
 import type {
   DataTag,
   DefinedInitialDataOptions,
   DefinedUseInfiniteQueryResult,
   DefinedUseQueryResult,
   InfiniteData,
+  MutationFunction,
   QueryFunction,
   QueryKey,
   UndefinedInitialDataOptions,
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
+  UseMutationOptions,
+  UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
   UseSuspenseInfiniteQueryOptions,
@@ -33,6 +42,80 @@ import type {
 
 type SecondParameter<T extends (...args: any) => any> = Parameters<T>[1];
 
+/**
+ * 프로젝트 피드백 답변 제출 API
+ * @summary 피드백 답변 제출
+ */
+export const saveFeedbackForm = (
+  feedbackResponseRequest: FeedbackResponseRequest,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<ApiResponseString>(
+    {
+      url: `/feedback_form/feedback`,
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      data: feedbackResponseRequest,
+      signal,
+    },
+    options,
+  );
+};
+
+export const getSaveFeedbackFormMutationOptions = <
+  TData = Awaited<ReturnType<typeof saveFeedbackForm>>,
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<TData, TError, { data: FeedbackResponseRequest }, TContext>;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const mutationKey = ['saveFeedbackForm'];
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof saveFeedbackForm>>,
+    { data: FeedbackResponseRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return saveFeedbackForm(data, requestOptions);
+  };
+
+  return { mutationFn, ...mutationOptions } as UseMutationOptions<
+    TData,
+    TError,
+    { data: FeedbackResponseRequest },
+    TContext
+  >;
+};
+
+export type SaveFeedbackFormMutationResult = NonNullable<
+  Awaited<ReturnType<typeof saveFeedbackForm>>
+>;
+export type SaveFeedbackFormMutationBody = FeedbackResponseRequest;
+export type SaveFeedbackFormMutationError = unknown;
+
+/**
+ * @summary 피드백 답변 제출
+ */
+export const useSaveFeedbackForm = <
+  TData = Awaited<ReturnType<typeof saveFeedbackForm>>,
+  TError = unknown,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<TData, TError, { data: FeedbackResponseRequest }, TContext>;
+  request?: SecondParameter<typeof customInstance>;
+}): UseMutationResult<TData, TError, { data: FeedbackResponseRequest }, TContext> => {
+  const mutationOptions = getSaveFeedbackFormMutationOptions(options);
+
+  return useMutation(mutationOptions);
+};
 /**
  * 사용자가 '피드백 하기' 버튼을 눌렀을 때 해당 프로젝트의 피드백 폼 데이터를 조회합니다.
  * @summary 프로젝트 피드백 폼 조회
@@ -422,6 +505,408 @@ export function useGetFeedbackFormsSuspenseInfinite<
   },
 ): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
   const queryOptions = getGetFeedbackFormsSuspenseInfiniteQueryOptions(projectId, options);
+
+  const query = useSuspenseInfiniteQuery(queryOptions) as UseSuspenseInfiniteQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
+ * 프로젝트 피드백 결과 조회 API입니다.
+ * @summary 피드백 답변 결과 조회
+ */
+export const getFeedbackResult = (
+  projectId: number,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<ApiResponseFeedbackResultResponse>(
+    { url: `/feedback_form/feedback-result/${projectId}`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getGetFeedbackResultQueryKey = (projectId: number) => {
+  return [`/feedback_form/feedback-result/${projectId}`] as const;
+};
+
+export const getGetFeedbackResultInfiniteQueryOptions = <
+  TData = InfiniteData<Awaited<ReturnType<typeof getFeedbackResult>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetFeedbackResultQueryKey(projectId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeedbackResult>>> = ({ signal }) =>
+    getFeedbackResult(projectId, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!projectId, ...queryOptions } as UseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof getFeedbackResult>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetFeedbackResultInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFeedbackResult>>
+>;
+export type GetFeedbackResultInfiniteQueryError = unknown;
+
+export function useGetFeedbackResultInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getFeedbackResult>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options: {
+    query: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetFeedbackResultInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getFeedbackResult>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetFeedbackResultInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getFeedbackResult>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 피드백 답변 결과 조회
+ */
+
+export function useGetFeedbackResultInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getFeedbackResult>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetFeedbackResultInfiniteQueryOptions(projectId, options);
+
+  const query = useInfiniteQuery(queryOptions) as UseInfiniteQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetFeedbackResultQueryOptions = <
+  TData = Awaited<ReturnType<typeof getFeedbackResult>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetFeedbackResultQueryKey(projectId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeedbackResult>>> = ({ signal }) =>
+    getFeedbackResult(projectId, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!projectId, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getFeedbackResult>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetFeedbackResultQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFeedbackResult>>
+>;
+export type GetFeedbackResultQueryError = unknown;
+
+export function useGetFeedbackResult<
+  TData = Awaited<ReturnType<typeof getFeedbackResult>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>> &
+      Pick<
+        DefinedInitialDataOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetFeedbackResult<
+  TData = Awaited<ReturnType<typeof getFeedbackResult>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>> &
+      Pick<
+        UndefinedInitialDataOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetFeedbackResult<
+  TData = Awaited<ReturnType<typeof getFeedbackResult>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 피드백 답변 결과 조회
+ */
+
+export function useGetFeedbackResult<
+  TData = Awaited<ReturnType<typeof getFeedbackResult>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetFeedbackResultQueryOptions(projectId, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetFeedbackResultSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof getFeedbackResult>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetFeedbackResultQueryKey(projectId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeedbackResult>>> = ({ signal }) =>
+    getFeedbackResult(projectId, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof getFeedbackResult>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetFeedbackResultSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFeedbackResult>>
+>;
+export type GetFeedbackResultSuspenseQueryError = unknown;
+
+export function useGetFeedbackResultSuspense<
+  TData = Awaited<ReturnType<typeof getFeedbackResult>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetFeedbackResultSuspense<
+  TData = Awaited<ReturnType<typeof getFeedbackResult>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetFeedbackResultSuspense<
+  TData = Awaited<ReturnType<typeof getFeedbackResult>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 피드백 답변 결과 조회
+ */
+
+export function useGetFeedbackResultSuspense<
+  TData = Awaited<ReturnType<typeof getFeedbackResult>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetFeedbackResultSuspenseQueryOptions(projectId, options);
+
+  const query = useSuspenseQuery(queryOptions) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetFeedbackResultSuspenseInfiniteQueryOptions = <
+  TData = InfiniteData<Awaited<ReturnType<typeof getFeedbackResult>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetFeedbackResultQueryKey(projectId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getFeedbackResult>>> = ({ signal }) =>
+    getFeedbackResult(projectId, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof getFeedbackResult>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetFeedbackResultSuspenseInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getFeedbackResult>>
+>;
+export type GetFeedbackResultSuspenseInfiniteQueryError = unknown;
+
+export function useGetFeedbackResultSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getFeedbackResult>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options: {
+    query: Partial<
+      UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetFeedbackResultSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getFeedbackResult>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetFeedbackResultSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getFeedbackResult>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 피드백 답변 결과 조회
+ */
+
+export function useGetFeedbackResultSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getFeedbackResult>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getFeedbackResult>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetFeedbackResultSuspenseInfiniteQueryOptions(projectId, options);
 
   const query = useSuspenseInfiniteQuery(queryOptions) as UseSuspenseInfiniteQueryResult<
     TData,

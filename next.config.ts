@@ -9,7 +9,13 @@ const nextConfig: NextConfig = {
       'images.unsplash.com',
       'img1.kakaocdn.net',
       's3.ap-northeast-2.amazonaws.com',
-      'your-s3-bucket.s3.amazonaws.com',
+      'dnd-uploaded-files.s3.amazonaws.com',
+    ],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
     ],
   },
 

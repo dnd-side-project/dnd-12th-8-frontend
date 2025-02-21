@@ -6,10 +6,27 @@
  */
 import { faker } from '@faker-js/faker';
 import { HttpResponse, delay, http } from 'msw';
-import type { FeedbackFormResponse } from '../../models';
+import type {
+  ApiResponseFeedbackResultResponse,
+  ApiResponseString,
+  FeedbackFormResponse,
+} from '../../models';
+
+export const getSaveFeedbackFormResponseMock = (
+  overrideResponse: Partial<ApiResponseString> = {},
+): ApiResponseString => ({
+  status: faker.helpers.arrayElement([
+    faker.number.int({ min: undefined, max: undefined }),
+    undefined,
+  ]),
+  message: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+  data: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+  ...overrideResponse,
+});
 
 export const getGetFeedbackFormsResponseMock = (): FeedbackFormResponse[] =>
   Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    questionId: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
     question: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
     type: faker.helpers.arrayElement([
       faker.helpers.arrayElement([
@@ -35,6 +52,101 @@ export const getGetFeedbackFormsResponseMock = (): FeedbackFormResponse[] =>
     ]),
   }));
 
+export const getGetFeedbackResultResponseMock = (
+  overrideResponse: Partial<ApiResponseFeedbackResultResponse> = {},
+): ApiResponseFeedbackResultResponse => ({
+  status: faker.helpers.arrayElement([
+    faker.number.int({ min: undefined, max: undefined }),
+    undefined,
+  ]),
+  message: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+  data: faker.helpers.arrayElement([
+    {
+      projectId: faker.helpers.arrayElement([
+        faker.number.int({ min: undefined, max: undefined }),
+        undefined,
+      ]),
+      totalResponseCount: faker.helpers.arrayElement([
+        faker.number.int({ min: undefined, max: undefined }),
+        undefined,
+      ]),
+      feedbackQuestionResult: faker.helpers.arrayElement([
+        Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+          questionId: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+          questionType: faker.helpers.arrayElement([
+            faker.helpers.arrayElement([
+              'MULTIPLE_CHOICE',
+              'SHORT_ANSWER',
+              'LIKERT_SCALE',
+              'AB_TEST',
+            ] as const),
+            undefined,
+          ]),
+          questionResponseCount: faker.helpers.arrayElement([
+            faker.number.int({ min: undefined, max: undefined }),
+            undefined,
+          ]),
+          totalPoints: faker.helpers.arrayElement([
+            faker.number.int({ min: undefined, max: undefined }),
+            undefined,
+          ]),
+          responseResultList: faker.helpers.arrayElement([
+            Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(
+              () => ({
+                questionText: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+                responseCount: faker.helpers.arrayElement([
+                  faker.number.int({ min: undefined, max: undefined }),
+                  undefined,
+                ]),
+                answerText: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+                point: faker.helpers.arrayElement([
+                  faker.number.int({ min: undefined, max: undefined }),
+                  undefined,
+                ]),
+              }),
+            ),
+            undefined,
+          ]),
+          aresponseCount: faker.helpers.arrayElement([
+            faker.number.int({ min: undefined, max: undefined }),
+            undefined,
+          ]),
+          bresponseCount: faker.helpers.arrayElement([
+            faker.number.int({ min: undefined, max: undefined }),
+            undefined,
+          ]),
+        })),
+        undefined,
+      ]),
+    },
+    undefined,
+  ]),
+  ...overrideResponse,
+});
+
+export const getSaveFeedbackFormMockHandler = (
+  overrideResponse?:
+    | ApiResponseString
+    | ((
+        info: Parameters<Parameters<typeof http.post>[1]>[0],
+      ) => Promise<ApiResponseString> | ApiResponseString),
+) => {
+  return http.post('*/feedback_form/feedback', async (info) => {
+    await delay(1000);
+
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getSaveFeedbackFormResponseMock(),
+      ),
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
+    );
+  });
+};
+
 export const getGetFeedbackFormsMockHandler = (
   overrideResponse?:
     | FeedbackFormResponse[]
@@ -57,4 +169,31 @@ export const getGetFeedbackFormsMockHandler = (
     );
   });
 };
-export const getApiMock = () => [getGetFeedbackFormsMockHandler()];
+
+export const getGetFeedbackResultMockHandler = (
+  overrideResponse?:
+    | ApiResponseFeedbackResultResponse
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<ApiResponseFeedbackResultResponse> | ApiResponseFeedbackResultResponse),
+) => {
+  return http.get('*/feedback_form/feedback-result/:projectId', async (info) => {
+    await delay(1000);
+
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetFeedbackResultResponseMock(),
+      ),
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
+    );
+  });
+};
+export const getApiMock = () => [
+  getSaveFeedbackFormMockHandler(),
+  getGetFeedbackFormsMockHandler(),
+  getGetFeedbackResultMockHandler(),
+];

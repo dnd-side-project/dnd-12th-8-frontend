@@ -8,7 +8,8 @@ interface LevelSelectProps {
   type?: 'outline' | 'solid';
   level: MemberResponseLevel;
   isSelected?: boolean;
-  onChange: () => void;
+  onChange?: () => void;
+  isSelectable?: boolean;
 }
 
 const levelButtonVariants = cva('', {
@@ -20,9 +21,13 @@ const levelButtonVariants = cva('', {
   },
 });
 
-function LevelSelect({ type = 'outline', level, isSelected = false, onChange }: LevelSelectProps) {
-  console.log('isSelected', isSelected, level, type);
-
+function LevelSelect({
+  type = 'outline',
+  level,
+  isSelected = false,
+  onChange,
+  isSelectable = true,
+}: LevelSelectProps) {
   const renderIcon = () => {
     switch (level) {
       case 'LEARNER':
@@ -43,7 +48,7 @@ function LevelSelect({ type = 'outline', level, isSelected = false, onChange }: 
 
   return (
     <button
-      onClick={() => onChange()}
+      onClick={() => isSelectable && onChange && onChange()}
       className={cn(
         'flex items-center justify-center gap-2 rounded-[20px] border-1 px-[16px] py-[8px]',
         isSelected &&

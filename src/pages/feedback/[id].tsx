@@ -3,15 +3,18 @@ import { useRouter } from 'next/router';
 import SmallPostCard from '@/components/@shared/card/post-card/SmallPostCard';
 import FeedbackQuestion from '@/components/feedback/FeedbackQuestion';
 import FeedbackStepController from '@/components/feedback/FeedbackStepController';
-import feedbackFormRequests from '@/constants/fake-data/feedbackForm.json';
+import { useGetProjectDetail, useGetFeedbackForms, useSaveFeedbackForm } from '@/generated';
 import { useFeedbackForm } from '@/hooks/useFeedbackForm';
-import type { FeedbackSubmitData } from '@/types/schema';
 
 const FeedbackPage = () => {
   const router = useRouter();
   const { id } = router.query;
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const feedbackFormRequest = feedbackFormRequests.feedbackFormRequests[0];
+  const { mutate: submitFeedback } = useSaveFeedbackForm();
+
+  // feedbackForm API 호출로 변경
+  const { data: feedbackForms } = useGetFeedbackForms(Number(id));
+  const { data: projectDetail } = useGetProjectDetail(Number(id));
 
   const {
     currentStep,
@@ -22,7 +25,7 @@ const FeedbackPage = () => {
     answers,
     handleAnswerChange,
     handleStepChange,
-  } = useFeedbackForm(feedbackFormRequest);
+  } = useFeedbackForm({ feedbackQuestions: feedbackForms ?? [] });
 
   const handleSubmit = async () => {
     if (isSubmitting) return;
@@ -35,13 +38,29 @@ const FeedbackPage = () => {
         return;
       }
 
-      const submitData: FeedbackSubmitData = {
-        feedbackId: id as string,
-        answers,
-      };
+      const formattedAnswers = answers.map((answer) => ({
+        questionId: String(answer.questionId),
+        questionType: answer.questionType,
+        selectedOption: Array.isArray(answer.answer) ? answer.answer[0] : answer.answer,
+        responseText: Array.isArray(answer.answer) ? '' : answer.answer,
+      }));
 
-      console.log('제출 데이터:', submitData);
-      await router.push('/main');
+      const submitData = {
+        projectId: Number(id),
+        answers: formattedAnswers,
+      };
+      console.log(submitData);
+
+      submitFeedback(
+        { data: submitData },
+        {
+          onSuccess: () => {
+            console.log(formattedAnswers);
+            alert('피드백 제출이 완료되었습니다.');
+            void router.push('/main');
+          },
+        },
+      );
     } catch (error) {
       console.error('피드백 제출 오류:', error);
       alert('피드백 제출에 실패했습니다. 다시 시도해주세요.');
@@ -58,21 +77,29 @@ const FeedbackPage = () => {
     handleStepChange(step);
   };
 
+  if (!projectDetail) return null;
+
   return (
     <div className="bg-gray-900 pb-25">
       <div className="mx-auto flex flex-col gap-8 p-4 laptop:flex-row">
         <div className="flex-1">
           <div className="mb-8">
             <SmallPostCard
-              title={feedbackFormRequests.title}
-              targetJob={feedbackFormRequests.targetJob}
-              thumbnailImgUrl={feedbackFormRequests.thumbnailImgUrl}
-              categoryNames={feedbackFormRequests.categoryNames}
+              data={{
+                title: projectDetail?.title ?? '',
+                targetJob: projectDetail?.targetJob ?? '',
+                logoImageUrl: projectDetail?.thumbnailImgUrl ?? '',
+                categoryNames: projectDetail?.platformCategories?.categoryNames ?? ['도서'],
+              }}
             />
           </div>
 
           <FeedbackQuestion
-            {...currentQuestion}
+            questionText={currentQuestion?.question ?? ''}
+            questionType={currentQuestion?.type ?? 'SHORT_ANSWER'}
+            options={currentQuestion?.options}
+            abImageAUrl={currentQuestion?.abImageAUrl}
+            abImageBUrl={currentQuestion?.abImageBUrl}
             questionId={currentStep}
             answer={currentAnswer}
             onAnswerChange={handleAnswerChange}

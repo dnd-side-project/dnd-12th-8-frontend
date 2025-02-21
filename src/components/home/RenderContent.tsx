@@ -103,14 +103,15 @@ const RenderTabContent = ({ activeTab }: RenderTabContentProps) => {
             return page.content.map((item) => (
               <PostCard
                 key={item.projectId}
-                id={item.projectId || 0}
-                imageUrl={item.thumbnailImgUrl || ''}
-                thumbnailUrl={item.thumbnailImgUrl || ''}
-                title={item.title || ''}
-                point={0}
-                target={'developer'}
-                questionCount={0}
-                role={'DEVELOPER'}
+                data={{
+                projectId: item.projectId || 0,
+                logoImageUrl: item.thumbnailImageUrl || '',
+                thumbnailImageUrl: item.thumbnailImageUrl || '',
+                title: item.title || '',
+                point: 100,
+                targetJob: 'DEVELOPER',
+                questionCount: 10,
+              }}
               />
             ));
           })}
@@ -137,14 +138,15 @@ const RenderTabContent = ({ activeTab }: RenderTabContentProps) => {
             return page.content.map((item) => (
               <PostCard
                 key={item.projectId}
-                id={item.projectId || 0}
-                imageUrl={item.thumbnailImgUrl || ''}
-                thumbnailUrl={item.thumbnailImgUrl || ''}
-                title={item.title || ''}
-                point={0}
-                target={'developer'}
-                questionCount={0}
-                role={'DEVELOPER'}
+                data={{
+                  projectId: item.projectId || 0,
+                  logoImageUrl: item.logoImgUrl || '',
+                  thumbnailImageUrl: item.thumbnailImgUrl || '',
+                  title: item.title || '',
+                  point: 100,
+                  targetJob: 'DESIGNER',
+                  questionCount: 10,
+                }}
               />
             ));
           })}
@@ -181,14 +183,15 @@ const RenderTabContent = ({ activeTab }: RenderTabContentProps) => {
                 return page.content.map((item) => (
                   <PostCard
                     key={item.projectId}
-                    id={item.projectId || 0}
-                    imageUrl={item.thumbnailImgUrl || ''}
-                    thumbnailUrl={item.thumbnailImgUrl || ''}
-                    title={item.title || ''}
-                    point={0}
-                    target={'developer'}
-                    questionCount={0}
-                    role={'DEVELOPER'}
+                    data={{
+                      projectId: item.projectId || 0,
+                      logoImageUrl: item.thumbnailImageUrl || '',
+                      thumbnailImageUrl: item.thumbnailImageUrl || '',
+                      title: item.title || '',
+                      point: 100,
+                      targetJob: 'DEVELOPER',
+                      questionCount: 10,
+                    }}
                   />
                 ));
               })}

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { LeftIcon, RightIcon } from '@/assets/icons';
 import MoneyChip from '@/components/@shared/chip/MoneyChip';
-import RoleChip from '@/components/@shared/chip/RoleChip';
+// import RoleChip from '@/components/@shared/chip/RoleChip';
 
 const Carousel = ({ items }: { items: any }) => {
   const extendedItems = [items[items.length - 1], ...items, items[0]];
@@ -127,7 +127,7 @@ const Carousel = ({ items }: { items: any }) => {
                 </div>
                 <div className="absolute right-0 bottom-0 left-0 flex gap-2 bg-gradient-to-t from-black/30 to-transparent p-5 tablet:p-8">
                   <MoneyChip amount={item.point} />
-                  <RoleChip variant={item.role} />
+                  {/* <RoleChip role={item.role} /> */}
                 </div>
               </div>
             </div>

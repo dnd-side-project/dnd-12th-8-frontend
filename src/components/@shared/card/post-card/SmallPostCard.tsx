@@ -1,80 +1,55 @@
 import Image from 'next/image';
-import Link from 'next/link';
-import { RightIcon } from '@/assets/icons';
-import Button from '@/components/@shared/button/Button';
 import RoleChip from '@/components/@shared/chip/RoleChip';
-import TextChip from '@/components/@shared/chip/TextChip';
 import { cn } from '@/utils/cn';
-
-type RoleVariant = 'DEVELOPER' | 'DESIGNER' | 'PLANNER' | 'ALL';
+import TextChip from '../../chip/TextChip';
 
 interface SmallPostCardProps {
-  title: string;
-  targetJob: string;
-  thumbnailImgUrl: string;
-  categoryNames: string[];
-  moveToDetail?: string;
-  isMyPage?: boolean;
+  data: {
+    title: string;
+    targetJob: string;
+    logoImageUrl: string;
+    categoryNames: string[];
+  };
+  styles?: {
+    title?: string;
+    icon?: string;
+    container?: string;
+  };
 }
 
-const SmallPostCard = ({
-  title,
-  targetJob,
-  thumbnailImgUrl,
-  categoryNames,
-  moveToDetail,
-  isMyPage,
-}: SmallPostCardProps) => {
+const SmallPostCard = ({ data, styles }: SmallPostCardProps) => {
+  const { title, targetJob, logoImageUrl, categoryNames } = data;
+
+  console.log('targetJob', targetJob);
+
   return (
-    <div
-      className={cn(
-        'w-full overflow-hidden pb-4',
-        isMyPage ? 'rounded-[10px] bg-gray-800 pt-5 pb-7 px-5' : 'border-b border-gray-600',
-      )}
-    >
+    <div className={cn('flex flex-col gap-5 overflow-hidden', styles?.container)}>
       <div className="flex gap-2">
-        <RoleChip variant={targetJob as RoleVariant} />
+        <RoleChip role="DESIGNER" />
         {categoryNames.map((categoryName) => (
           <TextChip key={categoryName} label={categoryName} />
         ))}
       </div>
 
-      <div className="mt-5 flex w-full items-center gap-3">
-        <div className="relative h-22 w-22 shrink-0 overflow-hidden rounded-[10px]">
+      <div className="flex items-center gap-4">
+        <div
+          className={cn(
+            'relative h-[85px] w-[85px] shrink-0 overflow-hidden rounded-[10px]',
+            styles?.icon,
+          )}
+        >
           <Image
-            src={thumbnailImgUrl}
+            src={logoImageUrl}
             alt={`썸네일 이미지`}
             fill
             sizes="100%"
             className="object-cover"
           />
         </div>
-        <div className="min-w-0 flex-1 flex-col pl-4">
-          <h3
-            className={cn(
-              'line-clamp-2 font-title2 text-gray-50',
-              isMyPage ? 'font-body2' : 'font-title2',
-            )}
-          >
-            {title}
-          </h3>
+        <div className="flex-1">
+          <h3 className={cn('line-clamp-2 font-title1 text-gray-50', styles?.title)}>{title}</h3>
         </div>
       </div>
-
-      {moveToDetail && (
-        <div className="flex justify-end">
-          <Link href={moveToDetail as string}>
-            <Button
-              variant="lined"
-              size="sm"
-              className="h-[40px] w-[180px] gap-2 rounded-full pl-2"
-            >
-              프로젝트 상세보기
-              <RightIcon className="h-5 w-5 text-gray-50" />
-            </Button>
-          </Link>
-        </div>
-      )}
     </div>
   );
 };

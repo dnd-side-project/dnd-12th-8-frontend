@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority';
-import { DesignerIcon, DeveloperIcon, PlannerIcon, UsersIcon } from '@/assets/icons';
 import { Icon } from '@/components/@shared/icons/Icon';
 import { cn } from '@/utils/cn';
+import { Role, ROLE_MAP } from '../select/RoleSelect';
 
 const roleTagVariants = cva(
   'inline-flex items-center gap-2 rounded-3xl px-3 py-1 text-sm font-caption1 bg-gray-600 border',
@@ -11,7 +11,7 @@ const roleTagVariants = cva(
         DESIGNER: 'text-purple-300 border-purple-300',
         PLANNER: 'text-orange-400 border-orange-400',
         DEVELOPER: 'text-pink-400 border-pink-400',
-        ALL: 'text-gray-50 border-gray-600',
+        ALL: 'bg-gray-600 text-gray-50 border-gray-600',
       },
     },
     defaultVariants: {
@@ -24,30 +24,16 @@ export type RoleVariant = 'DESIGNER' | 'PLANNER' | 'DEVELOPER' | 'ALL';
 
 interface RoleTagProps {
   className?: string;
-  variant?: RoleVariant;
+  role: Role;
 }
 
-const ROLE_ICONS = {
-  DESIGNER: DesignerIcon,
-  PLANNER: PlannerIcon,
-  DEVELOPER: DeveloperIcon,
-  ALL: UsersIcon,
-};
-
-const ROLE_LABELS = {
-  DESIGNER: '디자이너',
-  PLANNER: '기획자',
-  DEVELOPER: '개발자',
-  ALL: '모두',
-};
-
-function RoleChip({ variant = 'DEVELOPER', className }: RoleTagProps) {
-  const IconComponent = ROLE_ICONS[variant];
+function RoleChip({ role = 'DEVELOPER', className }: RoleTagProps) {
+  const { icon, label } = ROLE_MAP[role];
 
   return (
-    <div className={cn(roleTagVariants({ variant }), className)}>
-      <Icon icon={IconComponent} width={24} height={24} color="currentColor" />
-      <span>{ROLE_LABELS[variant]}</span>
+    <div className={cn(roleTagVariants({ variant: role }), className)}>
+      <Icon icon={icon} width={24} height={24} color="currentColor" />
+      <span>{label}</span>
     </div>
   );
 }

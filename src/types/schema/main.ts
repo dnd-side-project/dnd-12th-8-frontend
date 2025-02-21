@@ -1,12 +1,11 @@
 export interface PostCardItemSchema {
-  id: number;
-  imageUrl: string;
+  projectId: number;
+  logoImageUrl: string;
   title: string;
-  thumbnailUrl: string;
+  thumbnailImageUrl: string;
   point: number;
-  target: string;
   questionCount: number;
-  role: 'ALL' | 'DESIGNER' | 'PLANNER' | 'DEVELOPER';
+  targetJob: 'ALL' | 'DESIGNER' | 'PLANNER' | 'DEVELOPER';
 }
 
 export interface CarouselItemSchema {

@@ -24,7 +24,7 @@ const FeedbackQuestion = ({
   const renderQuestionContent = () => {
     switch (questionType) {
       case 'LIKERT_SCALE':
-        return <LikertScaleForm onSelect={onAnswerChange} />;
+        return <LikertScaleForm options={options} onSelect={onAnswerChange} />;
 
       case 'SHORT_ANSWER':
         return <ShortAnswerForm answer={answer} onAnswerChange={onAnswerChange} />;
@@ -34,7 +34,7 @@ const FeedbackQuestion = ({
           <ABTestForm
             abImageAUrl={abImageAUrl}
             abImageBUrl={abImageBUrl}
-            answer={answer}
+            selectedOption={answer as string}
             onAnswerChange={onAnswerChange}
           />
         );

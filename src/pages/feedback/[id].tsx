@@ -3,7 +3,12 @@ import { useRouter } from 'next/router';
 import SmallPostCard from '@/components/@shared/card/post-card/SmallPostCard';
 import FeedbackQuestion from '@/components/feedback/FeedbackQuestion';
 import FeedbackStepController from '@/components/feedback/FeedbackStepController';
-import { useGetProjectDetail, useGetFeedbackForms, useSaveFeedbackForm } from '@/generated';
+import {
+  useGetProjectDetail,
+  useGetFeedbackForms,
+  useSaveFeedbackForm,
+  FeedbackResponseRequest,
+} from '@/generated';
 import { useFeedbackForm } from '@/hooks/useFeedbackForm';
 
 const FeedbackPage = () => {
@@ -12,7 +17,6 @@ const FeedbackPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { mutate: submitFeedback } = useSaveFeedbackForm();
 
-  // feedbackForm API 호출로 변경
   const { data: feedbackForms } = useGetFeedbackForms(Number(id));
   const { data: projectDetail } = useGetProjectDetail(Number(id));
 
@@ -38,24 +42,16 @@ const FeedbackPage = () => {
         return;
       }
 
-      const formattedAnswers = answers.map((answer) => ({
-        questionId: String(answer.questionId),
-        questionType: answer.questionType,
-        selectedOption: Array.isArray(answer.answer) ? answer.answer[0] : answer.answer,
-        responseText: Array.isArray(answer.answer) ? '' : answer.answer,
-      }));
-
       const submitData = {
         projectId: Number(id),
-        answers: formattedAnswers,
-      };
-      console.log(submitData);
+        answers: answers,
+      } as FeedbackResponseRequest;
 
+      console.log(submitData);
       submitFeedback(
         { data: submitData },
         {
           onSuccess: () => {
-            console.log(formattedAnswers);
             alert('피드백 제출이 완료되었습니다.');
             void router.push('/main');
           },
@@ -101,7 +97,7 @@ const FeedbackPage = () => {
             abImageAUrl={currentQuestion?.abImageAUrl}
             abImageBUrl={currentQuestion?.abImageBUrl}
             questionId={currentStep}
-            answer={currentAnswer}
+            answer={currentAnswer?.selectedOption || currentAnswer?.responseText || ''}
             onAnswerChange={handleAnswerChange}
           />
         </div>

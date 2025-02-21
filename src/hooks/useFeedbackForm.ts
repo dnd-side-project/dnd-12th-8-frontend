@@ -6,9 +6,10 @@ interface FeedbackFormRequest {
 }
 
 interface FeedbackAnswer {
-  questionId: number;
+  questionId: string;
   questionType: FeedbackFormResponseType;
-  answer: string | string[];
+  selectedOption?: string;
+  responseText?: string;
 }
 
 export const useFeedbackForm = (
@@ -18,21 +19,72 @@ export const useFeedbackForm = (
   const [answers, setAnswers] = useState<FeedbackAnswer[]>([]);
 
   const totalSteps = feedbackFormRequest?.feedbackQuestions?.length ?? 0;
+  console.log('🚀 ~ answers:', answers);
   const currentQuestion = feedbackFormRequest?.feedbackQuestions?.[currentStep - 1];
-  const currentAnswer = answers.find((a) => a.questionId === currentStep)?.answer;
-  const hasCurrentAnswer = Boolean(currentAnswer);
+  const currentAnswer = answers.find((a) => a.questionId === currentQuestion?.questionId) || {
+    selectedOption: '',
+    responseText: '',
+  };
+  const hasCurrentAnswer = Boolean(currentAnswer?.selectedOption || currentAnswer?.responseText);
 
   const handleAnswerChange = (answer: string | string[]) => {
     if (!currentQuestion) return;
 
     setAnswers((prev) => {
-      const newAnswer: FeedbackAnswer = {
-        questionId: currentStep,
+      const existingAnswerIndex = prev.findIndex(
+        (a) => a.questionId === currentQuestion.questionId,
+      );
+
+      let formattedAnswer: FeedbackAnswer = {
+        questionId: currentQuestion.questionId as string,
         questionType: currentQuestion.type as FeedbackFormResponseType,
-        answer,
       };
 
-      return [...prev.filter((a) => a.questionId !== currentStep), newAnswer];
+      switch (currentQuestion.type) {
+        case 'MULTIPLE_CHOICE':
+          formattedAnswer = {
+            ...formattedAnswer,
+            selectedOption: String(Number(answer) - 1),
+          };
+          break;
+
+        case 'LIKERT_SCALE': {
+          const score = Number(answer) - 1;
+          formattedAnswer = {
+            ...formattedAnswer,
+            selectedOption: String(score),
+            responseText: currentQuestion.options?.[score] || '',
+          };
+          break;
+        }
+
+        case 'SHORT_ANSWER':
+          formattedAnswer = {
+            ...formattedAnswer,
+            responseText: answer as string,
+          };
+          break;
+
+        case 'AB_TEST': {
+          if (Array.isArray(answer)) {
+            const [selectedOption, responseText] = answer;
+            formattedAnswer = {
+              ...formattedAnswer,
+              selectedOption,
+              responseText,
+            };
+          }
+          break;
+        }
+      }
+
+      if (existingAnswerIndex !== -1) {
+        const newAnswers = [...prev];
+        newAnswers[existingAnswerIndex] = formattedAnswer;
+        return newAnswers;
+      }
+
+      return [...prev, formattedAnswer];
     });
   };
 

@@ -85,10 +85,12 @@ const FeedbackPage = () => {
         <div className="flex-1">
           <div className="mb-8">
             <SmallPostCard
-              title={projectDetail?.title ?? ''}
-              targetJob={projectDetail?.targetJob ?? ''}
-              thumbnailImgUrl={projectDetail?.thumbnailImgUrl ?? ''}
-              categoryNames={projectDetail?.platformCategories?.categoryNames ?? ['도서']}
+              data={{
+                title: projectDetail?.title ?? '',
+                targetJob: projectDetail?.targetJob ?? '',
+                logoImageUrl: projectDetail?.thumbnailImgUrl ?? '',
+                categoryNames: projectDetail?.platformCategories?.categoryNames ?? ['도서'],
+              }}
             />
           </div>
 

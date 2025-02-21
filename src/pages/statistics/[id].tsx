@@ -1,17 +1,17 @@
 import { useRouter } from 'next/router';
-import SmallPostCard from '@/components/@shared/card/post-card/SmallPostCard';
+// import SmallPostCard from '@/components/@shared/card/post-card/SmallPostCard';
 import ABTestStatistics from '@/components/mypage/statistics/ABTestStatistics';
 import LikertStatistics from '@/components/mypage/statistics/LikertStatistics';
 import SelectStatistics from '@/components/mypage/statistics/SelectStatistics';
 import ShortAnswerStatistics from '@/components/mypage/statistics/ShortAnswerStatistics';
 import StatisticsSidebar from '@/components/mypage/statistics/StatisticsSidebar';
 
-const statisticsFormHeader = {
-  title: 'AI 추천 시스템 프로젝트',
-  targetJob: 'developer',
-  thumbnailImgUrl: 'https://picsum.photos/id/217/100/100',
-  categoryNames: ['웹', '식음료'],
-};
+// const statisticsFormHeader = {
+//   title: 'AI 추천 시스템 프로젝트',
+//   targetJob: 'developer',
+//   thumbnailImgUrl: 'https://picsum.photos/id/217/100/100',
+//   categoryNames: ['웹', '식음료'],
+// };
 
 const sidebarInfo = {
   totalResponses: 25,
@@ -118,13 +118,13 @@ const StatisticsPage = () => {
     <div className="mx-auto flex flex-col gap-8 p-4 pb-55 laptop:flex-row laptop:pb-10">
       <div className="flex-1">
         <div className="mb-8">
-          <SmallPostCard
+          {/* <SmallPostCard
             title={statisticsFormHeader.title}
             targetJob={statisticsFormHeader.targetJob}
             thumbnailImgUrl={statisticsFormHeader.thumbnailImgUrl}
             categoryNames={statisticsFormHeader.categoryNames}
             moveToDetail={`/projects/${id}`}
-          />
+          /> */}
         </div>
         <div className="flex flex-col gap-8">
           <LikertStatistics {...likertScaleStatisticsData} />

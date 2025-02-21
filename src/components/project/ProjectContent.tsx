@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { AlertTriangleIcon, LinkIcon, ShareIcon } from '@/assets/icons';
 import { ProjectDetailResponse, useGetProjectDetail } from '@/generated';
@@ -69,12 +68,12 @@ function ProjectContent() {
         return <iframe allowFullScreen width="100%" height="450" src={item.detailContent || ''} />;
       case 'LINK':
         return (
-          <Link href={`http://${item.detailContent}` || ''} target="_blank" rel="noreferrer">
+          <a href={item.detailContent} target="_blank" rel="noreferrer">
             <div className="flex items-center gap-3 rounded-[10px] bg-gray-700 px-[18px] py-[16px] font-body3-regular text-gray-50">
-              <Icon icon={LinkIcon} color="currentColor" />
-              {item.detailContent}
+              <Icon icon={LinkIcon} color="currentColor" className="flex-shrink-0" />
+              <p className="break-all">{item.detailContent}</p>
             </div>
-          </Link>
+          </a>
         );
     }
   };

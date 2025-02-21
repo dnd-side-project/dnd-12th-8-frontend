@@ -6,6 +6,7 @@ import CalendarIcon from './calendar.svg';
 import CheckIcon from './check.svg';
 import CloseIcon from './close.svg';
 import CoinsStackedIcon from './coins-stacked.svg';
+import CorrectIcon from './correct.svg';
 import CursorClickIcon from './cursor-click.svg';
 import DesignerIcon from './designer.svg';
 import DeveloperIcon from './developer.svg';
@@ -18,6 +19,7 @@ import GraduationHatIcon from './graduation-hat.svg';
 import HeartActiveIcon from './heart-active.svg';
 import HeartIcon from './heart.svg';
 import ImageIcon from './image.svg';
+import IncorrectIcon from './incorrect.svg';
 import KakaoIcon from './kakao.svg';
 import LeftIcon from './left.svg';
 import LightbulbIcon from './lightbulb.svg';
@@ -47,6 +49,7 @@ export {
   CheckIcon,
   CloseIcon,
   CoinsStackedIcon,
+  CorrectIcon,
   CursorClickIcon,
   DesignerIcon,
   DeveloperIcon,
@@ -59,6 +62,7 @@ export {
   HeartActiveIcon,
   HeartIcon,
   ImageIcon,
+  IncorrectIcon,
   KakaoIcon,
   LeftIcon,
   LightbulbIcon,

@@ -86,15 +86,16 @@ const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
         <div className={gridClassName}>
           {postcardItems.map((item) => (
             <PostCard
-              key={item.id}
-              id={item.id}
-              imageUrl={item.imageUrl}
-              thumbnailUrl={item.thumbnailUrl}
-              title={item.title}
-              point={item.point}
-              target={item.target}
-              questionCount={item.questionCount}
-              role={item.role}
+              key={item.projectId}
+              data={{
+                projectId: item.projectId,
+                logoImageUrl: item.logoImageUrl,
+                thumbnailImageUrl: item.thumbnailImageUrl,
+                title: item.title,
+                point: item.point,
+                targetJob: item.targetJob,
+                questionCount: item.questionCount,
+              }}
             />
           ))}
         </div>
@@ -116,14 +117,15 @@ const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
             return page.content.map((item) => (
               <PostCard
                 key={item.projectId}
-                id={item.projectId || 0}
-                imageUrl={item.thumbnailImgUrl || ''}
-                thumbnailUrl={item.thumbnailImgUrl || ''}
-                title={item.title || ''}
-                point={0}
-                target={'developer'}
-                questionCount={0}
-                role={'DEVELOPER'}
+                data={{
+                  projectId: item.projectId || 0,
+                  logoImageUrl: item.logoImgUrl || '',
+                  thumbnailImageUrl: item.thumbnailImgUrl || '',
+                  title: item.title || '',
+                  point: 100,
+                  targetJob: 'DESIGNER',
+                  questionCount: 10,
+                }}
               />
             ));
           })}

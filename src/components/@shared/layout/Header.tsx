@@ -21,10 +21,10 @@ function Header() {
 
   return (
     <>
-      <div className="sticky top-0 left-0 z-50 mb-4 flex w-full items-center justify-between bg-gray-900 py-3 tablet:pt-6 laptop:mb-[58px] laptop:pt-7">
-        <Link href="/">
+      <div className="sticky top-0 left-0 z-50 flex w-full items-center justify-between bg-gray-900 pt-3 pb-7 tablet:pt-6 laptop:pt-7 laptop:pb-[58px]">
+        <Link href="/main">
           <LogoShortIcon className="laptop:hidden" />
-          <LogoFullIcon className="hidden laptop:block" />
+          <LogoFullIcon className="hidden h-[50px] w-[200px] laptop:block" />
         </Link>
 
         {isLoggedIn ? (

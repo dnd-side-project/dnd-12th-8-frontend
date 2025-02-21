@@ -23,7 +23,7 @@ const TabSection = ({ isMyPage = false }: TabSectionProps) => {
   const tabs = [
     { id: 'popular', label: '인기 Post' },
     { id: 'recommend', label: '추천 Post' },
-    // { id: 'search', label: '검색' },
+    { id: 'search', label: '검색' },
   ];
 
   const myPageTabs = [

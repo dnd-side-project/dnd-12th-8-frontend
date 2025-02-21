@@ -1,29 +1,30 @@
+import { useState } from 'react';
 import PostCard from '@/components/@shared/card/post-card/PostCard';
-// import { useSearchProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
-import { useGetRecommendedProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
-import { useGetPopularProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
-import { useSearchProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
-import { PostCardItemSchema } from '@/types/schema';
+import {
+  useGetPopularProjectsInfinite,
+  useGetRecommendedProjectsInfinite,
+  useSearchProjectsInfinite,
+} from '@/generated';
+import NoItemHome from './NoItemHome';
 
 interface RenderTabContentProps {
   activeTab: string;
-  postcardItems: PostCardItemSchema[];
 }
 
-const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) => {
+const RenderTabContent = ({ activeTab }: RenderTabContentProps) => {
+  const [searchKeyword, setSearchKeyword] = useState('');
+
   // 검색 프로젝트
   const searchProjects = useSearchProjectsInfinite(
     {
-      keyword: '',
-      roles: [],
-      categories: [],
+      query: searchKeyword.trim(),
       page: 0,
       size: 30,
       sort: 'string',
     } as any,
     {
       query: {
-        enabled: activeTab === 'search',
+        enabled: activeTab === 'search' && searchKeyword.trim().length > 0,
         getNextPageParam: (lastPage) => {
           if (!lastPage.last && typeof lastPage.number === 'number') {
             return lastPage.number + 1;
@@ -82,25 +83,6 @@ const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
 
   switch (activeTab) {
     case 'popular':
-      return (
-        <div className={gridClassName}>
-          {postcardItems.map((item) => (
-            <PostCard
-              key={item.projectId}
-              data={{
-                projectId: item.projectId,
-                logoImageUrl: item.logoImageUrl,
-                thumbnailImageUrl: item.thumbnailImageUrl,
-                title: item.title,
-                point: item.point,
-                targetJob: item.targetJob,
-                questionCount: item.questionCount,
-              }}
-            />
-          ))}
-        </div>
-      );
-    case 'recommend':
       if (!popularProjects.data) {
         return (
           <div className="flex h-[400px] items-center justify-center">
@@ -109,9 +91,48 @@ const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
         );
       }
 
+      if (popularProjects.data.pages[0].content?.length === 0) {
+        return <NoItemHome ment="인기 Post" />;
+      }
+
       return (
         <div className={gridClassName}>
           {popularProjects.data.pages.map((page) => {
+            if (!page.content) return null;
+
+            return page.content.map((item) => (
+              <PostCard
+                key={item.projectId}
+                data={{
+                projectId: item.projectId || 0,
+                logoImageUrl: item.thumbnailImageUrl || '',
+                thumbnailImageUrl: item.thumbnailImageUrl || '',
+                title: item.title || '',
+                point: 100,
+                targetJob: 'DEVELOPER',
+                questionCount: 10,
+              }}
+              />
+            ));
+          })}
+        </div>
+      );
+    case 'recommend':
+      if (!recommendedProjects.data) {
+        return (
+          <div className="flex h-[400px] items-center justify-center">
+            <div>로딩중...</div>
+          </div>
+        );
+      }
+
+      if (recommendedProjects.data.pages[0].content?.length === 0) {
+        return <NoItemHome ment="추천 Post" />;
+      }
+
+      return (
+        <div className={gridClassName}>
+          {recommendedProjects.data.pages.map((page) => {
             if (!page.content) return null;
 
             return page.content.map((item) => (
@@ -133,14 +154,52 @@ const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
       );
     case 'search':
       return (
-        <div className="flex h-[400px] items-center justify-center">
-          <div className="w-full max-w-2xl px-4">
+        <div className="">
+          <div className="mx-auto mb-8 w-full max-w-2xl overflow-hidden rounded-full">
             <input
               type="text"
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
               placeholder="검색어를 입력하세요"
-              className="focus:border-primary w-full rounded-lg border border-gray-300 p-4 focus:outline-none"
+              className="focus:border-primary w-full rounded-full bg-gray-600 p-4 text-gray-50 focus:outline-none"
             />
           </div>
+
+          {searchKeyword.trim().length === 0 && (
+            <div className="text-center text-gray-500">검색어를 입력해주세요</div>
+          )}
+
+          {searchKeyword.trim().length > 0 && !searchProjects.data && (
+            <div className="flex items-center justify-center">
+              <div>로딩중...</div>
+            </div>
+          )}
+
+          {searchProjects.data && searchProjects.data.pages[0].content && (
+            <div className={gridClassName}>
+              {searchProjects.data.pages.map((page) => {
+                if (!page.content) return null;
+
+                return page.content.map((item) => (
+                  <PostCard
+                    key={item.projectId}
+                    data={{
+                      projectId: item.projectId || 0,
+                      logoImageUrl: item.thumbnailImageUrl || '',
+                      thumbnailImageUrl: item.thumbnailImageUrl || '',
+                      title: item.title || '',
+                      point: 100,
+                      targetJob: 'DEVELOPER',
+                      questionCount: 10,
+                    }}
+                  />
+                ));
+              })}
+            </div>
+          )}
+
+          {searchProjects.data?.pages[0].content?.length === 0 &&
+            searchKeyword.trim().length > 0 && <NoItemHome ment="검색 결과" />}
         </div>
       );
   }

@@ -1,6 +1,7 @@
 import AlarmIcon from './alarm.svg';
 import AlertTriangleIcon from './alert-triangle.svg';
 import ArrowDownIcon from './arrow-down.svg';
+import ArrowRightIcon from './arrow-right.svg';
 import ArrowUpIcon from './arrow-up.svg';
 import CalendarIcon from './calendar.svg';
 import CheckIcon from './check.svg';
@@ -82,4 +83,5 @@ export {
   PencilIcon,
   ArrowUpIcon,
   ArrowDownIcon,
+  ArrowRightIcon,
 };

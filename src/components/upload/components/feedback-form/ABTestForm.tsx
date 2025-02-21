@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { ImageIcon } from '@/assets/icons';
+import { usePresignedUrl } from '@/hooks/usePresignedUrl';
 
 interface ImagePreview {
   url: string;
@@ -13,12 +14,30 @@ const ABTestForm = () => {
     B: null,
   });
 
+  const { uploadImage, isUploading } = usePresignedUrl();
+  console.log('🚀 ~ ABTestForm ~ isUploading:', isUploading);
+
   const handleImageUpload = async (type: 'A' | 'B', file: File) => {
-    const url = URL.createObjectURL(file);
-    setImages((prev) => ({
-      ...prev,
-      [type]: { url, file },
-    }));
+    try {
+      // 임시 미리보기 URL 생성
+      const previewUrl = URL.createObjectURL(file);
+      setImages((prev) => ({
+        ...prev,
+        [type]: { url: previewUrl, file },
+      }));
+
+      const imageUrl = await uploadImage(file);
+
+      if (imageUrl) {
+        // 실제 업로드된 URL로 업데이트
+        setImages((prev) => ({
+          ...prev,
+          [type]: { url: imageUrl, file },
+        }));
+      }
+    } catch (error) {
+      console.error('이미지 업로드 실패:', error);
+    }
   };
 
   return (
@@ -48,7 +67,7 @@ const ABTestForm = () => {
               ) : (
                 <label className="flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2">
                   <ImageIcon className="h-8 w-8 text-gray-300" />
-                  <span className="text-gray-300 px-4">이미지를 업로드해주세요</span>
+                  <span className="px-4 text-gray-300">이미지를 업로드해주세요</span>
                   <input
                     type="file"
                     accept="image/*"

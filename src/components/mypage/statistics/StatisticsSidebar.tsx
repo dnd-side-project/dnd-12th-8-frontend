@@ -64,7 +64,7 @@ const StatisticsSidebar = ({
   };
 
   return (
-    <div className="fixed bottom-0 left-0 z-30 w-full border-t-[1px] border-gray-700 bg-gray-900 px-4 pb-4 laptop:sticky laptop:top-30 laptop:h-screen laptop:w-[360px] laptop:border-none">
+    <div className="fixed bottom-0 left-0 z-30 w-full border-t-[1px] border-gray-700 bg-gray-900 px-4 pb-4 laptop:sticky laptop:top-35 laptop:h-screen laptop:w-[360px] laptop:border-none">
       <div className="mx-auto w-full flex-col items-stretch justify-between gap-2 tablet:max-w-[800px] laptop:flex laptop:h-full laptop:flex-col-reverse">
         <div className="flex-1">{sidebarInfo()}</div>
         <div className="flex flex-row gap-4 laptop:flex-col-reverse laptop:gap-2">

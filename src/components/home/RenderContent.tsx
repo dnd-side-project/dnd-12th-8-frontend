@@ -104,14 +104,14 @@ const RenderTabContent = ({ activeTab }: RenderTabContentProps) => {
               <PostCard
                 key={item.projectId}
                 data={{
-                projectId: item.projectId || 0,
-                logoImageUrl: item.thumbnailImageUrl || '',
-                thumbnailImageUrl: item.thumbnailImageUrl || '',
-                title: item.title || '',
-                point: 100,
-                targetJob: 'DEVELOPER',
-                questionCount: 10,
-              }}
+                  projectId: item.projectId || 0,
+                  logoImageUrl: item.logoImgUrl || '',
+                  thumbnailImageUrl: item.thumbnailImgUrl || '',
+                  title: item.title || '',
+                  point: 100,
+                  targetJob: item.targetJob || 'ALL',
+                  questionCount: 10,
+                }}
               />
             ));
           })}
@@ -185,11 +185,11 @@ const RenderTabContent = ({ activeTab }: RenderTabContentProps) => {
                     key={item.projectId}
                     data={{
                       projectId: item.projectId || 0,
-                      logoImageUrl: item.thumbnailImageUrl || '',
-                      thumbnailImageUrl: item.thumbnailImageUrl || '',
+                      logoImageUrl: item.logoImgUrl || '',
+                      thumbnailImageUrl: item.thumbnailImgUrl || '',
                       title: item.title || '',
                       point: 100,
-                      targetJob: 'DEVELOPER',
+                      targetJob: item.targetJob || 'ALL',
                       questionCount: 10,
                     }}
                   />

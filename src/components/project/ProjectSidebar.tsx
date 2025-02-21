@@ -1,15 +1,19 @@
+import { useRouter } from 'next/router';
 import { CoinsStackedIcon, HeartIcon } from '@/assets/icons';
 import Button from '../@shared/button/Button';
 import { Icon } from '../@shared/icons/Icon';
 
 const ProjectDesktopSidebar = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
   return (
     <div className="hidden w-full flex-col gap-5 desktop:flex">
       <div className="flex gap-3">
         <Button variant="gray" size="icon-lg">
           <Icon icon={HeartIcon} />
         </Button>
-        <Button variant="primary" size="lg">
+        <Button variant="primary" size="lg" onClick={() => void router.push(`/quiz/${Number(id)}`)}>
           참여하기
         </Button>
       </div>
@@ -29,6 +33,9 @@ const ProjectDesktopSidebar = () => {
 };
 
 const ProjectBottombar = () => {
+  const router = useRouter();
+  const { id } = router.query;
+
   return (
     <div className="flex items-center justify-center border-t border-gray-700 bg-gray-900 px-4 pt-[12px] pb-[24px]">
       <div className="flex w-full items-center justify-between gap-5 tablet:max-w-[800px] laptop:max-w-[1040px] desktop:hidden">
@@ -41,7 +48,12 @@ const ProjectBottombar = () => {
           </div>
         </div>
         <div className="flex gap-3 tablet:w-[495px]">
-          <Button variant="primary" size="lg" className="flex-1">
+          <Button
+            variant="primary"
+            size="lg"
+            className="flex-1"
+            onClick={() => void router.push(`/quiz/${Number(id)}`)}
+          >
             참여하기
           </Button>
           <Button variant="gray" size="icon-lg">

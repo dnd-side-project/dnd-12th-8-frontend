@@ -4,6 +4,7 @@ import { AlertTriangleIcon, LinkIcon, ShareIcon } from '@/assets/icons';
 import { ProjectDetailResponse, useGetProjectDetail } from '@/generated';
 import SmallPostCard from '../@shared/card/post-card/SmallPostCard';
 import { Icon } from '../@shared/icons/Icon';
+import ProjectMemberSection from './ProjectMemberSection';
 
 // const MOCK_IMAGE_URL =
 //   'https://images.unsplash.com/photo-1581712075036-2584cb8a3644?q=80&w=2982&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D';
@@ -110,9 +111,12 @@ function ProjectContent() {
 
       <div className="mt-[40px] flex flex-col gap-8">
         {renderContent({ type: 'TEXT', detailContent: description })}
+
         {projectDetailData?.projectDetails?.map((item) => {
           return renderContent(item);
         })}
+
+        <ProjectMemberSection data={projectDetailData?.projectMembers || []} />
       </div>
     </div>
   );

@@ -48,7 +48,7 @@
   --color-gray-900: #1a1a1a;
 
   /* 브레이크포인트 */
-  --breakpoint-tablet: 30rem; /* 480px 이상 */
+  --breakpoint-tablet: 36rem; /* 576px 이상 */
   --breakpoint-laptop: 64rem; /* 1024px 이상 */
   --breakpoint-desktop: 90rem; /* 1440px 이상 */
 }

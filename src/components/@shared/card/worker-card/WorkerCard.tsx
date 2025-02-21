@@ -3,13 +3,15 @@ import { CloseIcon } from '@/assets/icons';
 import Badge from '../../bage/Badge';
 import { Icon } from '../../icons/Icon';
 import { profileImage } from '../../layout/Header';
+import { LEVEL_MAP } from '../../select/LevelSelect';
+import { ROLE_MAP } from '../../select/RoleSelect';
 
 export interface Worker {
   id: number;
   name: string;
   isAuthor: boolean;
-  position: '디자인' | '개발자' | '기획자';
-  level: '현직자' | '학습자';
+  position: 'DESIGNER' | 'DEVELOPER' | 'PLANNER';
+  level: 'PROFESSIONAL' | 'LEARNER';
 }
 
 interface WorkerCardProps {
@@ -19,6 +21,9 @@ interface WorkerCardProps {
 
 function WorkerCard({ isEditable = false, data }: WorkerCardProps) {
   const { name, isAuthor, position, level } = data;
+  const positionLabel = ROLE_MAP[position].label;
+  const levelLabel = LEVEL_MAP[level].label;
+
   return (
     <div className="relative rounded-[10px] bg-gray-700 px-5 py-4.5">
       <div className="flex items-center gap-3">
@@ -31,8 +36,8 @@ function WorkerCard({ isEditable = false, data }: WorkerCardProps) {
             {isAuthor && <span className="font-caption1 text-gray-200">작성자</span>}
           </div>
           <div className="flex items-center gap-2">
-            <Badge label={position} />
-            <Badge label={level} />
+            <Badge label={positionLabel} />
+            <Badge label={levelLabel} />
           </div>
         </div>
       </div>

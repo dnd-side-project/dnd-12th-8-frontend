@@ -3,7 +3,6 @@ import Header from '@/components/@shared/layout/Header';
 import TabSection from '@/components/@shared/tab/TabSection';
 import Carousel from '@/components/home/Carousel';
 import RenderContent from '@/components/home/RenderContent';
-import { fakePostCardItems } from '@/constants/fake-data/fakePostCardItems';
 import { useGetAdvertisedProjects } from '@/generated';
 
 const MainPage = () => {
@@ -31,7 +30,7 @@ const MainPage = () => {
       <div className="mt-15 mb-12">{advertisedProjects && <Carousel items={postCardItems} />}</div>
       <div className="mx-auto max-w-[1200px] px-4 tablet:px-6 laptop:px-8">
         <TabSection />
-        <RenderContent activeTab={tab as string} postcardItems={fakePostCardItems} />
+        <RenderContent activeTab={tab as string} />
       </div>
     </div>
   );

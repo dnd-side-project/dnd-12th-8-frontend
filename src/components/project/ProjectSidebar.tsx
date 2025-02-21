@@ -2,9 +2,9 @@ import { CoinsStackedIcon, HeartIcon } from '@/assets/icons';
 import Button from '../@shared/button/Button';
 import { Icon } from '../@shared/icons/Icon';
 
-function ProjectSidebar() {
+const ProjectDesktopSidebar = () => {
   return (
-    <div className="flex w-full flex-col gap-5">
+    <div className="hidden w-full flex-col gap-5 desktop:flex">
       <div className="flex gap-3">
         <Button variant="gray" size="icon-lg">
           <Icon icon={HeartIcon} />
@@ -25,6 +25,40 @@ function ProjectSidebar() {
         </div>
       </div>
     </div>
+  );
+};
+
+const ProjectBottombar = () => {
+  return (
+    <div className="flex items-center justify-center border-t border-gray-700 bg-gray-900 px-4 pt-[12px] pb-[24px]">
+      <div className="flex w-full justify-between gap-5 tablet:max-w-[800px] laptop:max-w-[1040px] desktop:hidden">
+        <div className="flex flex-1 flex-col gap-1">
+          <p className="font-subtitle text-gray-50">200 Point</p>
+          <div className="flex items-center gap-2 font-body2 text-purple-200">
+            <p>사전퀴즈</p>
+            <p>•</p>
+            <p>10문항</p>
+          </div>
+        </div>
+        <div className="flex gap-3 tablet:w-[495px]">
+          <Button variant="primary" size="lg" className="flex-1">
+            참여하기
+          </Button>
+          <Button variant="gray" size="icon-lg">
+            <Icon icon={HeartIcon} />
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+function ProjectSidebar() {
+  return (
+    <>
+      <ProjectDesktopSidebar />
+      <ProjectBottombar />
+    </>
   );
 }
 

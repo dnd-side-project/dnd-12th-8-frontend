@@ -25,7 +25,7 @@ function OnboardingModal({ onClose }: { onClose: () => void }) {
 
   const handleSubmit = () => {
     const { nickname, job, level, categoryIds } = getValues();
-    console.log(userInfo?.memberId, userInfo?.email, nickname, job, level, categoryIds);
+
     if (!userInfo?.memberId || !nickname || !job || !level || !categoryIds.length) return;
 
     completeOnboardingMutate({

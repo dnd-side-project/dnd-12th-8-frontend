@@ -41,6 +41,7 @@ export * from './myPageProjectDetailResponseDtoProjectStatus';
 export * from './myPageProjectDetailResponseDtoTargetJob';
 export * from './myPageProjectDetailResponseDtoTargetLevel';
 export * from './myPageProjectResponseDto';
+export * from './myPageProjectResponseDtoJob';
 export * from './onboardingRequest';
 export * from './onboardingRequestJob';
 export * from './onboardingRequestLevel';

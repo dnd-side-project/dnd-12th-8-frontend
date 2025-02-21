@@ -29,6 +29,26 @@ export const getGetTempProjectListResponseMock = (
       logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       description: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      dueDate: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      job: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      platformCategoryResponse: faker.helpers.arrayElement([
+        {
+          platform: faker.helpers.arrayElement([
+            faker.helpers.arrayElement(['APP', 'WEB'] as const),
+            undefined,
+          ]),
+          categoryNames: faker.helpers.arrayElement([
+            Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+              faker.string.alpha(20),
+            ),
+            undefined,
+          ]),
+        },
+        undefined,
+      ]),
     })),
     undefined,
   ]),
@@ -168,6 +188,26 @@ export const getGetProjectListResponseMock = (
       logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       description: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      dueDate: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      job: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      platformCategoryResponse: faker.helpers.arrayElement([
+        {
+          platform: faker.helpers.arrayElement([
+            faker.helpers.arrayElement(['APP', 'WEB'] as const),
+            undefined,
+          ]),
+          categoryNames: faker.helpers.arrayElement([
+            Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+              faker.string.alpha(20),
+            ),
+            undefined,
+          ]),
+        },
+        undefined,
+      ]),
     })),
     undefined,
   ]),
@@ -192,6 +232,26 @@ export const getGetFavoriteProjectListResponseMock = (
       logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       description: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      dueDate: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      job: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      platformCategoryResponse: faker.helpers.arrayElement([
+        {
+          platform: faker.helpers.arrayElement([
+            faker.helpers.arrayElement(['APP', 'WEB'] as const),
+            undefined,
+          ]),
+          categoryNames: faker.helpers.arrayElement([
+            Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+              faker.string.alpha(20),
+            ),
+            undefined,
+          ]),
+        },
+        undefined,
+      ]),
     })),
     undefined,
   ]),

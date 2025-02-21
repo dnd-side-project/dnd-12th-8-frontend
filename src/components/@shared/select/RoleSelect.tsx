@@ -1,8 +1,10 @@
 import { cva } from 'class-variance-authority';
-import { DesignerIcon, DeveloperIcon, PlannerIcon } from '@/assets/icons';
+import { DesignerIcon, DeveloperIcon, PlannerIcon, UsersIcon } from '@/assets/icons';
 import { MemberResponseJob } from '@/generated';
 import { cn } from '@/utils/cn';
 import { Icon } from '../icons/Icon';
+
+export type Role = MemberResponseJob | 'ALL';
 
 interface RoleSelectProps {
   type?: 'outline' | 'solid';
@@ -23,6 +25,10 @@ export const ROLE_MAP = {
   PLANNER: {
     label: 'PM/PO',
     icon: PlannerIcon,
+  },
+  ALL: {
+    label: '모두',
+    icon: UsersIcon,
   },
 };
 
@@ -73,8 +79,6 @@ const roleButtonVariants = cva('', {
 });
 
 function RoleSelect({ type = 'outline', role, isSelected = false, onChange }: RoleSelectProps) {
-  console.log('isSelected', isSelected, role, type);
-
   return (
     <button
       onClick={() => onChange()}

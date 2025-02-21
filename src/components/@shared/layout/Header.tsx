@@ -29,14 +29,15 @@ function Header() {
 
         {isLoggedIn ? (
           <div className="flex items-center gap-6">
-            <Link href="/upload">
-              <Button
-                variant="lined"
-                className="h-auto w-auto min-w-0 rounded-full px-3 py-2 tablet:px-4 tablet:py-3"
-              >
-                <p className="font-body3 tablet:font-body1">Upload</p>
-              </Button>
-            </Link>
+            {/* <Link href="/upload"> */}
+            <Button
+              onClick={() => void alert('준비중입니다.')}
+              variant="lined"
+              className="h-auto w-auto min-w-0 rounded-full px-3 py-2 tablet:px-4 tablet:py-3"
+            >
+              <p className="font-body3 tablet:font-body1">Upload</p>
+            </Button>
+            {/* </Link> */}
             <button className="flex h-8 w-8 items-center justify-center tablet:h-12 tablet:w-12">
               <Icon icon={AlarmIcon} className="h-5 w-5 tablet:h-7 tablet:w-7" />
             </button>

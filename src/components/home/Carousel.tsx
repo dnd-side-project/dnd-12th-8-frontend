@@ -1,12 +1,15 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import { useEffect } from 'react';
 import { useCallback } from 'react';
 import { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { LeftIcon, RightIcon } from '@/assets/icons';
 import MoneyChip from '@/components/@shared/chip/MoneyChip';
 // import RoleChip from '@/components/@shared/chip/RoleChip';
 
 const Carousel = ({ items }: { items: any }) => {
+  const router = useRouter();
   const extendedItems = [items[items.length - 1], ...items, items[0]];
   const [currentIndex, setCurrentIndex] = useState(1);
   const [transition, setTransition] = useState(true);
@@ -104,13 +107,14 @@ const Carousel = ({ items }: { items: any }) => {
           {extendedItems.map((item, index) => (
             <div key={`${item.id}-${index}`} className="relative w-1/3 flex-shrink-0">
               <div
-                className={`relative mx-auto h-full overflow-hidden rounded-2xl ${
+                className={`relative mx-auto h-full cursor-pointer overflow-hidden rounded-2xl ${
                   transition ? 'transition-all duration-300' : ''
                 } ${
                   index === currentIndex
                     ? 'scale-100 opacity-100'
                     : 'scale-100 opacity-0 tablet:scale-90 tablet:opacity-60'
                 }`}
+                onClick={() => void router.push(`/project/${item.id}`)}
               >
                 <Image
                   src={item.imageUrl}

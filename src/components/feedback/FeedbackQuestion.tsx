@@ -34,7 +34,7 @@ const FeedbackQuestion = ({
           <ABTestForm
             abImageAUrl={abImageAUrl}
             abImageBUrl={abImageBUrl}
-            answer={answer}
+            answer={answer as { selectedOption?: string; responseText?: string }}
             onAnswerChange={onAnswerChange}
           />
         );

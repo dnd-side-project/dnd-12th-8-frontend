@@ -13,7 +13,7 @@ const SelectForm = ({ options, answer, onAnswerChange }: SelectFormProps) => {
         <button
           key={index}
           className={`w-full rounded-lg border-2 bg-gray-600 px-5 py-4 text-left font-body2 text-gray-50 transition-all duration-250 ${
-            selectedIndex === index + 1 ? 'border-purple-500 text-purple-400' : 'border-transparent'
+            selectedIndex === index ? 'border-purple-500 text-purple-400' : 'border-transparent'
           }`}
           onClick={() => onAnswerChange(String(index + 1))}
         >

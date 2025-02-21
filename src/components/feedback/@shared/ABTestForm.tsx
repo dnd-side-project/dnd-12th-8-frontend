@@ -3,19 +3,25 @@ import Image from 'next/image';
 interface ABTestFormProps {
   abImageAUrl?: string;
   abImageBUrl?: string;
-  answer: string | string[] | undefined;
-  onAnswerChange: (answer: string[]) => void;
+  answer?: {
+    selectedOption?: string;
+    responseText?: string;
+  };
+  onAnswerChange: (answer: [string, string]) => void;
 }
 
 const ABTestForm = ({ abImageAUrl, abImageBUrl, answer, onAnswerChange }: ABTestFormProps) => {
-  const [selectedOption, responseText] = Array.isArray(answer) ? answer : ['', ''];
+  const selectedOption = answer?.selectedOption || '';
+  console.log('🚀 ~ ABTestForm ~ selectedOption:', selectedOption);
+  console.log(answer);
+  const responseText = answer?.responseText || '';
 
   const handleOptionSelect = (option: 'A' | 'B') => {
     onAnswerChange([option, responseText]);
   };
 
-  const handleFeedbackChange = (feedback: string) => {
-    onAnswerChange([selectedOption, feedback]);
+  const handleFeedbackChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onAnswerChange([selectedOption || '', e.target.value]);
   };
 
   return (
@@ -50,7 +56,7 @@ const ABTestForm = ({ abImageAUrl, abImageBUrl, answer, onAnswerChange }: ABTest
           placeholder="선택한 이유를 입력해 주세요"
           className="font-body2 text-gray-50 placeholder:text-gray-400"
           value={responseText}
-          onChange={(e) => handleFeedbackChange(e.target.value)}
+          onChange={handleFeedbackChange}
         />
       </div>
     </div>

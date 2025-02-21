@@ -76,7 +76,7 @@ function ProjectContent() {
         );
       case 'LINK':
         return (
-          <Link href={item.detailContent || ''} target="_blank" rel="noreferrer">
+          <Link href={`http://${item.detailContent}` || ''} target="_blank" rel="noreferrer">
             <div className="flex items-center gap-3 rounded-[10px] bg-gray-700 px-[18px] py-[16px] font-body3-regular text-gray-50">
               <Icon icon={LinkIcon} color="currentColor" />
               {item.detailContent}

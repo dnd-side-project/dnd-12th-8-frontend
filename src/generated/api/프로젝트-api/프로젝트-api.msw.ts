@@ -11,6 +11,7 @@ import type {
   ApiResponseLong,
   ApiResponseVoid,
   PageProjectListResponseDto,
+  ProjectCategoryRecommendationResponseDto,
   ProjectResponseDto,
 } from '../../models';
 
@@ -75,6 +76,21 @@ export const getGetProjectDetailResponseMock = (
   ]),
   isAdvertised: faker.helpers.arrayElement([faker.datatype.boolean(), undefined]),
   projectMemberEmails: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+  projectMembers: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      memberName: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      job: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      level: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['LEARNER', 'PROFESSIONAL'] as const),
+        undefined,
+      ]),
+      profileUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+    })),
+    undefined,
+  ]),
   projectStatus: faker.helpers.arrayElement([
     faker.helpers.arrayElement(['TEMPORARY', 'OPEN', 'CLOSED'] as const),
     undefined,
@@ -117,6 +133,22 @@ export const getGetProjectDetailResponseMock = (
     })),
     undefined,
   ]),
+  comments: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      memberName: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      job: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      level: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['LEARNER', 'PROFESSIONAL'] as const),
+        undefined,
+      ]),
+      content: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      profileUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+    })),
+    undefined,
+  ]),
   ...overrideResponse,
 });
 
@@ -131,6 +163,26 @@ export const getDeleteProjectResponseMock = (
   data: faker.helpers.arrayElement([{}, undefined]),
   ...overrideResponse,
 });
+
+export const getGetRelatedProjectsResponseMock = (): ProjectCategoryRecommendationResponseDto[] =>
+  Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+    projectId: faker.helpers.arrayElement([
+      faker.number.int({ min: undefined, max: undefined }),
+      undefined,
+    ]),
+    title: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+    targetLevel: faker.helpers.arrayElement([
+      faker.helpers.arrayElement(['LEARNER', 'PROFESSIONAL'] as const),
+      undefined,
+    ]),
+    targetJob: faker.helpers.arrayElement([
+      faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+      undefined,
+    ]),
+    description: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+    thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+    logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+  }));
 
 export const getSearchProjectsResponseMock = (
   overrideResponse: Partial<PageProjectListResponseDto> = {},
@@ -537,6 +589,31 @@ export const getDeleteProjectMockHandler = (
   });
 };
 
+export const getGetRelatedProjectsMockHandler = (
+  overrideResponse?:
+    | ProjectCategoryRecommendationResponseDto[]
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) =>
+        | Promise<ProjectCategoryRecommendationResponseDto[]>
+        | ProjectCategoryRecommendationResponseDto[]),
+) => {
+  return http.get('*/projects/:projectId/related', async (info) => {
+    await delay(1000);
+
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetRelatedProjectsResponseMock(),
+      ),
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
+    );
+  });
+};
+
 export const getSearchProjectsMockHandler = (
   overrideResponse?:
     | PageProjectListResponseDto
@@ -633,6 +710,7 @@ export const getApiMock = () => [
   getSaveFinalProjectMockHandler(),
   getGetProjectDetailMockHandler(),
   getDeleteProjectMockHandler(),
+  getGetRelatedProjectsMockHandler(),
   getSearchProjectsMockHandler(),
   getGetRecommendedProjectsMockHandler(),
   getGetPopularProjectsMockHandler(),

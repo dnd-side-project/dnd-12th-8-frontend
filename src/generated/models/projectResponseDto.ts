@@ -4,6 +4,8 @@
  * 98 percents API 명세서
  * OpenAPI spec version: v1
  */
+import type { CommentDto } from './commentDto';
+import type { MemberSubInfoResponse } from './memberSubInfoResponse';
 import type { PlatformCategoryResponse } from './platformCategoryResponse';
 import type { ProjectDetailResponse } from './projectDetailResponse';
 import type { ProjectResponseDtoProjectStatus } from './projectResponseDtoProjectStatus';
@@ -25,8 +27,10 @@ export interface ProjectResponseDto {
   targetLevel?: ProjectResponseDtoTargetLevel;
   isAdvertised?: boolean;
   projectMemberEmails?: string;
+  projectMembers?: MemberSubInfoResponse[];
   projectStatus?: ProjectResponseDtoProjectStatus;
   platformCategories?: PlatformCategoryResponse;
   projectDetails?: ProjectDetailResponse[];
   quizzes?: QuizResponse[];
+  comments?: CommentDto[];
 }

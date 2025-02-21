@@ -6,11 +6,42 @@
  */
 import { faker } from '@faker-js/faker';
 import { HttpResponse, delay, http } from 'msw';
-import type { MemberResponse, PointResponseDto } from '../../models';
+import type {
+  ApiResponseMemberSearchResponseDto,
+  MemberResponse,
+  PointResponseDto,
+} from '../../models';
 
 export const getCompleteOnboardingResponseMock = (): string => faker.word.sample();
 
 export const getUpdateOnboardingStatusResponseMock = (): string => faker.word.sample();
+
+export const getGetMemberResponseMock = (
+  overrideResponse: Partial<ApiResponseMemberSearchResponseDto> = {},
+): ApiResponseMemberSearchResponseDto => ({
+  status: faker.helpers.arrayElement([
+    faker.number.int({ min: undefined, max: undefined }),
+    undefined,
+  ]),
+  message: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+  data: faker.helpers.arrayElement([
+    {
+      email: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      job: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      level: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['LEARNER', 'PROFESSIONAL'] as const),
+        undefined,
+      ]),
+      profileUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      memberName: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+    },
+    undefined,
+  ]),
+  ...overrideResponse,
+});
 
 export const getGetUserPointsResponseMock = (
   overrideResponse: Partial<PointResponseDto> = {},
@@ -98,6 +129,29 @@ export const getUpdateOnboardingStatusMockHandler = (
   });
 };
 
+export const getGetMemberMockHandler = (
+  overrideResponse?:
+    | ApiResponseMemberSearchResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) => Promise<ApiResponseMemberSearchResponseDto> | ApiResponseMemberSearchResponseDto),
+) => {
+  return http.get('*/members/search', async (info) => {
+    await delay(1000);
+
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetMemberResponseMock(),
+      ),
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
+    );
+  });
+};
+
 export const getGetUserPointsMockHandler = (
   overrideResponse?:
     | PointResponseDto
@@ -146,6 +200,7 @@ export const getGetMemberInfoMockHandler = (
 export const getApiMock = () => [
   getCompleteOnboardingMockHandler(),
   getUpdateOnboardingStatusMockHandler(),
+  getGetMemberMockHandler(),
   getGetUserPointsMockHandler(),
   getGetMemberInfoMockHandler(),
 ];

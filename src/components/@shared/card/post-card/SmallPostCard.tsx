@@ -1,7 +1,9 @@
+import dayjs from 'dayjs';
 import Image from 'next/image';
 import RoleChip from '@/components/@shared/chip/RoleChip';
 import { cn } from '@/utils/cn';
 import TextChip from '../../chip/TextChip';
+import { Role } from '../../select/RoleSelect';
 
 interface SmallPostCardProps {
   data: {
@@ -9,6 +11,7 @@ interface SmallPostCardProps {
     targetJob: string;
     logoImageUrl: string;
     categoryNames: string[];
+    dueDate?: string;
   };
   styles?: {
     title?: string;
@@ -18,17 +21,18 @@ interface SmallPostCardProps {
 }
 
 const SmallPostCard = ({ data, styles }: SmallPostCardProps) => {
-  const { title, targetJob, logoImageUrl, categoryNames } = data;
+  const { title, targetJob, logoImageUrl, categoryNames, dueDate } = data;
 
-  console.log('targetJob', targetJob);
+  const dday = dayjs(dueDate).diff(dayjs(), 'day');
 
   return (
     <div className={cn('flex flex-col gap-5 overflow-hidden', styles?.container)}>
       <div className="flex gap-2">
-        <RoleChip role="DESIGNER" />
+        <RoleChip role={targetJob as Role} />
         {categoryNames.map((categoryName) => (
           <TextChip key={categoryName} label={categoryName} />
         ))}
+        {dueDate && <TextChip type="outline" label={`D-${dday}`} />}
       </div>
 
       <div className="flex items-center gap-4">

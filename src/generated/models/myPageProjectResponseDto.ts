@@ -4,6 +4,8 @@
  * 98 percents API 명세서
  * OpenAPI spec version: v1
  */
+import type { MyPageProjectResponseDtoJob } from './myPageProjectResponseDtoJob';
+import type { PlatformCategoryResponse } from './platformCategoryResponse';
 
 export interface MyPageProjectResponseDto {
   projectId?: number;
@@ -11,4 +13,7 @@ export interface MyPageProjectResponseDto {
   logoImgUrl?: string;
   thumbnailImgUrl?: string;
   description?: string;
+  dueDate?: string;
+  job?: MyPageProjectResponseDtoJob;
+  platformCategoryResponse?: PlatformCategoryResponse;
 }

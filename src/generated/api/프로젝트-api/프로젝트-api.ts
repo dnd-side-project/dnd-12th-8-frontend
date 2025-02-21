@@ -19,6 +19,7 @@ import type {
   GetPopularProjectsParams,
   GetRecommendedProjectsParams,
   PageProjectListResponseDto,
+  ProjectCategoryRecommendationResponseDto,
   ProjectCreateRequest,
   ProjectResponseDto,
   SearchProjectsParams,
@@ -661,6 +662,410 @@ export const useDeleteProject = <
 
   return useMutation(mutationOptions);
 };
+/**
+ * 특정 프로젝트와 같은 카테고리를 가진 프로젝트 목록 조회
+ * @summary 연관 카테고리 프로젝트 조회
+ */
+export const getRelatedProjects = (
+  projectId: number,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<ProjectCategoryRecommendationResponseDto[]>(
+    { url: `/projects/${projectId}/related`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getGetRelatedProjectsQueryKey = (projectId: number) => {
+  return [`/projects/${projectId}/related`] as const;
+};
+
+export const getGetRelatedProjectsInfiniteQueryOptions = <
+  TData = InfiniteData<Awaited<ReturnType<typeof getRelatedProjects>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetRelatedProjectsQueryKey(projectId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRelatedProjects>>> = ({ signal }) =>
+    getRelatedProjects(projectId, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!projectId, ...queryOptions } as UseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof getRelatedProjects>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetRelatedProjectsInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRelatedProjects>>
+>;
+export type GetRelatedProjectsInfiniteQueryError = unknown;
+
+export function useGetRelatedProjectsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getRelatedProjects>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options: {
+    query: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetRelatedProjectsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getRelatedProjects>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetRelatedProjectsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getRelatedProjects>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 연관 카테고리 프로젝트 조회
+ */
+
+export function useGetRelatedProjectsInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getRelatedProjects>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseInfiniteQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetRelatedProjectsInfiniteQueryOptions(projectId, options);
+
+  const query = useInfiniteQuery(queryOptions) as UseInfiniteQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetRelatedProjectsQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRelatedProjects>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetRelatedProjectsQueryKey(projectId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRelatedProjects>>> = ({ signal }) =>
+    getRelatedProjects(projectId, requestOptions, signal);
+
+  return { queryKey, queryFn, enabled: !!projectId, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getRelatedProjects>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetRelatedProjectsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRelatedProjects>>
+>;
+export type GetRelatedProjectsQueryError = unknown;
+
+export function useGetRelatedProjects<
+  TData = Awaited<ReturnType<typeof getRelatedProjects>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options: {
+    query: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>> &
+      Pick<
+        DefinedInitialDataOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetRelatedProjects<
+  TData = Awaited<ReturnType<typeof getRelatedProjects>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>,
+        'initialData'
+      >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetRelatedProjects<
+  TData = Awaited<ReturnType<typeof getRelatedProjects>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 연관 카테고리 프로젝트 조회
+ */
+
+export function useGetRelatedProjects<
+  TData = Awaited<ReturnType<typeof getRelatedProjects>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<UseQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>>;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetRelatedProjectsQueryOptions(projectId, options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetRelatedProjectsSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof getRelatedProjects>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetRelatedProjectsQueryKey(projectId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRelatedProjects>>> = ({ signal }) =>
+    getRelatedProjects(projectId, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof getRelatedProjects>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetRelatedProjectsSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRelatedProjects>>
+>;
+export type GetRelatedProjectsSuspenseQueryError = unknown;
+
+export function useGetRelatedProjectsSuspense<
+  TData = Awaited<ReturnType<typeof getRelatedProjects>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options: {
+    query: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetRelatedProjectsSuspense<
+  TData = Awaited<ReturnType<typeof getRelatedProjects>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetRelatedProjectsSuspense<
+  TData = Awaited<ReturnType<typeof getRelatedProjects>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 연관 카테고리 프로젝트 조회
+ */
+
+export function useGetRelatedProjectsSuspense<
+  TData = Awaited<ReturnType<typeof getRelatedProjects>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetRelatedProjectsSuspenseQueryOptions(projectId, options);
+
+  const query = useSuspenseQuery(queryOptions) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetRelatedProjectsSuspenseInfiniteQueryOptions = <
+  TData = InfiniteData<Awaited<ReturnType<typeof getRelatedProjects>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetRelatedProjectsQueryKey(projectId);
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getRelatedProjects>>> = ({ signal }) =>
+    getRelatedProjects(projectId, requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof getRelatedProjects>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetRelatedProjectsSuspenseInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getRelatedProjects>>
+>;
+export type GetRelatedProjectsSuspenseInfiniteQueryError = unknown;
+
+export function useGetRelatedProjectsSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getRelatedProjects>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options: {
+    query: Partial<
+      UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetRelatedProjectsSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getRelatedProjects>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetRelatedProjectsSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getRelatedProjects>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 연관 카테고리 프로젝트 조회
+ */
+
+export function useGetRelatedProjectsSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getRelatedProjects>>>,
+  TError = unknown,
+>(
+  projectId: number,
+  options?: {
+    query?: Partial<
+      UseSuspenseInfiniteQueryOptions<Awaited<ReturnType<typeof getRelatedProjects>>, TError, TData>
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
+): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetRelatedProjectsSuspenseInfiniteQueryOptions(projectId, options);
+
+  const query = useSuspenseInfiniteQuery(queryOptions) as UseSuspenseInfiniteQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
 /**
  * 직무, 카테고리(다중) 선택 가능
  * @summary 프로젝트 전체 조회(검색 Post)

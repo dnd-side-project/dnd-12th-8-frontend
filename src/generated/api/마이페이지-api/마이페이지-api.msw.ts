@@ -29,6 +29,26 @@ export const getGetTempProjectListResponseMock = (
       logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       description: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      dueDate: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      job: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      platformCategoryResponse: faker.helpers.arrayElement([
+        {
+          platform: faker.helpers.arrayElement([
+            faker.helpers.arrayElement(['APP', 'WEB'] as const),
+            undefined,
+          ]),
+          categoryNames: faker.helpers.arrayElement([
+            Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+              faker.string.alpha(20),
+            ),
+            undefined,
+          ]),
+        },
+        undefined,
+      ]),
     })),
     undefined,
   ]),
@@ -168,6 +188,70 @@ export const getGetProjectListResponseMock = (
       logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       description: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      dueDate: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      job: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      platformCategoryResponse: faker.helpers.arrayElement([
+        {
+          platform: faker.helpers.arrayElement([
+            faker.helpers.arrayElement(['APP', 'WEB'] as const),
+            undefined,
+          ]),
+          categoryNames: faker.helpers.arrayElement([
+            Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+              faker.string.alpha(20),
+            ),
+            undefined,
+          ]),
+        },
+        undefined,
+      ]),
+    })),
+    undefined,
+  ]),
+  ...overrideResponse,
+});
+
+export const getGetParticipateProjectResponseMock = (
+  overrideResponse: Partial<ApiResponseListMyPageProjectResponseDto> = {},
+): ApiResponseListMyPageProjectResponseDto => ({
+  status: faker.helpers.arrayElement([
+    faker.number.int({ min: undefined, max: undefined }),
+    undefined,
+  ]),
+  message: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+  data: faker.helpers.arrayElement([
+    Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() => ({
+      projectId: faker.helpers.arrayElement([
+        faker.number.int({ min: undefined, max: undefined }),
+        undefined,
+      ]),
+      title: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      description: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      dueDate: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      job: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      platformCategoryResponse: faker.helpers.arrayElement([
+        {
+          platform: faker.helpers.arrayElement([
+            faker.helpers.arrayElement(['APP', 'WEB'] as const),
+            undefined,
+          ]),
+          categoryNames: faker.helpers.arrayElement([
+            Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+              faker.string.alpha(20),
+            ),
+            undefined,
+          ]),
+        },
+        undefined,
+      ]),
     })),
     undefined,
   ]),
@@ -192,6 +276,26 @@ export const getGetFavoriteProjectListResponseMock = (
       logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
       description: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      dueDate: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      job: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      platformCategoryResponse: faker.helpers.arrayElement([
+        {
+          platform: faker.helpers.arrayElement([
+            faker.helpers.arrayElement(['APP', 'WEB'] as const),
+            undefined,
+          ]),
+          categoryNames: faker.helpers.arrayElement([
+            Array.from({ length: faker.number.int({ min: 1, max: 10 }) }, (_, i) => i + 1).map(() =>
+              faker.string.alpha(20),
+            ),
+            undefined,
+          ]),
+        },
+        undefined,
+      ]),
     })),
     undefined,
   ]),
@@ -273,6 +377,31 @@ export const getGetProjectListMockHandler = (
   });
 };
 
+export const getGetParticipateProjectMockHandler = (
+  overrideResponse?:
+    | ApiResponseListMyPageProjectResponseDto
+    | ((
+        info: Parameters<Parameters<typeof http.get>[1]>[0],
+      ) =>
+        | Promise<ApiResponseListMyPageProjectResponseDto>
+        | ApiResponseListMyPageProjectResponseDto),
+) => {
+  return http.get('*/my-page/participate-project', async (info) => {
+    await delay(1000);
+
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getGetParticipateProjectResponseMock(),
+      ),
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
+    );
+  });
+};
+
 export const getGetFavoriteProjectListMockHandler = (
   overrideResponse?:
     | ApiResponseListMyPageProjectResponseDto
@@ -301,5 +430,6 @@ export const getApiMock = () => [
   getGetTempProjectListMockHandler(),
   getGetTempProjectDetailMockHandler(),
   getGetProjectListMockHandler(),
+  getGetParticipateProjectMockHandler(),
   getGetFavoriteProjectListMockHandler(),
 ];

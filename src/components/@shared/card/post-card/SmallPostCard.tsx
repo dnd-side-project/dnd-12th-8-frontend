@@ -6,7 +6,7 @@ import RoleChip from '@/components/@shared/chip/RoleChip';
 import TextChip from '@/components/@shared/chip/TextChip';
 import { cn } from '@/utils/cn';
 
-type RoleVariant = 'developer' | 'designer' | 'planner' | 'all';
+type RoleVariant = 'DEVELOPER' | 'DESIGNER' | 'PLANNER' | 'ALL';
 
 interface SmallPostCardProps {
   title: string;

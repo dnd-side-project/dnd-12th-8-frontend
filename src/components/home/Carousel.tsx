@@ -6,7 +6,7 @@ import { LeftIcon, RightIcon } from '@/assets/icons';
 import MoneyChip from '@/components/@shared/chip/MoneyChip';
 import RoleChip from '@/components/@shared/chip/RoleChip';
 
-const Carousel = ({ items }: any) => {
+const Carousel = ({ items }: { items: any }) => {
   const extendedItems = [items[items.length - 1], ...items, items[0]];
   const [currentIndex, setCurrentIndex] = useState(1);
   const [transition, setTransition] = useState(true);

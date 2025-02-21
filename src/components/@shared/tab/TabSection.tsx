@@ -10,13 +10,13 @@ const TabSection = ({ activeTab, isMyPage = false }: TabSectionProps) => {
   const tabs = [
     { id: 'popular', label: '인기 Post' },
     { id: 'recommend', label: '추천 Post' },
-    { id: 'search', label: '검색' },
+    // { id: 'search', label: '검색' },
   ];
 
   const myPageTabs = [
     { id: 'writtenPosts', label: '작성한 Post' },
     { id: 'likedPosts', label: '좋아요한 Post' },
-    { id: 'writtenReviews', label: '작성한 Review' },
+    // { id: 'writtenReviews', label: '작성한 Review' },
   ];
 
   return (

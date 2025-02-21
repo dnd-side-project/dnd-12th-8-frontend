@@ -17,9 +17,8 @@ const MainPage = () => {
     imageUrl: project.thumbnailImgUrl,
     thumbnailUrl: project.thumbnailImgUrl,
     point: 100,
-    role: project.role,
-    target: project.target,
-    questionCount: project.questionCount,
+    role: project.targetJob ?? 'ALL',
+    questionCount: 5,
   }));
 
   return (
@@ -29,9 +28,7 @@ const MainPage = () => {
           <Header />
         </div>
       </div>
-      <div className="mt-15 mb-12">
-        {advertisedProjects && postCardItems && <Carousel items={postCardItems} />}
-      </div>
+      <div className="mt-15 mb-12">{advertisedProjects && <Carousel items={postCardItems} />}</div>
       <div className="mx-auto max-w-[1200px] px-4 tablet:px-6 laptop:px-8">
         <TabSection activeTab={tab as string} />
         <RenderContent activeTab={tab as string} postcardItems={fakePostCardItems} />

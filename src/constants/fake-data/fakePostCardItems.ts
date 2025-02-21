@@ -9,7 +9,7 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 250,
     target: '초등 1학년',
     questionCount: 8,
-    role: 'all',
+    role: 'ALL',
   },
   {
     id: 2,
@@ -19,7 +19,7 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 200,
     target: '유치원',
     questionCount: 12,
-    role: 'designer',
+    role: 'DESIGNER',
   },
   {
     id: 3,
@@ -29,7 +29,7 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 350,
     target: '초등 전체',
     questionCount: 10,
-    role: 'planner',
+    role: 'PLANNER',
   },
   {
     id: 4,
@@ -39,7 +39,7 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 200,
     target: '초등 3-4학년',
     questionCount: 6,
-    role: 'developer',
+    role: 'DEVELOPER',
   },
   {
     id: 5,
@@ -49,7 +49,7 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 400,
     target: '초등 5-6학년',
     questionCount: 15,
-    role: 'all',
+    role: 'ALL',
   },
   {
     id: 6,
@@ -59,7 +59,7 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 280,
     target: '초등 2학년',
     questionCount: 9,
-    role: 'all',
+    role: 'ALL',
   },
   {
     id: 7,
@@ -69,7 +69,7 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 320,
     target: '초등 3학년',
     questionCount: 8,
-    role: 'developer',
+    role: 'DEVELOPER',
   },
   {
     id: 8,
@@ -79,7 +79,7 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 300,
     target: '초등 1-2학년',
     questionCount: 12,
-    role: 'all',
+    role: 'ALL',
   },
   {
     id: 9,
@@ -89,7 +89,7 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 350,
     target: '초등 2-3학년',
     questionCount: 10,
-    role: 'developer',
+    role: 'DEVELOPER',
   },
   {
     id: 10,
@@ -99,7 +99,7 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 270,
     target: '초등 3-4학년',
     questionCount: 8,
-    role: 'developer',
+    role: 'DEVELOPER',
   },
   {
     id: 11,
@@ -109,6 +109,6 @@ export const fakePostCardItems: PostCardItemSchema[] = [
     point: 380,
     target: '초등 4-5학년',
     questionCount: 14,
-    role: 'developer',
+    role: 'DEVELOPER',
   },
 ];

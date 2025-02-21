@@ -39,7 +39,7 @@ const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
   const recommendedProjects = useGetRecommendedProjectsInfinite(
     {
       page: 0,
-      size: 30,
+      size: 100,
       sort: 'string',
     } as any,
     {
@@ -60,7 +60,7 @@ const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
   const popularProjects = useGetPopularProjectsInfinite(
     {
       page: 0,
-      size: 30,
+      size: 100,
       sort: 'string',
     } as any,
     {
@@ -123,7 +123,7 @@ const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
                 point={0}
                 target={'developer'}
                 questionCount={0}
-                role={'developer'}
+                role={'DEVELOPER'}
               />
             ));
           })}

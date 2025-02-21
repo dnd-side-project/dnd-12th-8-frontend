@@ -12,4 +12,5 @@ export interface CommentDto {
   job?: CommentDtoJob;
   level?: CommentDtoLevel;
   content?: string;
+  profileUrl?: string;
 }

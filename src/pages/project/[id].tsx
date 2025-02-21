@@ -1,10 +1,7 @@
-import { useRouter } from 'next/router';
+import ProjectDetails from '@/components/project/ProjectDetails';
 
 function ProjectDetailsPage() {
-  const router = useRouter();
-  const { id } = router.query;
-
-  return <div>hi, {id}</div>;
+  return <ProjectDetails />;
 }
 
 export default ProjectDetailsPage;

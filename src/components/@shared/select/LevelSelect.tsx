@@ -12,6 +12,17 @@ interface LevelSelectProps {
   isSelectable?: boolean;
 }
 
+export const LEVEL_MAP = {
+  LEARNER: {
+    icon: DeveloperIcon,
+    label: '학습자',
+  },
+  PROFESSIONAL: {
+    icon: GraduationHatIcon,
+    label: '현직자',
+  },
+};
+
 const levelButtonVariants = cva('', {
   variants: {
     variant: {
@@ -28,23 +39,7 @@ function LevelSelect({
   onChange,
   isSelectable = true,
 }: LevelSelectProps) {
-  const renderIcon = () => {
-    switch (level) {
-      case 'LEARNER':
-        return <Icon icon={DeveloperIcon} color="currentColor" />;
-      case 'PROFESSIONAL':
-        return <Icon icon={GraduationHatIcon} color="currentColor" />;
-    }
-  };
-
-  const renderLabel = () => {
-    switch (level) {
-      case 'LEARNER':
-        return '학습자';
-      case 'PROFESSIONAL':
-        return '현직자';
-    }
-  };
+  const { icon, label } = LEVEL_MAP[level];
 
   return (
     <button
@@ -58,8 +53,8 @@ function LevelSelect({
         !isSelected && 'border-gray-600 bg-gray-600 text-gray-400',
       )}
     >
-      {renderIcon()}
-      <p className="font-body3">{renderLabel()}</p>
+      <Icon icon={icon} color="currentColor" />
+      <p className="font-body3">{label}</p>
     </button>
   );
 }

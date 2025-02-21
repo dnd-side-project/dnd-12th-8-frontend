@@ -145,6 +145,7 @@ export const getGetProjectDetailResponseMock = (
         undefined,
       ]),
       content: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      profileUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
     })),
     undefined,
   ]),

@@ -4,7 +4,13 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   images: {
-    domains: ['picsum.photos', 'images.unsplash.com', 'img1.kakaocdn.net'],
+    domains: [
+      'picsum.photos',
+      'images.unsplash.com',
+      'img1.kakaocdn.net',
+      's3.ap-northeast-2.amazonaws.com',
+      'your-s3-bucket.s3.amazonaws.com',
+    ],
   },
 
   /* svgr 설정 */

@@ -1,16 +1,16 @@
 import PostCard from '@/components/@shared/card/post-card/PostCard';
-// import { useSearchProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
-import { useGetRecommendedProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
-import { useGetPopularProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
-import { useSearchProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
-import { PostCardItemSchema } from '@/types/schema';
+import {
+  useGetPopularProjectsInfinite,
+  useGetRecommendedProjectsInfinite,
+  useSearchProjectsInfinite,
+} from '@/generated';
+import NoItemHome from './NoItemHome';
 
 interface RenderTabContentProps {
   activeTab: string;
-  postcardItems: PostCardItemSchema[];
 }
 
-const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) => {
+const RenderTabContent = ({ activeTab }: RenderTabContentProps) => {
   // 검색 프로젝트
   const searchProjects = useSearchProjectsInfinite(
     {
@@ -82,24 +82,6 @@ const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
 
   switch (activeTab) {
     case 'popular':
-      return (
-        <div className={gridClassName}>
-          {postcardItems.map((item) => (
-            <PostCard
-              key={item.id}
-              id={item.id}
-              imageUrl={item.imageUrl}
-              thumbnailUrl={item.thumbnailUrl}
-              title={item.title}
-              point={item.point}
-              target={item.target}
-              questionCount={item.questionCount}
-              role={item.role}
-            />
-          ))}
-        </div>
-      );
-    case 'recommend':
       if (!popularProjects.data) {
         return (
           <div className="flex h-[400px] items-center justify-center">
@@ -108,9 +90,47 @@ const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
         );
       }
 
+      if (popularProjects.data.pages[0].content?.length === 0) {
+        return <NoItemHome ment="인기 Post" />;
+      }
+
       return (
         <div className={gridClassName}>
           {popularProjects.data.pages.map((page) => {
+            if (!page.content) return null;
+
+            return page.content.map((item) => (
+              <PostCard
+                key={item.projectId}
+                id={item.projectId || 0}
+                imageUrl={item.thumbnailImgUrl || ''}
+                thumbnailUrl={item.thumbnailImgUrl || ''}
+                title={item.title || ''}
+                point={0}
+                target={'developer'}
+                questionCount={0}
+                role={'DEVELOPER'}
+              />
+            ));
+          })}
+        </div>
+      );
+    case 'recommend':
+      if (!recommendedProjects.data) {
+        return (
+          <div className="flex h-[400px] items-center justify-center">
+            <div>로딩중...</div>
+          </div>
+        );
+      }
+
+      if (recommendedProjects.data.pages[0].content?.length === 0) {
+        return <NoItemHome ment="추천 Post" />;
+      }
+
+      return (
+        <div className={gridClassName}>
+          {recommendedProjects.data.pages.map((page) => {
             if (!page.content) return null;
 
             return page.content.map((item) => (

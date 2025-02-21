@@ -5,15 +5,15 @@ const WORKER_MOCK_DATA: Worker[] = [
     id: 1,
     name: '김무이',
     isAuthor: true,
-    position: '디자인',
-    level: '현직자',
+    position: 'DESIGNER',
+    level: 'PROFESSIONAL',
   },
   {
     id: 2,
     name: '김무이',
     isAuthor: false,
-    position: '개발자',
-    level: '학습자',
+    position: 'DEVELOPER',
+    level: 'LEARNER',
   },
 ];
 

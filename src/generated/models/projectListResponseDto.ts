@@ -4,6 +4,8 @@
  * 98 percents API 명세서
  * OpenAPI spec version: v1
  */
+import type { ProjectListResponseDtoTargetJob } from './projectListResponseDtoTargetJob';
+import type { ProjectListResponseDtoTargetLevel } from './projectListResponseDtoTargetLevel';
 
 export interface ProjectListResponseDto {
   projectId?: number;
@@ -13,4 +15,7 @@ export interface ProjectListResponseDto {
   favoriteCount?: number;
   participantCount?: number;
   thumbnailImgUrl?: string;
+  logoImgUrl?: string;
+  targetJob?: ProjectListResponseDtoTargetJob;
+  targetLevel?: ProjectListResponseDtoTargetLevel;
 }

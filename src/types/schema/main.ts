@@ -6,7 +6,7 @@ export interface PostCardItemSchema {
   point: number;
   target: string;
   questionCount: number;
-  role: 'all' | 'designer' | 'planner' | 'developer';
+  role: 'ALL' | 'DESIGNER' | 'PLANNER' | 'DEVELOPER';
 }
 
 export interface CarouselItemSchema {

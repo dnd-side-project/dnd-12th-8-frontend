@@ -5,13 +5,8 @@ import Image from 'next/image';
 import { LeftIcon, RightIcon } from '@/assets/icons';
 import MoneyChip from '@/components/@shared/chip/MoneyChip';
 import RoleChip from '@/components/@shared/chip/RoleChip';
-import { PostCardItemSchema } from '@/types/schema';
 
-interface CarouselProps {
-  items: PostCardItemSchema[];
-}
-
-const Carousel = ({ items }: CarouselProps) => {
+const Carousel = ({ items }: { items: any }) => {
   const extendedItems = [items[items.length - 1], ...items, items[0]];
   const [currentIndex, setCurrentIndex] = useState(1);
   const [transition, setTransition] = useState(true);

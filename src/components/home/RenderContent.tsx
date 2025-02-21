@@ -1,4 +1,8 @@
 import PostCard from '@/components/@shared/card/post-card/PostCard';
+// import { useSearchProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
+import { useGetRecommendedProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
+import { useGetPopularProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
+import { useSearchProjectsInfinite } from '@/generated/api/프로젝트-api/프로젝트-api';
 import { PostCardItemSchema } from '@/types/schema';
 
 interface RenderTabContentProps {
@@ -6,13 +10,78 @@ interface RenderTabContentProps {
   postcardItems: PostCardItemSchema[];
 }
 
-const renderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) => {
+const RenderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) => {
+  // 검색 프로젝트
+  const searchProjects = useSearchProjectsInfinite(
+    {
+      keyword: '',
+      roles: [],
+      categories: [],
+      page: 0,
+      size: 30,
+      sort: 'string',
+    } as any,
+    {
+      query: {
+        enabled: activeTab === 'search',
+        getNextPageParam: (lastPage) => {
+          if (!lastPage.last && typeof lastPage.number === 'number') {
+            return lastPage.number + 1;
+          }
+          return undefined;
+        },
+      },
+    },
+  );
+  console.log('🔍 Search Projects:', searchProjects.data);
+
+  // 추천 프로젝트
+  const recommendedProjects = useGetRecommendedProjectsInfinite(
+    {
+      page: 0,
+      size: 100,
+      sort: 'string',
+    } as any,
+    {
+      query: {
+        enabled: activeTab === 'recommend',
+        getNextPageParam: (lastPage) => {
+          if (!lastPage.last && typeof lastPage.number === 'number') {
+            return lastPage.number + 1;
+          }
+          return undefined;
+        },
+      },
+    },
+  );
+  console.log('👍 Recommended Projects:', recommendedProjects.data);
+
+  // 인기 프로젝트
+  const popularProjects = useGetPopularProjectsInfinite(
+    {
+      page: 0,
+      size: 100,
+      sort: 'string',
+    } as any,
+    {
+      query: {
+        enabled: activeTab === 'popular',
+        getNextPageParam: (lastPage) => {
+          if (!lastPage.last && typeof lastPage.number === 'number') {
+            return lastPage.number + 1;
+          }
+          return undefined;
+        },
+      },
+    },
+  );
+  console.log('🔥 Popular Projects:', popularProjects.data);
+
   const gridClassName =
     'grid grid-cols-1 gap-5 pb-15 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4';
 
   switch (activeTab) {
     case 'popular':
-    case 'recommend':
       return (
         <div className={gridClassName}>
           {postcardItems.map((item) => (
@@ -30,6 +99,36 @@ const renderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
           ))}
         </div>
       );
+    case 'recommend':
+      if (!popularProjects.data) {
+        return (
+          <div className="flex h-[400px] items-center justify-center">
+            <div>로딩중...</div>
+          </div>
+        );
+      }
+
+      return (
+        <div className={gridClassName}>
+          {popularProjects.data.pages.map((page) => {
+            if (!page.content) return null;
+
+            return page.content.map((item) => (
+              <PostCard
+                key={item.projectId}
+                id={item.projectId || 0}
+                imageUrl={item.thumbnailImgUrl || ''}
+                thumbnailUrl={item.thumbnailImgUrl || ''}
+                title={item.title || ''}
+                point={0}
+                target={'developer'}
+                questionCount={0}
+                role={'DEVELOPER'}
+              />
+            ));
+          })}
+        </div>
+      );
     case 'search':
       return (
         <div className="flex h-[400px] items-center justify-center">
@@ -45,4 +144,4 @@ const renderTabContent = ({ activeTab, postcardItems }: RenderTabContentProps) =
   }
 };
 
-export default renderTabContent;
+export default RenderTabContent;

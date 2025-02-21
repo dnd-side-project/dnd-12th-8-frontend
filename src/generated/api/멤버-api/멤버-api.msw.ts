@@ -10,6 +10,8 @@ import type { MemberResponse, PointResponseDto } from '../../models';
 
 export const getCompleteOnboardingResponseMock = (): string => faker.word.sample();
 
+export const getUpdateOnboardingStatusResponseMock = (): string => faker.word.sample();
+
 export const getGetUserPointsResponseMock = (
   overrideResponse: Partial<PointResponseDto> = {},
 ): PointResponseDto => ({
@@ -75,6 +77,27 @@ export const getCompleteOnboardingMockHandler = (
   });
 };
 
+export const getUpdateOnboardingStatusMockHandler = (
+  overrideResponse?:
+    | string
+    | ((info: Parameters<Parameters<typeof http.patch>[1]>[0]) => Promise<string> | string),
+) => {
+  return http.patch('*/members/onboarding-status', async (info) => {
+    await delay(1000);
+
+    return new HttpResponse(
+      JSON.stringify(
+        overrideResponse !== undefined
+          ? typeof overrideResponse === 'function'
+            ? await overrideResponse(info)
+            : overrideResponse
+          : getUpdateOnboardingStatusResponseMock(),
+      ),
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
+    );
+  });
+};
+
 export const getGetUserPointsMockHandler = (
   overrideResponse?:
     | PointResponseDto
@@ -122,6 +145,7 @@ export const getGetMemberInfoMockHandler = (
 };
 export const getApiMock = () => [
   getCompleteOnboardingMockHandler(),
+  getUpdateOnboardingStatusMockHandler(),
   getGetUserPointsMockHandler(),
   getGetMemberInfoMockHandler(),
 ];

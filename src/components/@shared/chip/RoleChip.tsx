@@ -8,19 +8,19 @@ const roleTagVariants = cva(
   {
     variants: {
       variant: {
-        designer: 'text-purple-300 border-purple-300',
-        planner: 'text-orange-400 border-orange-400',
-        developer: 'text-pink-400 border-pink-400',
-        all: 'text-gray-50 border-gray-600',
+        DESIGNER: 'text-purple-300 border-purple-300',
+        PLANNER: 'text-orange-400 border-orange-400',
+        DEVELOPER: 'text-pink-400 border-pink-400',
+        ALL: 'text-gray-50 border-gray-600',
       },
     },
     defaultVariants: {
-      variant: 'developer',
+      variant: 'DEVELOPER',
     },
   },
 );
 
-export type RoleVariant = 'designer' | 'planner' | 'developer' | 'all';
+export type RoleVariant = 'DESIGNER' | 'PLANNER' | 'DEVELOPER' | 'ALL';
 
 interface RoleTagProps {
   className?: string;
@@ -28,20 +28,20 @@ interface RoleTagProps {
 }
 
 const ROLE_ICONS = {
-  designer: DesignerIcon,
-  planner: PlannerIcon,
-  developer: DeveloperIcon,
-  all: UsersIcon,
+  DESIGNER: DesignerIcon,
+  PLANNER: PlannerIcon,
+  DEVELOPER: DeveloperIcon,
+  ALL: UsersIcon,
 };
 
 const ROLE_LABELS = {
-  designer: '디자이너',
-  planner: '기획자',
-  developer: '개발자',
-  all: '모두',
+  DESIGNER: '디자이너',
+  PLANNER: '기획자',
+  DEVELOPER: '개발자',
+  ALL: '모두',
 };
 
-function RoleChip({ variant = 'developer', className }: RoleTagProps) {
+function RoleChip({ variant = 'DEVELOPER', className }: RoleTagProps) {
   const IconComponent = ROLE_ICONS[variant];
 
   return (

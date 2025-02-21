@@ -165,6 +165,15 @@ export const getSearchProjectsResponseMock = (
         undefined,
       ]),
       thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      targetJob: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      targetLevel: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['LEARNER', 'PROFESSIONAL'] as const),
+        undefined,
+      ]),
     })),
     undefined,
   ]),
@@ -250,6 +259,15 @@ export const getGetRecommendedProjectsResponseMock = (
         undefined,
       ]),
       thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      targetJob: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      targetLevel: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['LEARNER', 'PROFESSIONAL'] as const),
+        undefined,
+      ]),
     })),
     undefined,
   ]),
@@ -335,6 +353,15 @@ export const getGetPopularProjectsResponseMock = (
         undefined,
       ]),
       thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+      targetJob: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+        undefined,
+      ]),
+      targetLevel: faker.helpers.arrayElement([
+        faker.helpers.arrayElement(['LEARNER', 'PROFESSIONAL'] as const),
+        undefined,
+      ]),
     })),
     undefined,
   ]),
@@ -405,6 +432,15 @@ export const getGetAdvertisedProjectsResponseMock = (): AdvertisedProjectRespons
       undefined,
     ]),
     thumbnailImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+    logoImgUrl: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
+    targetJob: faker.helpers.arrayElement([
+      faker.helpers.arrayElement(['DEVELOPER', 'PLANNER', 'DESIGNER'] as const),
+      undefined,
+    ]),
+    targetLevel: faker.helpers.arrayElement([
+      faker.helpers.arrayElement(['LEARNER', 'PROFESSIONAL'] as const),
+      undefined,
+    ]),
     startDate: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
     endDate: faker.helpers.arrayElement([faker.string.alpha(20), undefined]),
   }));

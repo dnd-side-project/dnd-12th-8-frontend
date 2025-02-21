@@ -14,7 +14,7 @@ const meta: Meta<typeof RoleChip> = {
   argTypes: {
     variant: {
       control: 'radio',
-      options: ['developer', 'designer', 'planner', 'all'],
+      options: ['DEVELOPER', 'DESIGNER', 'PLANNER', 'ALL'],
       description: '역할 종류',
     },
     className: {
@@ -29,17 +29,17 @@ type Story = StoryObj<typeof RoleChip>;
 
 export const Default: Story = {
   args: {
-    variant: 'developer',
+    variant: 'DEVELOPER',
   },
 };
 
 export const RoleVariants: Story = {
   render: () => (
     <div className="flex gap-2">
-      <RoleChip variant="developer" />
-      <RoleChip variant="designer" />
-      <RoleChip variant="planner" />
-      <RoleChip variant="all" />
+      <RoleChip variant="DEVELOPER" />
+      <RoleChip variant="DESIGNER" />
+      <RoleChip variant="PLANNER" />
+      <RoleChip variant="ALL" />
     </div>
   ),
 };

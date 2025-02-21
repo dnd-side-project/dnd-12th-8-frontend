@@ -19,7 +19,7 @@ function RelatedProjectsSection() {
   return (
     <div className="flex flex-col gap-[18px]">
       <h2 className="font-title2 text-gray-50">같은 카테고리의 글</h2>
-      <div className="grid grid-cols-2 gap-4 tablet:grid-cols-3 laptop:grid-cols-4">
+      <div className="grid grid-cols-1 gap-5 pb-15 tablet:grid-cols-2 laptop:grid-cols-3 desktop:grid-cols-4">
         {relatedProjectsData?.map((data) => {
           return (
             <PostCard

@@ -31,10 +31,10 @@ const ProjectDesktopSidebar = () => {
 const ProjectBottombar = () => {
   return (
     <div className="flex items-center justify-center border-t border-gray-700 bg-gray-900 px-4 pt-[12px] pb-[24px]">
-      <div className="flex w-full justify-between gap-5 tablet:max-w-[800px] laptop:max-w-[1040px] desktop:hidden">
+      <div className="flex w-full items-center justify-between gap-5 tablet:max-w-[800px] laptop:max-w-[1040px] desktop:hidden">
         <div className="flex flex-1 flex-col gap-1">
-          <p className="font-subtitle text-gray-50">200 Point</p>
-          <div className="flex items-center gap-2 font-body2 text-purple-200">
+          <p className="font-body2 text-gray-50 tablet:font-subtitle">200 Point</p>
+          <div className="flex items-center gap-2 font-caption1 text-purple-200 tablet:font-body2">
             <p>사전퀴즈</p>
             <p>•</p>
             <p>10문항</p>

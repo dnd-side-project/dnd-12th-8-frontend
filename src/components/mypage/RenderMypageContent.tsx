@@ -1,77 +1,96 @@
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import PostCard from '@/components/@shared/card/post-card/PostCard';
 import SmallPostCard from '@/components/@shared/card/post-card/SmallPostCard';
-import { PostCardItemSchema } from '@/types/schema';
+// import { useGetUserPoints } from '@/generated';
+import { useGetFavoriteProjectList } from '@/generated';
+import { useGetProjectList } from '@/generated';
 
-interface FeedbackFormSchema {
-  title: string;
-  targetJob: string;
-  thumbnailImgUrl: string;
-  categoryNames: string[];
-}
+interface RenderTabContentProps {}
 
-interface RenderTabContentProps {
-  activeTab: string;
-  postcardItems: PostCardItemSchema[];
-  feedbackFormItems: FeedbackFormSchema;
-}
+const RenderMypageContent = ({}: RenderTabContentProps) => {
+  const router = useRouter();
+  const { tab: currentTab } = router.query;
 
-const RenderMypageContent = ({
-  activeTab,
-  postcardItems,
-  feedbackFormItems,
-}: RenderTabContentProps) => {
-  const gridClassName = 'grid grid-cols-1 gap-5 pb-15 tablet:grid-cols-2 desktop:grid-cols-3';
+  const { data: favoriteProjectListData } = useGetFavoriteProjectList({
+    query: { enabled: currentTab === 'likedPosts' },
+  });
+  const { data: projectListData } = useGetProjectList({
+    query: { enabled: currentTab === 'writtenPosts' },
+  });
 
-  switch (activeTab) {
-    case 'likedPosts':
-      return (
-        <div className={gridClassName}>
-          {postcardItems.map((item) => (
-            <PostCard
-              key={item.id}
-              id={item.id}
-              imageUrl={item.imageUrl}
-              thumbnailUrl={item.thumbnailUrl}
-              title={item.title}
-              point={item.point}
-              target={item.target}
-              questionCount={item.questionCount}
-              role={item.role}
-            />
-          ))}
-        </div>
-      );
-    case 'writtenPosts':
-      return (
-        <div className="flex flex-col gap-8">
-          {[...Array(10)].map((_, index) => (
-            <SmallPostCard
-              key={index}
-              title={feedbackFormItems.title}
-              targetJob={feedbackFormItems.targetJob}
-              thumbnailImgUrl={feedbackFormItems.thumbnailImgUrl}
-              categoryNames={feedbackFormItems.categoryNames}
-              isMyPage
-            />
-          ))}
-        </div>
-      );
-    case 'writtenReviews':
-      return (
-        <div className="flex flex-col gap-8">
-          {[...Array(10)].map((_, index) => (
-            <SmallPostCard
-              key={index}
-              title={feedbackFormItems.title}
-              targetJob={feedbackFormItems.targetJob}
-              thumbnailImgUrl={feedbackFormItems.thumbnailImgUrl}
-              categoryNames={feedbackFormItems.categoryNames}
-              isMyPage
-            />
-          ))}
-        </div>
-      );
-  }
+  const renderContent = () => {
+    switch (currentTab) {
+      case 'likedPosts':
+        return (
+          <div className="grid grid-cols-1 gap-5 pb-15 tablet:grid-cols-2 desktop:grid-cols-3">
+            {favoriteProjectListData?.data?.map((item) => (
+              <PostCard
+                key={item.projectId}
+                data={{
+                  projectId: item.projectId || 0,
+                  logoImageUrl: item.logoImgUrl || '',
+                  thumbnailImageUrl: item.thumbnailImgUrl || '',
+                  title: item.title || '',
+                  point: 100,
+                  questionCount: 10,
+                  targetJob: 'ALL',
+                }}
+              />
+            ))}
+          </div>
+        );
+      case 'writtenPosts':
+        return (
+          <div className="flex flex-col gap-[18px]">
+            {projectListData?.data?.map((item) => (
+              <Link href={`/project/${item.projectId}`} key={item.projectId}>
+                <div className="rounded-[10px] bg-gray-800 px-6 pt-7 pb-9">
+                  <SmallPostCard
+                    data={{
+                      title: item.title || '',
+                      logoImageUrl: item.logoImgUrl || '',
+                      categoryNames: ['웹', '식음료'],
+                      targetJob: 'DEVELOPER',
+                    }}
+                    styles={{
+                      icon: 'h-[64px] w-[64px]',
+                      title: 'font-body1',
+                    }}
+                  />
+                </div>
+              </Link>
+            ))}
+          </div>
+        );
+
+      case 'writtenReviews':
+        return (
+          <div className="flex flex-col gap-[18px]">
+            {projectListData?.data?.map((item) => (
+              <Link href={`/project/${item.projectId}`} key={item.projectId}>
+                <div key={item.projectId} className="rounded-[10px] bg-gray-800 px-6 pt-7 pb-9">
+                  <SmallPostCard
+                    data={{
+                      title: item.title || '',
+                      logoImageUrl: item.logoImgUrl || '',
+                      categoryNames: ['웹', '식음료'],
+                      targetJob: 'DEVELOPER',
+                    }}
+                    styles={{
+                      icon: 'h-[64px] w-[64px]',
+                      title: 'font-body1',
+                    }}
+                  />
+                </div>
+              </Link>
+            ))}
+          </div>
+        );
+    }
+  };
+
+  return renderContent();
 };
 
 export default RenderMypageContent;

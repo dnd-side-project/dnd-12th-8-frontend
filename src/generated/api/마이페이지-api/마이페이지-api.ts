@@ -1157,6 +1157,377 @@ export function useGetProjectListSuspenseInfinite<
 }
 
 /**
+ * 사용자가 피드백 참여한 프로젝트 조회
+ * @summary 마이페이지 피드백 참여 프로젝트 조회
+ */
+export const getParticipateProject = (
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal,
+) => {
+  return customInstance<ApiResponseListMyPageProjectResponseDto>(
+    { url: `/my-page/participate-project`, method: 'GET', signal },
+    options,
+  );
+};
+
+export const getGetParticipateProjectQueryKey = () => {
+  return [`/my-page/participate-project`] as const;
+};
+
+export const getGetParticipateProjectInfiniteQueryOptions = <
+  TData = InfiniteData<Awaited<ReturnType<typeof getParticipateProject>>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseInfiniteQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetParticipateProjectQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getParticipateProject>>> = ({ signal }) =>
+    getParticipateProject(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof getParticipateProject>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetParticipateProjectInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getParticipateProject>>
+>;
+export type GetParticipateProjectInfiniteQueryError = unknown;
+
+export function useGetParticipateProjectInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getParticipateProject>>>,
+  TError = unknown,
+>(options: {
+  query: Partial<
+    UseInfiniteQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  > &
+    Pick<
+      DefinedInitialDataOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>,
+      'initialData'
+    >;
+  request?: SecondParameter<typeof customInstance>;
+}): DefinedUseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetParticipateProjectInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getParticipateProject>>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseInfiniteQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  > &
+    Pick<
+      UndefinedInitialDataOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>,
+      'initialData'
+    >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetParticipateProjectInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getParticipateProject>>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseInfiniteQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 마이페이지 피드백 참여 프로젝트 조회
+ */
+
+export function useGetParticipateProjectInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getParticipateProject>>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseInfiniteQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetParticipateProjectInfiniteQueryOptions(options);
+
+  const query = useInfiniteQuery(queryOptions) as UseInfiniteQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetParticipateProjectQueryOptions = <
+  TData = Awaited<ReturnType<typeof getParticipateProject>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetParticipateProjectQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getParticipateProject>>> = ({ signal }) =>
+    getParticipateProject(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getParticipateProject>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetParticipateProjectQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getParticipateProject>>
+>;
+export type GetParticipateProjectQueryError = unknown;
+
+export function useGetParticipateProject<
+  TData = Awaited<ReturnType<typeof getParticipateProject>>,
+  TError = unknown,
+>(options: {
+  query: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  > &
+    Pick<
+      DefinedInitialDataOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>,
+      'initialData'
+    >;
+  request?: SecondParameter<typeof customInstance>;
+}): DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetParticipateProject<
+  TData = Awaited<ReturnType<typeof getParticipateProject>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  > &
+    Pick<
+      UndefinedInitialDataOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>,
+      'initialData'
+    >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetParticipateProject<
+  TData = Awaited<ReturnType<typeof getParticipateProject>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 마이페이지 피드백 참여 프로젝트 조회
+ */
+
+export function useGetParticipateProject<
+  TData = Awaited<ReturnType<typeof getParticipateProject>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetParticipateProjectQueryOptions(options);
+
+  const query = useQuery(queryOptions) as UseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetParticipateProjectSuspenseQueryOptions = <
+  TData = Awaited<ReturnType<typeof getParticipateProject>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseSuspenseQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetParticipateProjectQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getParticipateProject>>> = ({ signal }) =>
+    getParticipateProject(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseQueryOptions<
+    Awaited<ReturnType<typeof getParticipateProject>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetParticipateProjectSuspenseQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getParticipateProject>>
+>;
+export type GetParticipateProjectSuspenseQueryError = unknown;
+
+export function useGetParticipateProjectSuspense<
+  TData = Awaited<ReturnType<typeof getParticipateProject>>,
+  TError = unknown,
+>(options: {
+  query: Partial<
+    UseSuspenseQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetParticipateProjectSuspense<
+  TData = Awaited<ReturnType<typeof getParticipateProject>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseSuspenseQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetParticipateProjectSuspense<
+  TData = Awaited<ReturnType<typeof getParticipateProject>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseSuspenseQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 마이페이지 피드백 참여 프로젝트 조회
+ */
+
+export function useGetParticipateProjectSuspense<
+  TData = Awaited<ReturnType<typeof getParticipateProject>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseSuspenseQueryOptions<Awaited<ReturnType<typeof getParticipateProject>>, TError, TData>
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseSuspenseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetParticipateProjectSuspenseQueryOptions(options);
+
+  const query = useSuspenseQuery(queryOptions) as UseSuspenseQueryResult<TData, TError> & {
+    queryKey: DataTag<QueryKey, TData, TError>;
+  };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+export const getGetParticipateProjectSuspenseInfiniteQueryOptions = <
+  TData = InfiniteData<Awaited<ReturnType<typeof getParticipateProject>>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseSuspenseInfiniteQueryOptions<
+      Awaited<ReturnType<typeof getParticipateProject>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {};
+
+  const queryKey = queryOptions?.queryKey ?? getGetParticipateProjectQueryKey();
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getParticipateProject>>> = ({ signal }) =>
+    getParticipateProject(requestOptions, signal);
+
+  return { queryKey, queryFn, ...queryOptions } as UseSuspenseInfiniteQueryOptions<
+    Awaited<ReturnType<typeof getParticipateProject>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
+
+export type GetParticipateProjectSuspenseInfiniteQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getParticipateProject>>
+>;
+export type GetParticipateProjectSuspenseInfiniteQueryError = unknown;
+
+export function useGetParticipateProjectSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getParticipateProject>>>,
+  TError = unknown,
+>(options: {
+  query: Partial<
+    UseSuspenseInfiniteQueryOptions<
+      Awaited<ReturnType<typeof getParticipateProject>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetParticipateProjectSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getParticipateProject>>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseSuspenseInfiniteQueryOptions<
+      Awaited<ReturnType<typeof getParticipateProject>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+export function useGetParticipateProjectSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getParticipateProject>>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseSuspenseInfiniteQueryOptions<
+      Awaited<ReturnType<typeof getParticipateProject>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
+/**
+ * @summary 마이페이지 피드백 참여 프로젝트 조회
+ */
+
+export function useGetParticipateProjectSuspenseInfinite<
+  TData = InfiniteData<Awaited<ReturnType<typeof getParticipateProject>>>,
+  TError = unknown,
+>(options?: {
+  query?: Partial<
+    UseSuspenseInfiniteQueryOptions<
+      Awaited<ReturnType<typeof getParticipateProject>>,
+      TError,
+      TData
+    >
+  >;
+  request?: SecondParameter<typeof customInstance>;
+}): UseSuspenseInfiniteQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+  const queryOptions = getGetParticipateProjectSuspenseInfiniteQueryOptions(options);
+
+  const query = useSuspenseInfiniteQuery(queryOptions) as UseSuspenseInfiniteQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+
+  query.queryKey = queryOptions.queryKey;
+
+  return query;
+}
+
+/**
  * 마이페이지에 찜한 포스트 조회
  * @summary 마이페이지 찜 프로젝트 조회
  */

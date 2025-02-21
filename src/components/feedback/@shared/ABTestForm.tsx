@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import Image from 'next/image';
 
 interface ABTestFormProps {
   abImageAUrl?: string;
   abImageBUrl?: string;
+  selectedOption: string;
   answer?: {
     selectedOption?: string;
     responseText?: string;
@@ -10,18 +12,23 @@ interface ABTestFormProps {
   onAnswerChange: (answer: [string, string]) => void;
 }
 
-const ABTestForm = ({ abImageAUrl, abImageBUrl, answer, onAnswerChange }: ABTestFormProps) => {
-  const selectedOption = answer?.selectedOption || '';
-  console.log('🚀 ~ ABTestForm ~ selectedOption:', selectedOption);
-  console.log(answer);
-  const responseText = answer?.responseText || '';
+const ABTestForm = ({
+  abImageAUrl,
+  abImageBUrl,
+  selectedOption,
+  answer,
+  onAnswerChange,
+}: ABTestFormProps) => {
+  const [feedbackText, setFeedbackText] = useState(answer?.responseText || '');
 
   const handleOptionSelect = (option: 'A' | 'B') => {
-    onAnswerChange([option, responseText]);
+    onAnswerChange([option, feedbackText]);
   };
 
-  const handleFeedbackChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onAnswerChange([selectedOption || '', e.target.value]);
+  const handleFeedbackChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newText = e.target.value;
+    setFeedbackText(newText);
+    onAnswerChange([selectedOption, newText]);
   };
 
   return (
@@ -51,11 +58,10 @@ const ABTestForm = ({ abImageAUrl, abImageBUrl, answer, onAnswerChange }: ABTest
       </div>
 
       <div className="mt-7 flex flex-col gap-6 rounded-[10px] bg-gray-700 px-4 py-3 tablet:py-5">
-        <input
-          type="text"
+        <textarea
           placeholder="선택한 이유를 입력해 주세요"
-          className="font-body2 text-gray-50 placeholder:text-gray-400"
-          value={responseText}
+          className="max-h-[500px] min-h-[100px] w-full resize-y bg-transparent font-body2 text-gray-50 placeholder:text-gray-400 focus:outline-none"
+          value={feedbackText}
           onChange={handleFeedbackChange}
         />
       </div>

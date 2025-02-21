@@ -31,6 +31,10 @@ export const useFeedbackForm = (
     if (!currentQuestion) return;
 
     setAnswers((prev) => {
+      const existingAnswerIndex = prev.findIndex(
+        (a) => a.questionId === currentQuestion.questionId,
+      );
+
       let formattedAnswer: FeedbackAnswer = {
         questionId: currentQuestion.questionId as string,
         questionType: currentQuestion.type as FeedbackFormResponseType,
@@ -62,17 +66,25 @@ export const useFeedbackForm = (
           break;
 
         case 'AB_TEST': {
-          const [selectedOption, responseText] = Array.isArray(answer) ? answer : [answer, ''];
-          formattedAnswer = {
-            ...formattedAnswer,
-            selectedOption,
-            responseText,
-          };
+          if (Array.isArray(answer)) {
+            const [selectedOption, responseText] = answer;
+            formattedAnswer = {
+              ...formattedAnswer,
+              selectedOption,
+              responseText,
+            };
+          }
           break;
         }
       }
 
-      return [...prev.filter((a) => a.questionId !== currentQuestion.questionId), formattedAnswer];
+      if (existingAnswerIndex !== -1) {
+        const newAnswers = [...prev];
+        newAnswers[existingAnswerIndex] = formattedAnswer;
+        return newAnswers;
+      }
+
+      return [...prev, formattedAnswer];
     });
   };
 

@@ -17,7 +17,6 @@ const FeedbackPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { mutate: submitFeedback } = useSaveFeedbackForm();
 
-  // feedbackForm API 호출로 변경
   const { data: feedbackForms } = useGetFeedbackForms(Number(id));
   const { data: projectDetail } = useGetProjectDetail(Number(id));
 

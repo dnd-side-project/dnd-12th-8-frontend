@@ -28,8 +28,6 @@ function LevelSelect({
   onChange,
   isSelectable = true,
 }: LevelSelectProps) {
-  console.log('isSelected', isSelected, level, type);
-
   const renderIcon = () => {
     switch (level) {
       case 'LEARNER':

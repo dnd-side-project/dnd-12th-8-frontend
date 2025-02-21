@@ -1,8 +1,7 @@
 import { cva } from 'class-variance-authority';
 import { Icon } from '@/components/@shared/icons/Icon';
-import { MemberResponseJob } from '@/generated';
 import { cn } from '@/utils/cn';
-import { ROLE_MAP } from '../select/RoleSelect';
+import { Role, ROLE_MAP } from '../select/RoleSelect';
 
 const roleTagVariants = cva(
   'inline-flex items-center gap-2 rounded-3xl px-3 py-1 text-sm font-caption1 bg-gray-600 border',
@@ -12,7 +11,7 @@ const roleTagVariants = cva(
         DESIGNER: 'text-purple-300 border-purple-300',
         PLANNER: 'text-orange-400 border-orange-400',
         DEVELOPER: 'text-pink-400 border-pink-400',
-        ALL: 'text-gray-50 border-gray-600',
+        ALL: 'bg-gray-600 text-gray-50 border-gray-600',
       },
     },
     defaultVariants: {
@@ -25,7 +24,7 @@ export type RoleVariant = 'DESIGNER' | 'PLANNER' | 'DEVELOPER' | 'ALL';
 
 interface RoleTagProps {
   className?: string;
-  role: MemberResponseJob;
+  role: Role;
 }
 
 function RoleChip({ role = 'DEVELOPER', className }: RoleTagProps) {

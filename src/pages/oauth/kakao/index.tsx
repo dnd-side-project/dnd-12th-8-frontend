@@ -23,7 +23,6 @@ function LoginPage() {
     if (!userData) return;
 
     if (!userData?.onboardingCompleted) {
-      console.log('온보딩 모달 키기');
       setIsOnboarding(true);
     } else {
       router.replace('/main');

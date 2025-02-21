@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 import { ReactElement, ReactNode } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { NextPage } from 'next';
 import { IBM_Plex_Sans } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -36,6 +37,7 @@ export default function App({ Component, pageProps, router }: AppPropsWithLayout
       <main className={`${pretendard.variable} ${ibmPlexSans.variable} font-sans`}>
         {getLayout(<Component {...pageProps} />)}
       </main>
+      <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
   );
 }

@@ -20,7 +20,7 @@ function UserBaseProfile() {
           <span className="font-title1 text-gray-50">{memberName}</span>
           <span className="font-caption1 text-gray-200">{email || 'example@kakao.com'}</span>
         </div>
-        <div className="flex flex-col gap-2 tablet:flex-row">
+        <div className="flex gap-2 tablet:flex-row">
           {job && <RoleChip role={job} />}
           {level && <LevelSelect level={level} isSelectable={false} isSelected={true} />}
         </div>

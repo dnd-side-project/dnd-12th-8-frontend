@@ -44,7 +44,7 @@ const RenderMypageContent = ({}: RenderTabContentProps) => {
         return (
           <div className="flex flex-col gap-[18px]">
             {projectListData?.data?.map((item) => (
-              <Link href={`/project/${item.projectId}`} key={item.projectId}>
+              <Link href={`/statistics/${item.projectId}`} key={item.projectId}>
                 <div className="rounded-[10px] bg-gray-800 px-6 pt-7 pb-9">
                   <SmallPostCard
                     data={{

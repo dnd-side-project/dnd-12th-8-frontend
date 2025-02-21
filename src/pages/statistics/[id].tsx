@@ -89,10 +89,12 @@ const StatisticsPage = () => {
 
   const onClickDelete = () => {
     console.log('삭제하기');
+    alert('준비 중입니다');
   };
 
   const onClickClose = () => {
     console.log('답변 마감하기');
+    alert('준비 중입니다');
   };
 
   if (!projectDetail) return null;

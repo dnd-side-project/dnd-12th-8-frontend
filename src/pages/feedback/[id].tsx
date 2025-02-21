@@ -3,7 +3,12 @@ import { useRouter } from 'next/router';
 import SmallPostCard from '@/components/@shared/card/post-card/SmallPostCard';
 import FeedbackQuestion from '@/components/feedback/FeedbackQuestion';
 import FeedbackStepController from '@/components/feedback/FeedbackStepController';
-import { useGetProjectDetail, useGetFeedbackForms, useSaveFeedbackForm } from '@/generated';
+import {
+  useGetProjectDetail,
+  useGetFeedbackForms,
+  useSaveFeedbackForm,
+  FeedbackResponseRequest,
+} from '@/generated';
 import { useFeedbackForm } from '@/hooks/useFeedbackForm';
 
 const FeedbackPage = () => {
@@ -38,24 +43,58 @@ const FeedbackPage = () => {
         return;
       }
 
-      const formattedAnswers = answers.map((answer) => ({
-        questionId: String(answer.questionId),
-        questionType: answer.questionType,
-        selectedOption: Array.isArray(answer.answer) ? answer.answer[0] : answer.answer,
-        responseText: Array.isArray(answer.answer) ? '' : answer.answer,
-      }));
+      const formattedAnswers = answers.map((answer) => {
+        const baseAnswer = {
+          questionId: answer.questionId,
+          questionType: answer.questionType,
+        };
+
+        switch (answer.questionType) {
+          case 'MULTIPLE_CHOICE':
+            return {
+              ...baseAnswer,
+              selectedOption: String(Number(answer.answer) - 1),
+            };
+          case 'LIKERT_SCALE': {
+            const score = Number(answer.answer) - 1;
+            const texts = ['매우 나쁨', '나쁨', '보통', '좋음', '매우 좋음'];
+            return {
+              ...baseAnswer,
+              selectedOption: String(score),
+              responseText: texts[score],
+            };
+          }
+          case 'SHORT_ANSWER':
+            return {
+              ...baseAnswer,
+              responseText: answer.answer as string,
+            };
+          case 'AB_TEST': {
+            const [selectedOption, responseText] = Array.isArray(answer.answer)
+              ? answer.answer
+              : [answer.answer, ''];
+            return {
+              ...baseAnswer,
+              selectedOption,
+              responseText,
+            };
+          }
+          default:
+            return baseAnswer;
+        }
+      });
 
       const submitData = {
         projectId: Number(id),
         answers: formattedAnswers,
-      };
+      } as FeedbackResponseRequest;
+
       console.log(submitData);
 
       submitFeedback(
         { data: submitData },
         {
           onSuccess: () => {
-            console.log(formattedAnswers);
             alert('피드백 제출이 완료되었습니다.');
             void router.push('/main');
           },

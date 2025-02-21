@@ -6,7 +6,7 @@ interface FeedbackFormRequest {
 }
 
 interface FeedbackAnswer {
-  questionId: number;
+  questionId: string;
   questionType: FeedbackFormResponseType;
   answer: string | string[];
 }
@@ -18,8 +18,9 @@ export const useFeedbackForm = (
   const [answers, setAnswers] = useState<FeedbackAnswer[]>([]);
 
   const totalSteps = feedbackFormRequest?.feedbackQuestions?.length ?? 0;
+  console.log('🚀 ~ answers:', answers);
   const currentQuestion = feedbackFormRequest?.feedbackQuestions?.[currentStep - 1];
-  const currentAnswer = answers.find((a) => a.questionId === currentStep)?.answer;
+  const currentAnswer = answers.find((a) => a.questionId === currentQuestion?.questionId)?.answer;
   const hasCurrentAnswer = Boolean(currentAnswer);
 
   const handleAnswerChange = (answer: string | string[]) => {
@@ -27,12 +28,12 @@ export const useFeedbackForm = (
 
     setAnswers((prev) => {
       const newAnswer: FeedbackAnswer = {
-        questionId: currentStep,
+        questionId: currentQuestion.questionId as string,
         questionType: currentQuestion.type as FeedbackFormResponseType,
         answer,
       };
 
-      return [...prev.filter((a) => a.questionId !== currentStep), newAnswer];
+      return [...prev.filter((a) => a.questionId !== currentQuestion.questionId), newAnswer];
     });
   };
 

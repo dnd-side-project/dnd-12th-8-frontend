@@ -1,20 +1,34 @@
 import { useState } from 'react';
-import type { FeedbackAnswer, FeedbackFormRequest } from '@/types/schema';
+import type { FeedbackFormResponse, FeedbackFormResponseType } from '@/generated';
 
-export const useFeedbackForm = (feedbackFormRequest: FeedbackFormRequest) => {
+interface FeedbackFormRequest {
+  feedbackQuestions: FeedbackFormResponse[];
+}
+
+interface FeedbackAnswer {
+  questionId: number;
+  questionType: FeedbackFormResponseType;
+  answer: string | string[];
+}
+
+export const useFeedbackForm = (
+  feedbackFormRequest: FeedbackFormRequest = { feedbackQuestions: [] },
+) => {
   const [currentStep, setCurrentStep] = useState(1);
   const [answers, setAnswers] = useState<FeedbackAnswer[]>([]);
 
-  const totalSteps = feedbackFormRequest.feedbackQuestions.length;
-  const currentQuestion = feedbackFormRequest.feedbackQuestions[currentStep - 1];
+  const totalSteps = feedbackFormRequest?.feedbackQuestions?.length ?? 0;
+  const currentQuestion = feedbackFormRequest?.feedbackQuestions?.[currentStep - 1];
   const currentAnswer = answers.find((a) => a.questionId === currentStep)?.answer;
   const hasCurrentAnswer = Boolean(currentAnswer);
 
   const handleAnswerChange = (answer: string | string[]) => {
+    if (!currentQuestion) return;
+
     setAnswers((prev) => {
-      const newAnswer = {
+      const newAnswer: FeedbackAnswer = {
         questionId: currentStep,
-        questionType: currentQuestion.questionType,
+        questionType: currentQuestion.type as FeedbackFormResponseType,
         answer,
       };
 

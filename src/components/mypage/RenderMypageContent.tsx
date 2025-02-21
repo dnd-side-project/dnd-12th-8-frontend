@@ -34,7 +34,7 @@ const RenderMypageContent = ({}: RenderTabContentProps) => {
                   title: item.title || '',
                   point: 100,
                   questionCount: 10,
-                  targetJob: 'ALL',
+                  targetJob: item.job || 'ALL',
                 }}
               />
             ))}
@@ -50,8 +50,9 @@ const RenderMypageContent = ({}: RenderTabContentProps) => {
                     data={{
                       title: item.title || '',
                       logoImageUrl: item.logoImgUrl || '',
-                      categoryNames: ['웹', '식음료'],
-                      targetJob: 'DEVELOPER',
+                      categoryNames: item.platformCategoryResponse?.categoryNames || [],
+                      targetJob: item.job || 'ALL',
+                      dueDate: item.dueDate || '',
                     }}
                     styles={{
                       icon: 'h-[64px] w-[64px]',
@@ -74,8 +75,9 @@ const RenderMypageContent = ({}: RenderTabContentProps) => {
                     data={{
                       title: item.title || '',
                       logoImageUrl: item.logoImgUrl || '',
-                      categoryNames: ['웹', '식음료'],
-                      targetJob: 'DEVELOPER',
+                      categoryNames: item.platformCategoryResponse?.categoryNames || [],
+                      targetJob: item.job || 'ALL',
+                      dueDate: item.dueDate || '',
                     }}
                     styles={{
                       icon: 'h-[64px] w-[64px]',
